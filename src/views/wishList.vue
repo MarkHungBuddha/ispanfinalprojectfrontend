@@ -13,7 +13,7 @@ import navbar from "@/components/navbar.vue";
         <v-col cols="5">操作</v-col>
       </v-row>
 
-      <v-row v-for="(item, index) in wishList" :key="item.id" class="item-row">
+      <v-row v-for="(item, index) in itemList" :key="item.id" class="item-row">
         <v-col cols="6">
           <v-img :src="item.imgUrl" max-width="80"></v-img>
           <span>{{ item.itemName }}</span>
