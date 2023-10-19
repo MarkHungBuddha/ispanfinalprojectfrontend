@@ -24,7 +24,12 @@ const routes = [
       name: 'ShoppingCart',
       component: () => import("@/views/shoppingCart.vue"),
       meta: { title: '購物車' },
-
+  },
+  {
+    path: '/wishList',
+      name: 'wishList',
+      component: () => import("@/views/wishList.vue"),
+      meta: { title: '願望清單' }
 
   }
 

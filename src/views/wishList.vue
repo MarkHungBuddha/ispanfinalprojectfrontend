@@ -1,38 +1,30 @@
 <script setup>
+import sidebar from "@/components/sidebar.vue";
 import navbar from "@/components/navbar.vue";
 </script>
+
 <template>
   <v-app>
     <v-container>
       <navbar></navbar>
 
       <v-row class="header">
-        <v-col cols="5">商品</v-col>
-        <v-col cols="2">單價</v-col>
-        <v-col cols="2">數量</v-col>
-        <v-col cols="2">總計</v-col>
-        <v-col cols="1">操作</v-col>
+        <v-col cols="6">商品</v-col>
+        <v-col cols="5">操作</v-col>
       </v-row>
 
-      <v-row v-for="(item, index) in itemList" :key="item.id" class="item-row">
-        <v-col cols="5">
+      <v-row v-for="(item, index) in wishList" :key="item.id" class="item-row">
+        <v-col cols="6">
           <v-img :src="item.imgUrl" max-width="80"></v-img>
           <span>{{ item.itemName }}</span>
         </v-col>
-        <v-col cols="2">${{ item.price }}</v-col>
-        <v-col cols="2">
-          <v-btn small @click="handleSub(item)">-</v-btn>
-          {{ item.count }}
-          <v-btn small @click="handlePlus(item)">+</v-btn>
-        </v-col>
-        <v-col cols="2">${{ item.price * item.count }}</v-col>
-        <v-col cols="1">
+        <v-col cols="5">
+          <v-btn small @click="addToCart(item)">加入購物車</v-btn>
           <v-btn small @click="handledelete(index)">刪除</v-btn>
         </v-col>
       </v-row>
     </v-container>
   </v-app>
-
 </template>
 
 <script>
