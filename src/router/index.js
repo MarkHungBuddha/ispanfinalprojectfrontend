@@ -31,7 +31,26 @@ const routes = [
       component: () => import("@/views/wishList.vue"),
       meta: { title: '願望清單' }
 
+  },
+  {
+    path: '/login',
+      name: 'Login',
+      component: () => import("@/views/login.vue"),
+      meta: { title: '登入' }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import("@/views/register.vue"),
+    meta: { title: '登入' }
+  },
+  {
+    path: '/uploadProduct',
+      name: 'uploadProduct',
+      component: () => import("@/views/uploadProduct.vue"),
+      meta: { title: '上傳商品' }
   }
+
 
 ]
 

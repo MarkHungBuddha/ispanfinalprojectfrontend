@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar app :elevation="2">
+    <v-toolbar  :elevation="2">
       <v-toolbar-title>
         <span class="logo">Your Logo</span>
       </v-toolbar-title>
@@ -16,7 +16,7 @@
       <v-btn v-if="!isLoggedIn" @click="login">Login</v-btn>
       <v-btn v-else @click="goToCart">Cart</v-btn>
       <v-btn v-if="!isLoggedIn" @click="register">Register</v-btn>
-    </v-app-bar>
+    </v-toolbar>
 </template>
 
 <script>
