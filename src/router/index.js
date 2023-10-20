@@ -49,6 +49,12 @@ const routes = [
       name: 'uploadProduct',
       component: () => import("@/views/uploadProduct.vue"),
       meta: { title: '上傳商品' }
+  },
+  {
+    path: '/productSearch',
+    name: 'productSearch',
+    component: () => import("@/views/productSearch.vue"),
+    meta: { title: '搜尋結果' }
   }
 
 

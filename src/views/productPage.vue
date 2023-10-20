@@ -6,8 +6,6 @@ import navbar from "@/components/navbar.vue";
   <v-app>
     <v-container>
       <navbar/>
-
-
       <v-breadcrumbs :items="breadcrumbs" divider=">"></v-breadcrumbs>
       <v-carousel>
         <v-carousel-item v-for="(imageCode, index) in productImages" :key="index">

@@ -1,7 +1,10 @@
 <template>
     <v-toolbar  :elevation="2">
       <v-toolbar-title>
-        <span class="logo">Your Logo</span>
+        <span class="logo">
+          <v-img src="@/assets/logo.svg"></v-img>
+        商場
+        </span>
       </v-toolbar-title>
 
       <v-text-field
