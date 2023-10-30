@@ -1,23 +1,23 @@
-import { createApp } from 'vue'
-import './assets/main.css'
-import 'vuetify/styles'
-import{ createVuetify } from 'vuetify';
-// import Vuetify from 'vuetify';
+import { createApp } from 'vue';
+import axios from 'axios';  // 引入 Axios
+import './assets/main.css';
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import store from './store';  // 引入 Vuex store
 
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 
-// import 'bootstrap-icons/font/bootstrap-icons.css'
-// import '@/assets/bootstrap.min.css'
-// import '@/assets/bootstrap.min.js'
-import router from './router'
-import App from './App.vue'
+import router from './router';
+import App from './App.vue';
 import sidebar from "@/components/sidebar.vue";
 import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
 
+// 設定 Axios
+axios.defaults.withCredentials = true;
 
-const app = createApp(App)
+const app = createApp(App);
 
 const vuetify = createVuetify({
     theme: {
@@ -25,11 +25,12 @@ const vuetify = createVuetify({
     },
     components,
     directives,
-})
+});
 
 app.component('sidebar', sidebar);
 app.component('Home', Home);
 app.component('productPage', productPage);
 
-app.use(vuetify).use(router).mount('#app');
+app.config.globalProperties.$axios = axios;
 
+app.use(vuetify).use(router).use(store).mount('#app');  // 加入 .use(store)

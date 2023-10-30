@@ -7,24 +7,21 @@ import navbar from "@/components/navbar.vue";
 </script>
 
 <template>
-<v-app>
-  <v-row>
-    <v-col cols="12" md="10">
-      <navbar/>
-      <slider/>
-      <register-form/>
 
-    </v-col>
-  </v-row>
-
-
-</v-app>
-
-
-
-
-
+  <v-app>
+    <v-row justify="center">
+      <v-col>
+        <navbar/>
+        <slider class="custom-slider"/>
+      </v-col>
+    </v-row>
+  </v-app>
 </template>
 
+<style scoped>
 
-
+.custom-slider {
+  max-width: 80vw;
+  margin: 0 auto;  /* 置中容器 */
+}
+</style>

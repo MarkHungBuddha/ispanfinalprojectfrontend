@@ -1,4 +1,5 @@
 <script setup>
+import axios from "axios"; // 引入axios
 import navbar from "@/components/navbar.vue";
 </script>
 <template>
@@ -40,6 +41,8 @@ import navbar from "@/components/navbar.vue";
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -51,15 +54,35 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
       if (this.$refs.form.validate()) {
-        // Perform login logic here
-        console.log("Logged in with", this.username, this.password);
+        try {
+          const response = await axios.post(`http://localhost:8080/public/api/member/memberLogin?username=${this.username}&passwdbcrypt=${this.password}`);
+
+          if (response.data && response.data.success) {
+            // 登入成功，進行相應操作
+            console.log(response.data.success);
+            alert(response.data.success);
+            // Redirect to homepage
+            this.$router.push('/');
+          } else if (response.data && response.data.error) {
+            // 登入失敗，顯示後端返回的錯誤信息
+            console.error(response.data.error);
+            alert(response.data.error);
+          } else {
+            console.error("未知的響應格式");
+          }
+        } catch (error) {
+          console.error("登入時發生錯誤: ", error.message || "未知的錯誤");
+          alert(error.message || "登入時發生錯誤");
+        }
       }
     }
+
   }
 };
 </script>
+
 
 <style scoped>
 </style>
