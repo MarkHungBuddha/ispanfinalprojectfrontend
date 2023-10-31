@@ -13,7 +13,7 @@ import App from './App.vue';
 import sidebar from "@/components/sidebar.vue";
 import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
-
+import navbar from "@/components/navbar.vue"
 // 設定 Axios
 axios.defaults.withCredentials = true;
 
@@ -30,7 +30,7 @@ const vuetify = createVuetify({
 app.component('sidebar', sidebar);
 app.component('Home', Home);
 app.component('productPage', productPage);
-
+app.component('navbar ', navbar);
 app.config.globalProperties.$axios = axios;
 
 app.use(vuetify).use(router).use(store).mount('#app');  // 加入 .use(store)

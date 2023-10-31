@@ -11,10 +11,10 @@
                 </template>
                 <v-expansion-panel-content>
                   <v-list-item>
-                    <v-list-item-title>新增商品</v-list-item-title>
+                    <v-list-item-title @click="UploadProduct">新增商品</v-list-item-title>
                   </v-list-item>
                   <v-list-item>
-                    <v-list-item-title>商品管理</v-list-item-title>
+                    <v-list-item-title @click="FindProduct">商品管理</v-list-item-title>
                   </v-list-item>
                 </v-expansion-panel-content>
               </v-expansion-panel>
@@ -56,10 +56,18 @@
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-
+      
 </template>
 
 <script>
 export default {
-}
+  methods: {
+    UploadProduct() {
+      this.$router.push('/uploadProduct'); 
+    },
+    FindProduct() {
+      this.$router.push('/showAllProduct'); 
+    }
+  }
+};
 </script>

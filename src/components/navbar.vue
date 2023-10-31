@@ -6,13 +6,7 @@
       </v-btn>
     </v-toolbar-title>
 
-    <v-text-field
-        v-if="!isLoggedIn"
-        v-model="searchText"
-        label="Search"
-        hide-details
-        class="search-bar"
-    ></v-text-field>
+    <v-text-field v-if="!isLoggedIn" v-model="searchText" label="Search" hide-details class="search-bar"></v-text-field>
 
     <v-spacer></v-spacer>
 
@@ -48,23 +42,23 @@ export default {
     },
     redirectToShoppingCart() {
       axios.get('http://localhost:8080/customer/api/shoppingCart')
-          .then(() => {
-            this.$router.push('/shoppingCart');
-          });
+        .then(() => {
+          this.$router.push('/shoppingCart');
+        });
     },
     redirectToWishList() {
       axios.get('http://localhost:8080/customer/api/wishlist')
-          .then((response) => {
-            this.$store.commit('setWishList', response.data);
-            this.$router.push('/wishList');
-          });
+        .then((response) => {
+          this.$store.commit('setWishList', response.data);
+          this.$router.push('/wishList');
+        });
     },
     logout() {
       axios.post('http://localhost:8080/customer/member/logout')
-          .then(() => {
-            this.$store.dispatch('updateLoginStatus', false);
-            this.$router.push('/');
-          });
+        .then(() => {
+          this.$store.dispatch('updateLoginStatus', false);
+          this.$router.push('/');
+        });
     }
   },
   watch: {
@@ -80,9 +74,11 @@ export default {
 
 <style>
 .icon-img {
-  width: 24px; /* Adjust as needed */
+  width: 24px;
+  /* Adjust as needed */
   height: 24px;
 }
+
 .custom-navbar {
   background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
 }
@@ -115,9 +111,12 @@ export default {
   background-color: #FF8E53;
   color: white;
 }
+
 .logo-img {
-  width: 40px; /* Adjust as needed */
+  width: 40px;
+  /* Adjust as needed */
   height: 80%;
 }
 
+;
 </style>
