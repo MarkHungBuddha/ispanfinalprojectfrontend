@@ -23,7 +23,7 @@ import order from '../views/order.vue';
         <router-link to="/order">查看訂單</router-link> |
         <navbar />
         <slider />
-        <register-form />
+        <!-- <register-form /> -->
 
 
       </v-col>
