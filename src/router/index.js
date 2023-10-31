@@ -15,28 +15,28 @@ const routes = [
   },
   {
     path: '/productPage',
-      name: 'ProductPage',
-      component: () => import("@/views/productPage.vue"),
-      meta: { title: '商品頁面' }
+    name: 'ProductPage',
+    component: () => import("@/views/productPage.vue"),
+    meta: { title: '商品頁面' }
   },
   {
     path: '/shoppingCart',
-      name: 'ShoppingCart',
-      component: () => import("@/views/shoppingCart.vue"),
-      meta: { title: '購物車' },
+    name: 'ShoppingCart',
+    component: () => import("@/views/shoppingCart.vue"),
+    meta: { title: '購物車' },
   },
   {
     path: '/wishList',
-      name: 'wishList',
-      component: () => import("@/views/wishList.vue"),
-      meta: { title: '願望清單' }
+    name: 'wishList',
+    component: () => import("@/views/wishList.vue"),
+    meta: { title: '願望清單' }
 
   },
   {
     path: '/login',
-      name: 'Login',
-      component: () => import("@/views/login.vue"),
-      meta: { title: '登入' }
+    name: 'Login',
+    component: () => import("@/views/login.vue"),
+    meta: { title: '登入' }
   },
   {
     path: '/register',
@@ -46,9 +46,15 @@ const routes = [
   },
   {
     path: '/uploadProduct',
-      name: 'uploadProduct',
-      component: () => import("@/views/uploadProduct.vue"),
-      meta: { title: '上傳商品' }
+    name: 'uploadProduct',
+    component: () => import("@/views/uploadProduct.vue"),
+    meta: { title: '上傳商品' }
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => import("@/views/order.vue"),
+    meta: { title: '查看訂單' }
   }
 
 
