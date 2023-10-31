@@ -1,6 +1,6 @@
 <script setup>
 import navbar from "@/components/navbar.vue";
-import barList from "./barList.vue";
+import barList from "@/components//barList.vue";
 </script>
 <template>
   <v-app>
