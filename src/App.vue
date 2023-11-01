@@ -1,6 +1,6 @@
 <template>
-  <router-view :is-logged-in="isLoggedIn"></router-view>
   <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
+  <router-view :is-logged-in="isLoggedIn"></router-view>
 
 </template>
 
@@ -33,3 +33,5 @@ export default {
 ,
 };
 </script>
+
+

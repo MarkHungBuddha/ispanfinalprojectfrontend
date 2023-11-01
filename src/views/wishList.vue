@@ -15,9 +15,10 @@ import navbar from "@/components/navbar.vue";
 
       <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
         <v-col cols="6" class="d-flex align-center">
-          <v-img :src="item.imgUrl" max-width="80" class="mr-3"></v-img>
+          <v-img :src="item.imgUrl + item.imgExtension" max-width="80" class="mr-3"></v-img>
           <span class="font-weight-medium">{{ item.itemName }}</span>
         </v-col>
+<!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
         <v-col cols="6" class="text-right">
           <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
           <v-btn small color="error" @click="removeFromWishlist(item.id, index)">刪除</v-btn>
@@ -38,8 +39,10 @@ export default {
       itemList: this.$store.state.wishlist.map(item => ({
         id: item.id,
         itemName: item.productname,
-        imgUrl: `https://i.imgur.com/${item.productimage}.png`
+        imgUrl: `https://i.imgur.com/${item.productimage}`,
+        imgExtension: item.imageExtension || '.png'  // 假設從store中也可以取得檔名後綴，如果沒有則預設為.png
       }))
+
     };
   },
   methods: {

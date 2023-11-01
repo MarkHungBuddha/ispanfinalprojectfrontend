@@ -14,8 +14,8 @@ const routes = [
     meta: { title: '賣場首頁' }
   },
   {
-    path: '/productPage',
-      name: 'ProductPage',
+    path: '/productPage/:productId',
+    name: 'ProductPage',
       component: () => import("@/views/productPage.vue"),
       meta: { title: '商品頁面' }
   },

@@ -11,8 +11,9 @@ import navbar from "@/components/navbar.vue";
   <v-app>
     <v-row justify="center">
       <v-col>
-        <navbar/>
+<!--        <register-form/>-->
         <slider class="custom-slider"/>
+        <v-range-slider></v-range-slider>
       </v-col>
     </v-row>
   </v-app>
