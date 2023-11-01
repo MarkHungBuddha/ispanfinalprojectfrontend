@@ -4,14 +4,16 @@ import { createApp } from 'vue';
 import Slider from "@/components/slider.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 import navbar from "@/components/navbar.vue";
-import categoryname from '../components/categoryname.vue';
+import categoryname from '@/components/categoryname.vue';
+
 </script>
 
 <template>
   <v-app>
     <v-row justify="center">
-      <v-col>
+      <v-col>s
         <navbar />
+
         <categoryname></categoryname>
         <slider class="custom-slider" />
       </v-col>
