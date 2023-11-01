@@ -13,6 +13,7 @@ import App from './App.vue';
 import sidebar from "@/components/sidebar.vue";
 import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
+import '@mdi/font/css/materialdesignicons.css'
 
 // 設定 Axios
 axios.defaults.withCredentials = true;
