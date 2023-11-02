@@ -55,9 +55,13 @@ const routes = [
     name: 'showAllProduct',
     component: () => import("@/views/showAllProduct.vue"),
     meta: { title: '商品管理' }
+  },
+  {
+    path: '/uploadImage',
+    name: 'uploadImage',
+    component: () => import("@/views/uploadImage.vue"),
+    meta: { title: '上傳照片' }
   }
-
-
 ]
 
 const router = createRouter({
