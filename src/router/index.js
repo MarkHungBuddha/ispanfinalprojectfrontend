@@ -49,6 +49,11 @@ const routes = [
       name: 'uploadProduct',
       component: () => import("@/views/uploadProduct.vue"),
       meta: { title: '上傳商品' }
+  },
+  {
+    path: '/member', // 修改会员资料的页面路径
+    component: () => import("@/views/member.vue"),
+    meta: { title: '會員資料' } // 修改会员资料的 Vue 组件
   }
 
 

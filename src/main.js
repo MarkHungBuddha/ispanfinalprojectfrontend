@@ -13,11 +13,15 @@ import App from './App.vue';
 import sidebar from "@/components/sidebar.vue";
 import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
-
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/dist/vuetify.min.css'
+import { VOtpInput } from 'vuetify/labs/VOtpInput'
 // 設定 Axios
 axios.defaults.withCredentials = true;
 
 const app = createApp(App);
+
 
 const vuetify = createVuetify({
     theme: {
@@ -26,6 +30,11 @@ const vuetify = createVuetify({
     components,
     directives,
 });
+export default createVuetify({
+    components: {
+      VOtpInput,
+    },
+  })
 
 app.component('sidebar', sidebar);
 app.component('Home', Home);
