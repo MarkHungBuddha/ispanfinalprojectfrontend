@@ -5,14 +5,18 @@
         <barList></barList>
         <navbar></navbar>
 
+        <!-- 買家訂單頁面 -->
+        <!-- 標籤選項卡 -->
         <v-tabs v-model="tab" align-with-title :items="items" class="elevation-1 mt-5">
-          <v-tab v-for="(item, index) in items" :key="item" :value="item" @click="handleTabClick(item)">
+          <v-tab v-for="(item, index) in items" :key="item" :value="item" @click="handleTabClick(item)"
+            :class="{ 'tab--active': tab === item }">
             {{ item }}
           </v-tab>
         </v-tabs>
-
+        <!-- 訂單列表 -->
         <div v-for="order in orders" :key="order.orderid" class="mb-3">
-          <v-card>
+          <v-card class="light-gray-background">
+            <!-- 訂單卡片內容 -->
             <v-card-title>
               訂單編號: {{ order.orderid }}
             </v-card-title>
@@ -37,7 +41,17 @@
           </v-card>
         </div>
 
+
+        <!-- 無訂單數據時的提示 -->
         <v-alert v-if="orders == null" type="info">沒有訂單資料</v-alert>
+
+        <!-- 分頁控件 -->
+        <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+
+
+        <!-- 加載中的提示 -->
+        <v-progress-circular v-if="isLoading" indeterminate color="primary"></v-progress-circular>
+
       </v-container>
     </v-main>
   </v-app>
@@ -58,37 +72,87 @@ export default {
       tab: null,
       items: ['所有訂單', '待付款', '待出貨', '待收貨', '已完成', '已取消'],
       orders: [],
+      currentPage: 1, // 从1开始以匹配后端API
+      totalPages: 1, // 初始设置为1，将从API响应中更新
+      pageSize: 10, // 每页的项目数，这应该与后端设置匹配
+      isLoading: false, // 加载状态标志
     };
   },
+  watch: {
+    currentPage(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.fetchPage(); // 当页码变化时获取新数据
+      }
+    }
+  },
   methods: {
+    // onPageChange(page) {
+    //   console.log('Page changed to:', page); // 这应该显示新选择的页码
+    //   this.currentPage = page; // 更新当前页码
+    //   this.fetchPage(); // 根据新的页码获取数据
+
+    // },
+    // 当用户选择分页控件上的新页码时调用
+    fetchPage() {
+      this.isLoading = true;
+      if (this.tab === '所有訂單') {
+        this.fetchAllOrders();
+      } else {
+        const statusMap = {
+          '待付款': 1,
+          '待出貨': 2,
+          '待收貨': 3,
+          '已完成': 4,
+          '已取消': 5
+        };
+        this.fetchOrders(statusMap[this.tab]);
+      }
+    },
+    // 靠訂單狀態碼找訂單
     fetchOrders(statusid) {
+      this.isLoading = true;
+
       axios
         .get('http://localhost:8080/customer/api/findorders/Status', {
           params: {
-            p: 1,
-            statusid,
+            p: this.currentPage,
+            statusid: statusid,
           },
         })
         .then((response) => {
           this.orders = response.data.content;
+          this.totalPages = response.data.totalPages;
+          // 确保我们在前端显示从1开始的页码，即使API从1开始
+          this.isLoading = false;
         })
         .catch((error) => {
           console.error('無法檢索訂單：', error);
+          this.isLoading = false;
         });
     },
+    // 找所有訂單
     fetchAllOrders() {
+      this.isLoading = true;
       axios
         .get('http://localhost:8080/customer/api/findAllOrders', {
-          params: { p: 1 },
+          params: { p: this.currentPage },
         })
         .then((response) => {
           this.orders = response.data.content;
+          this.totalPages = response.data.totalPages;
+          this.isLoading = false;
+          console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
         })
         .catch((error) => {
           console.error('無法檢索所有訂單：', error);
+          this.isLoading = false;
         });
     },
+
+
     handleTabClick(item) {
+      this.currentPage = 1; // 重置为第一页
+      this.tab = item; // 更新当前活跃的标签
       const statusMap = {
         '所有訂單': 0,
         '待付款': 1,
@@ -97,19 +161,22 @@ export default {
         '已完成': 4,
         '已取消': 5
       };
+      this.tab = item; // 更新当前活跃的标签
+
       if (item === '所有訂單') {
         this.fetchAllOrders();
       } else {
         this.fetchOrders(statusMap[item]);
       }
     },
+
     formatDate(datetime) {
       const date = new Date(datetime);
       return date.toISOString().substring(0, 19).replace('T', ' ');
     },
   },
   created() {
-    this.fetchAllOrders(); // 預設載入 '待付款' 狀態的訂單
+    this.fetchAllOrders(); // 預設載入 '全部訂單' 
   },
 };
 </script>
@@ -119,5 +186,17 @@ export default {
   width: auto;
   max-width: 150px;
   height: auto;
+  /*圖片控制 */
+}
+
+
+.light-gray-background {
+  background-color: #dbd8d862;
+  /* 訂單背景色 */
+}
+
+.tab--active {
+  background-color: #dbd8d862;
+  /* 指定選中標籤顏色 */
 }
 </style>
