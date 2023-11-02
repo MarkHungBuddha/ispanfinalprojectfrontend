@@ -158,7 +158,7 @@ export default {
       };
       try {
         // 发送API请求并等待响应
-        const response = await axios.post('http://localhost:8080/seller/api/product', JSON.stringify(productData));
+        const response = await axios.post('http://localhost:8080/seller/api/product/{id}', JSON.stringify(productData));
 
         // 请求成功后跳转到指定页面
         if (response.status === 200) {
