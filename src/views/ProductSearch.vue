@@ -48,25 +48,87 @@
                             </v-menu>
                         </div>
                     </v-col>
+                    <v-col>
+                        <div class="text-center">
+                            <v-menu open-on-hover>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn color="primary" v-bind="props" @mouseenter="showItems">電腦周邊</v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item v-for="(PCperipherals, index) in computerInfo" :key="index"
+                                        @click="fetchProducts(PCperipherals)">
+                                        <v-list-item-title>{{ PCperipherals }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </div>
+                    </v-col>
+                    <v-col>
+                        <div class="text-center">
+                            <v-menu open-on-hover>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn color="primary" v-bind="props" @mouseenter="showItems">小型家電</v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item v-for="(info, index) in computerInfo" :key="index"
+                                        @click="fetchProducts(info)">
+                                        <v-list-item-title>{{ info }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </div>
+                    </v-col>
+                    <v-col>
+                        <div class="text-center">
+                            <v-menu open-on-hover>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn color="primary" v-bind="props" @mouseenter="showItems">視聽娛樂</v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item v-for="(info, index) in computerInfo" :key="index"
+                                        @click="fetchProducts(info)">
+                                        <v-list-item-title>{{ info }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </div>
+                    </v-col>
+                    <v-col>
+                        <div class="text-center">
+                            <v-menu open-on-hover>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn color="primary" v-bind="props" @mouseenter="showItems">辦公耗材</v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item v-for="(info, index) in computerInfo" :key="index"
+                                        @click="fetchProducts(info)">
+                                        <v-list-item-title>{{ info }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </div>
+
+
+
                 </v-row>
-                <div>
-                    <div v-if="showPriceAndSpecialPrice">
+                <v-row>
+                    <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3" xl="2.4">
                         <v-card>
-                            <v-card-title>商品详情</v-card-title>
-                            <v-card-text>
-                                <v-img v-if="selectedCategoryImagepath"
-                                    :src="`https://i.imgur.com/${selectedCategoryImagepath}.png`" alt="Product Image"
+                            <v-card-text class="d-flex flex-column align-center">
+                                <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                                     class="product-image mr-2" style="width: 100px;"></v-img>
-                                {{ selectedCategoryName }}
-                                <div>價格: {{ selectedCategoryPrice }}</div>
-                                <div>特價: {{ selectedCategorySpecialPrice }}</div>
+                                <v-card-title class="text-truncate">{{ product.productname }}</v-card-title>
+                                <div>价格: {{ product.price }}</div>
+                                <div>特价: {{ product.specialprice }}</div>
                             </v-card-text>
                         </v-card>
-                    </div>
-                </div>
+                    </v-col>
+                </v-row>
                 <!-- 使用 <v-pagination> 组件来显示页码 -->
                 <div class="pagination">
-                    <v-pagination v-model="currentPage" :length="totalPages" :total-visible="7"></v-pagination>
+                    <v-pagination v-model="currentPage" :length="totalPages" @input="pageChanged">
+                    </v-pagination>
+
                 </div>
             </v-container>
         </v-main>
@@ -101,41 +163,63 @@ export default {
                 '機殼', '散熱風扇', '顯示卡', '硬碟_SSD',
                 '桌上型電腦', '電供_線材', '軟體'
             ],
+            PCperipherals: [
+
+            ],
+
+
+
+
+
+
+
+
+
+
+
+
             currentPage: 1,
+            totalPages: 0, // 初始化总页数为0
             showLargeAppliances: false, // 控制大型家電内容的显示状态
         };
     },
-    computed: {
-        totalPages() {
-            return Math.ceil(this.products.length / 12);
-        },
-    },
+
     methods: {
-        fetchProducts(categoryName) {
+        // pageChanged(page) {
+        //     this.fetchProducts(this.selectedCategoryName, page);
+        // },
+        fetchProducts(categoryName, page) {
+            if (this.selectedCategoryName !== categoryName) {
+                page = 1; // 如果类别改变，重置页码为1
+            }
+            this.currentPage = page; // 更新当前页码
+
+            this.selectedCategoryName = categoryName; // 更新当前选中的类别
+
+
+
+
+
             axios
                 .get("http://localhost:8080/public/api/categoryname", {
                     params: {
                         categoryname: categoryName,
                         minPrice: 0.0,
                         maxPrice: 999999.99,
-                        page: this.currentPage,
-                        pageSize: 12,
+                        page: this.currentPage, // 傳遞當前頁碼
+                        pageSize: 4,
                     },
                 })
                 .then((response) => {
-                    // 将新的结果添加到现有的结果数组中
-                    this.products = this.products.concat(response.data.content);
 
-                    if (this.products.length > 0) {
-                        this.selectedCategoryName = this.products[0].productname;
-                        this.selectedCategoryImagepath = this.products[0].imagepath;
-                        this.selectedCategoryPrice = this.products[0].price;
-                        this.selectedCategorySpecialPrice = this.products[0].specialprice;
-                        this.showPriceAndSpecialPrice = true;
-                    }
+                    this.products = response.data.content; // 当前页的产品数据
+                    this.totalPages = response.data.totalPages; // 总页数，假设后端提供了这个信息
+
                 })
                 .catch((error) => {
-                    console.error("無法获取产品列表", error);
+                    console.error("Error fetching products:", error);
+
+
                 });
         },
         showItems() {
@@ -143,6 +227,9 @@ export default {
         },
         showLargeAppliances() {
             this.showLargeAppliances = true;
+        },
+        pageChanged(newPage) {
+            this.fetchProducts(this.selectedCategoryName, newPage);
         },
     },
 };
@@ -161,6 +248,27 @@ export default {
 .pagination {
     text-align: center;
     margin-top: 20px;
+}
+
+.v-card-title {
+    word-wrap: break-word;
+    /* 允许在单词边界自动换行 */
+    overflow-wrap: break-word;
+    /* 允许在任意字符之间自动换行 */
+    max-width: 100%;
+    /* 确保标题宽度不超过卡片宽度 */
+    white-space: normal;
+    /* 允许文本自然换行 */
+    overflow: hidden;
+    /* 隐藏超出元素框的内容 */
+    text-overflow: ellipsis;
+    /* 文本溢出时显示省略号 */
+    display: -webkit-box;
+    /* 将对象作为弹性盒子模型显示 */
+    -webkit-line-clamp: 2;
+    /* 限制显示的文本行数 */
+    -webkit-box-orient: vertical;
+    /* 定义弹性盒子元素的子元素的排列方向 */
 }
 </style>
   

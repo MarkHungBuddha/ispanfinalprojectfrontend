@@ -4,7 +4,8 @@ import { createApp } from 'vue';
 import Slider from "@/components/slider.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 import navbar from "@/components/navbar.vue";
-import categoryname from '@/components/categoryname.vue';
+// import categoryname from '@/components/categoryname.vue';
+// import ProductSearch from './ProductSearch.vue';
 
 </script>
 
@@ -13,8 +14,9 @@ import categoryname from '@/components/categoryname.vue';
     <v-row justify="center">
       <v-col>s
         <navbar />
+        <!-- <product-search></product-search> -->
 
-        <categoryname></categoryname>
+        <!-- <categoryname></categoryname> -->
         <slider class="custom-slider" />
       </v-col>
     </v-row>
