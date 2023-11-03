@@ -1,9 +1,8 @@
 <script setup>
 import navbar from "@/components/navbar.vue";
-import RegisterForm from "@/components/memberProfile.vue";
 
-import otp from "@/components/OTP.vue";
-import MemberProfile from "../components/memberProfile.vue";
+import MemberProfile from "../components/editProfileForm.vue";
+import editProfileForm from "../components/editProfileForm.vue";
 </script>
 
 <template>
@@ -11,9 +10,9 @@ import MemberProfile from "../components/memberProfile.vue";
     <v-main>
       <v-container>
         <navbar/>
-        <MemberProfile/>
-
-
+        
+<editProfileForm/>
+<h1>1123</h1>
 
       </v-container>
 
