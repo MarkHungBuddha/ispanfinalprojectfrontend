@@ -2,7 +2,7 @@
   <v-container>
     <v-form @submit.prevent="registerUser">
       <!-- Google Login Button -->
-      <v-btn @click="handleGoogleLogin" color="primary">使用 Google 登录</v-btn>
+      <v-btn @click="handleGoogleLogin" color="primary">使用 Google 註冊</v-btn>
       <!-- Username Field -->
       <v-text-field
         v-model="username"
@@ -61,7 +61,7 @@
         </div>
       </div>
       <!-- Submit Button -->
-      <v-btn type="submit" color="primary">提交</v-btn>
+      <v-btn type="submit" color="primary">送出</v-btn>
     </v-form>
   </v-container>
 </template>

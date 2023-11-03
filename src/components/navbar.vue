@@ -25,7 +25,7 @@
     <v-btn v-if="isLoggedIn" @click="logout" class="custom-btn">登出</v-btn>
     <v-btn v-else @click="redirectTo('/login')" class="custom-btn">登入</v-btn>
     <v-btn v-if="!isLoggedIn" @click="redirectTo('/register')" class="custom-btn">註冊</v-btn>
-    <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" class="custom-btn">修改會員資料</v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" class="custom-btn">會員資料</v-btn>
 
   </v-toolbar>
 </template>

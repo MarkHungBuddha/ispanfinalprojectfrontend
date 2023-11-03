@@ -9,14 +9,14 @@
             <v-card-text>
               <v-form ref="form">
                 <v-text-field
-                  label="Username"
+                  label="會員帳號"
                   name="username"
                   v-model="username"
                   :rules="[rules.required]"
                   required
                 ></v-text-field>
                 <v-text-field
-                  label="Password"
+                  label="會員密碼"
                   name="password"
                   type="password"
                   v-model="password"
