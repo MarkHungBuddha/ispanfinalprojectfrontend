@@ -3,6 +3,7 @@
     <v-list>
       <v-list-item-group>
         <v-expansion-panels>
+
           <v-expansion-panel>
             <v-expansion-panel-title>
               商品管理
@@ -16,7 +17,38 @@
               </v-list-item>
             </v-expansion-panel-text>
           </v-expansion-panel>
-          <!-- 其他 v-expansion-panel 結構省略... -->
+
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              訂單管理
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list-item>
+                <v-list-item-title>待回問題</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>待確認訂單</v-list-item-title>
+              </v-list-item>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              數據分析
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list-item>
+                <v-list-item-title>提問數量</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>評論數量</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>營收分析</v-list-item-title>
+              </v-list-item>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
         </v-expansion-panels>
       </v-list-item-group>
     </v-list>

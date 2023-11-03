@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+
 const routes = [
   {
     path: '/seller',
@@ -55,8 +56,14 @@ const routes = [
     name: 'order',
     component: () => import("@/views/order.vue"),
     meta: { title: '查看訂單' }
-  }
-
+  },
+  {
+    path: '/orderDetail/:orderid',
+    name: 'orderDetail',
+    component: () => import("@/views/orderDetail.vue"),
+    meta: { title: '訂單' },
+    props: true,
+  },
 
 ]
 

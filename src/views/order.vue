@@ -4,6 +4,12 @@
       <v-container>
         <barList></barList>
         <navbar></navbar>
+        <sidebarBuyer></sidebarBuyer>
+
+        <!-- 搜索訂單ID欄 -->
+        <div class="selectbar">
+          <v-text-field v-model="searchQuery" label="搜索訂單ID" @input="searchOrder"></v-text-field>
+        </div>
 
         <!-- 買家訂單頁面 -->
         <!-- 標籤選項卡 -->
@@ -15,7 +21,7 @@
         </v-tabs>
         <!-- 訂單列表 -->
         <div v-for="order in orders" :key="order.orderid" class="mb-3">
-          <v-card class="light-gray-background">
+          <v-card class="light-gray-background" @click="goToOrderDetail(order.orderid)">
             <!-- 訂單卡片內容 -->
             <v-card-title>
               訂單編號: {{ order.orderid }}
@@ -29,8 +35,10 @@
               <div>訂單狀態: {{ order.statusname }}</div>
               <div>送貨地址: {{ order.orderaddess }}</div>
               <div v-for="product in order.products" :key="product.imagepath" class="d-flex align-center mb-2">
+
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                   class="product-image mr-2" style="width: 100px;"></v-img>
+
                 <div class="flex-grow-1">
                   <strong>{{ product.productName }}</strong>
                   <div>數量: {{ product.quantity }}</div>
@@ -61,11 +69,14 @@
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 import barList from "@/components/barList.vue";
+import sidebarBuyer from '@/components/sidebarBuyer.vue';
+
 
 export default {
   components: {
     navbar,
-    barList
+    barList,
+    sidebarBuyer,
   },
   data() {
     return {
@@ -86,13 +97,6 @@ export default {
     }
   },
   methods: {
-    // onPageChange(page) {
-    //   console.log('Page changed to:', page); // 这应该显示新选择的页码
-    //   this.currentPage = page; // 更新当前页码
-    //   this.fetchPage(); // 根据新的页码获取数据
-
-    // },
-    // 当用户选择分页控件上的新页码时调用
     fetchPage() {
       this.isLoading = true;
       if (this.tab === '所有訂單') {
@@ -122,7 +126,9 @@ export default {
         .then((response) => {
           this.orders = response.data.content;
           this.totalPages = response.data.totalPages;
-          // 确保我们在前端显示从1开始的页码，即使API从1开始
+          // 确保我们在前端显示从1开始的页码
+
+
           this.isLoading = false;
         })
         .catch((error) => {
@@ -161,7 +167,6 @@ export default {
         '已完成': 4,
         '已取消': 5
       };
-      this.tab = item; // 更新当前活跃的标签
 
       if (item === '所有訂單') {
         this.fetchAllOrders();
@@ -169,10 +174,15 @@ export default {
         this.fetchOrders(statusMap[item]);
       }
     },
-
+    // 時間格式
     formatDate(datetime) {
       const date = new Date(datetime);
       return date.toISOString().substring(0, 19).replace('T', ' ');
+    },
+    //按單筆訂單跳至訂單頁面
+    goToOrderDetail(orderId) {
+      // 或者使用命名路由和參數
+      this.$router.push({ name: 'orderDetail', params: { orderid: orderId } });
     },
   },
   created() {
@@ -189,10 +199,17 @@ export default {
   /*圖片控制 */
 }
 
-
 .light-gray-background {
   background-color: #dbd8d862;
   /* 訂單背景色 */
+}
+
+.selectbar {
+  background-color: rgb(255, 255, 255);
+  /* color: #FE6B8B; */
+
+  margin-top: 30px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .tab--active {
