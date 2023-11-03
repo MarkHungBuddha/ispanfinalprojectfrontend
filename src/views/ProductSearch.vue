@@ -55,9 +55,9 @@
                                     <v-btn color="primary" v-bind="props" @mouseenter="showItems">電腦周邊</v-btn>
                                 </template>
                                 <v-list>
-                                    <v-list-item v-for="(PCperipherals, index) in computerInfo" :key="index"
-                                        @click="fetchProducts(PCperipherals)">
-                                        <v-list-item-title>{{ PCperipherals }}</v-list-item-title>
+                                    <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
+                                        @click="fetchProducts(computerPeripheral)">
+                                        <v-list-item-title>{{ computerPeripheral }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -70,9 +70,9 @@
                                     <v-btn color="primary" v-bind="props" @mouseenter="showItems">小型家電</v-btn>
                                 </template>
                                 <v-list>
-                                    <v-list-item v-for="(info, index) in computerInfo" :key="index"
-                                        @click="fetchProducts(info)">
-                                        <v-list-item-title>{{ info }}</v-list-item-title>
+                                    <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
+                                        @click="fetchProducts(smallAppliance)">
+                                        <v-list-item-title>{{ smallAppliance }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -85,9 +85,9 @@
                                     <v-btn color="primary" v-bind="props" @mouseenter="showItems">視聽娛樂</v-btn>
                                 </template>
                                 <v-list>
-                                    <v-list-item v-for="(info, index) in computerInfo" :key="index"
-                                        @click="fetchProducts(info)">
-                                        <v-list-item-title>{{ info }}</v-list-item-title>
+                                    <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
+                                        @click="fetchProducts(entertainment)">
+                                        <v-list-item-title>{{ entertainment }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -100,15 +100,14 @@
                                     <v-btn color="primary" v-bind="props" @mouseenter="showItems">辦公耗材</v-btn>
                                 </template>
                                 <v-list>
-                                    <v-list-item v-for="(info, index) in computerInfo" :key="index"
-                                        @click="fetchProducts(info)">
-                                        <v-list-item-title>{{ info }}</v-list-item-title>
+                                    <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
+                                        @click="fetchProducts(officeSupply)">
+                                        <v-list-item-title>{{ officeSupply }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
                         </div>
-
-
+                    </v-col>
 
                 </v-row>
                 <v-row>
@@ -118,18 +117,39 @@
                                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                                     class="product-image mr-2" style="width: 100px;"></v-img>
                                 <v-card-title class="text-truncate">{{ product.productname }}</v-card-title>
-                                <div>价格: {{ product.price }}</div>
-                                <div>特价: {{ product.specialprice }}</div>
+                                <div>價格: {{ product.price }}</div>
+                                <div>特價: {{ product.specialprice }}</div>
+
+
+                                <v-btn color="success" @click="addProductToCart(product.id)">加入購物車</v-btn>
                             </v-card-text>
                         </v-card>
                     </v-col>
-                </v-row>
-                <!-- 使用 <v-pagination> 组件来显示页码 -->
-                <div class="pagination">
-                    <v-pagination v-model="currentPage" :length="totalPages" @input="pageChanged">
-                    </v-pagination>
 
-                </div>
+
+                </v-row>
+                <!-- 分頁控件 -->
+                <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+
+                <v-row>
+                    <v-col cols="300" sm="4">
+                        <v-switch v-model="priceFilter" label="啟用價格範圍過濾"></v-switch>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="minPrice" label="最小價格" type="number" :disabled="!priceFilter"
+                            min="0"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="maxPrice" label="最大價格" type="number" :disabled="!priceFilter"
+                            min="0"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" class="d-flex align-end">
+                        <v-btn color="primary" @click="applyFilters">應用篩選</v-btn>
+                    </v-col>
+                </v-row>
+
+
+
             </v-container>
         </v-main>
     </v-app>
@@ -163,49 +183,45 @@ export default {
                 '機殼', '散熱風扇', '顯示卡', '硬碟_SSD',
                 '桌上型電腦', '電供_線材', '軟體'
             ],
-            PCperipherals: [
-
-            ],
-
-
-
-
-
-
-
-
-
-
-
+            computerPeripherals: ['外接擴充', '鍵鼠週邊', '線材_接頭', '列印掃描', '電腦耳機_喇叭', '影像輸入裝置', '儲存裝置', '電源周邊', '網路裝置'],
+            smallAppliances: ['耳機_喇叭', '生活家電', '廚房家電', '健康家電', '季節家電', '烹調家電', '家電配備'],
+            entertainments: ['音樂_錄音', '電視配件', '電視遊樂器', '喇叭音響', '液晶電視', '投影機周邊', '視聽播放', '視聽配件'],
+            officeSupplies: ['墨水碳粉色帶', '光碟片', '工具', '紙材', '辦公OA設備'],
 
             currentPage: 1,
-            totalPages: 0, // 初始化总页数为0
+            totalPages: 1, // 初始化总页数为1
             showLargeAppliances: false, // 控制大型家電内容的显示状态
+
+            minPrice: 0,
+            maxPrice: 9999999,
+            priceFilter: false,
         };
+    },
+    watch: {
+        currentPage(newVal, oldVal) {
+            if (newVal !== oldVal) {
+                this.fetchProducts(this.selectedCategoryName);
+            }
+        }
     },
 
     methods: {
-        // pageChanged(page) {
-        //     this.fetchProducts(this.selectedCategoryName, page);
-        // },
-        fetchProducts(categoryName, page) {
+        applyFilters() {
+            this.fetchProducts(this.selectedCategoryName);
+        },
+
+        fetchProducts(categoryName) {
             if (this.selectedCategoryName !== categoryName) {
-                page = 1; // 如果类别改变，重置页码为1
+                this.currentPage = 1;
+                this.selectedCategoryName = categoryName;
             }
-            this.currentPage = page; // 更新当前页码
-
-            this.selectedCategoryName = categoryName; // 更新当前选中的类别
-
-
-
-
 
             axios
                 .get("http://localhost:8080/public/api/categoryname", {
                     params: {
                         categoryname: categoryName,
-                        minPrice: 0.0,
-                        maxPrice: 999999.99,
+                        minPrice: this.minPrice,
+                        maxPrice: this.maxPrice,
                         page: this.currentPage, // 傳遞當前頁碼
                         pageSize: 4,
                     },
@@ -228,9 +244,44 @@ export default {
         showLargeAppliances() {
             this.showLargeAppliances = true;
         },
-        pageChanged(newPage) {
-            this.fetchProducts(this.selectedCategoryName, newPage);
-        },
+
+
+
+
+        addProductToCart(productid) { // 注意這裡的參數名是小寫的 productid
+
+            console.log('123' + productid)
+            const product = this.products.find(p => p.id === productid);
+
+            console.log(product.id)
+
+            if (!product) {
+                console.error('Product not found!');
+                return;
+            }
+            console.log(product); // 這應該包含 productId
+
+            const url = "http://localhost:8080/customer/api/shoppingCart";
+            axios.post(url, {
+                productId: product.id, // 确保这里是正确的产品 ID 字段
+                // 其他需要发送的字段
+            }, {
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => {
+                    // 成功添加到購物車後的操作，比如通知用戶
+                    alert('成功');
+                    alert(response.data);
+                })
+                .catch(error => {
+                    // 錯誤處理
+                    console.error('Error adding product to cart:', error);
+                    alert('無法添加商品到購物車。');
+                });
+        }
+
+
+
     },
 };
 </script>
@@ -250,25 +301,18 @@ export default {
     margin-top: 20px;
 }
 
+.product-image {
+    width: 100px;
+    height: auto;
+}
+
 .v-card-title {
     word-wrap: break-word;
     /* 允许在单词边界自动换行 */
     overflow-wrap: break-word;
     /* 允许在任意字符之间自动换行 */
     max-width: 100%;
-    /* 确保标题宽度不超过卡片宽度 */
-    white-space: normal;
-    /* 允许文本自然换行 */
-    overflow: hidden;
-    /* 隐藏超出元素框的内容 */
-    text-overflow: ellipsis;
-    /* 文本溢出时显示省略号 */
-    display: -webkit-box;
-    /* 将对象作为弹性盒子模型显示 */
-    -webkit-line-clamp: 2;
-    /* 限制显示的文本行数 */
-    -webkit-box-orient: vertical;
-    /* 定义弹性盒子元素的子元素的排列方向 */
+
 }
 </style>
   

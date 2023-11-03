@@ -5,7 +5,7 @@ import Slider from "@/components/slider.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 import navbar from "@/components/navbar.vue";
 // import categoryname from '@/components/categoryname.vue';
-// import ProductSearch from './ProductSearch.vue';
+import ProductSearch from './ProductSearch.vue';
 
 </script>
 
@@ -14,7 +14,7 @@ import navbar from "@/components/navbar.vue";
     <v-row justify="center">
       <v-col>s
         <navbar />
-        <!-- <product-search></product-search> -->
+        <product-search></product-search>
 
         <!-- <categoryname></categoryname> -->
         <slider class="custom-slider" />
