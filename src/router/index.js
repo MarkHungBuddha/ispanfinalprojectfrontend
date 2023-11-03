@@ -20,10 +20,18 @@ const routes = [
     meta: { title: '商品頁面' }
   },
   {
-    path: '/productPageBack',
+    path: '/productPageBack/:productId',
     name: 'productPageBack',
     component: () => import("@/views/productPageBack.vue"),
-    meta: { title: '商品頁面' }
+    meta: { title: '商品頁面' },
+    props: true,
+  },
+  {
+    path: '/editpage/:productId',
+    name: 'editpage',
+    component: () => import("@/views/editpage.vue"),
+    meta: { title: '編輯頁面' },
+    props: true,
   },
   {
     path: '/shoppingCart',
