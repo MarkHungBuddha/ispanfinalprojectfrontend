@@ -6,11 +6,24 @@
           <v-card-title class="headline blue lighten-2 white--text">編輯您的個人資料</v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
+              <!-- 头像显示 -->
+              <v-avatar size="120" class="mb-3">
+                <img :src="imageFullPath" alt="Profile image">
+              </v-avatar>
+
+              <!-- 头像上传 -->
+              <v-file-input
+                label="選擇大頭照"
+                prepend-icon="mdi-camera"
+                @change="uploadImage"
+                accept="image/*"
+              ></v-file-input>
+
               <!-- 用户名 -->
               <v-text-field
                 v-model="user.username"
                 :rules="usernameRules"
-                label="用戶名稱"
+                label="會員名稱"
                 required
               ></v-text-field>
               
@@ -37,13 +50,31 @@
               ></v-select>
 
               <!-- 出生日期 -->
-              <v-text-field
-                ref="birthdate"
-                v-model="user.birthdate"
-                label="出生日期"
-                prepend-icon="mdi-calendar"
-                readonly
-              ></v-text-field>
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="user.birthdate"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="user.birthdate"
+                    label="出生日期"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="user.birthdate"
+                  no-title
+                  @input="menu = false"
+                ></v-date-picker>
+              </v-menu>
 
               <!-- 電話 -->
               <v-text-field
@@ -116,14 +147,15 @@
 </template>
 
 <script>
-
 import flatpickr from 'flatpickr';
 import axios from 'axios';
+import 'flatpickr/dist/flatpickr.css';
 
 export default {
   data() {
     return {
       valid: true,
+      menu: false,
       user: {
         id: '',
         username: '',
@@ -146,18 +178,25 @@ export default {
         text: '',
       },
       usernameRules: [
-        v => !!v || '用戶名稱是必填的',
-        v => (v && v.length >= 3) || '用戶名稱必須至少3個字符',
+        v => !!v || '會員名稱是必填的',
+        v => (v && v.length >= 3) || '會員名稱必須至少3個字符',
       ],
     };
   },
+  computed: {
+    imageFullPath() {
+      return this.user.memberimgpath ? `https://i.imgur.com/${this.user.memberimgpath}.jpeg` : '';
+    },
+  },
   methods: {
     setupFlatpickr() {
-      flatpickr(this.$refs.birthdate.$el, {
-        dateFormat: 'Y-m-d', // 設定日期格式，根據需要調整
-        onValueUpdate: (selectedDates, dateStr) => {
-  this.user.birthdate = dateStr;
-},
+      this.$nextTick(() => {
+        flatpickr(this.$refs.birthdate, {
+          dateFormat: 'Y-m-d',
+          onValueUpdate: (selectedDates, dateStr) => {
+            this.user.birthdate = dateStr;
+          },
+        });
       });
     },
     fetchUserProfile() {
@@ -212,6 +251,37 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
+    uploadImage(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('memberId', this.user.id);
+
+    axios.post('http://localhost:8080/public/api/member/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      // 假設響應中包含了新圖片的路徑或代碼
+      this.user.memberimgpath = response.data.filePath;
+      // 更新頭像顯示
+      this.$forceUpdate(); // 強制Vue重新渲染組件
+      // 反饋給用戶上傳成功的訊息
+      this.snackbar.show = true;
+      this.snackbar.color = 'success';
+      this.snackbar.text = '大頭照上傳成功';
+    })
+    .catch(error => {
+      console.error("Image upload failed: ", error);
+      this.snackbar.show = true;
+      this.snackbar.color = 'error';
+      this.snackbar.text = '大頭照上傳失敗' + error.message;
+    });
+  }
+}
+
   },
   created() {
     this.fetchUserProfile();
