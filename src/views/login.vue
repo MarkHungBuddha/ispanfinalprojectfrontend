@@ -1,11 +1,6 @@
-<script setup>
-import axios from "axios"; // 引入axios
-import navbar from "@/components/navbar.vue";
-</script>
 <template>
   <v-app>
     <v-container>
-      <navbar/>
       <v-row justify="center" align="center" class="fill-height">
         <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
@@ -61,10 +56,13 @@ export default {
 
           if (response.data && response.data.success) {
             // 登入成功，進行相應操作
+            this.$store.dispatch('updateLoginStatus', true);  // 更新登录状态
             console.log(response.data.success);
             alert(response.data.success);
-            // Redirect to homepage
-            this.$router.push('/');
+
+            // 跳转到首页
+            this.$router.push('/');  // assuming '/' is your homepage route path
+
           } else if (response.data && response.data.error) {
             // 登入失敗，顯示後端返回的錯誤信息
             console.error(response.data.error);
@@ -82,7 +80,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 </style>

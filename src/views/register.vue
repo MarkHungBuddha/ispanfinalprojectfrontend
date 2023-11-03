@@ -7,7 +7,6 @@ import RegisterForm from "@/components/RegisterForm.vue";
   <v-app>
     <v-main>
       <v-container>
-        <navbar/>
         <register-form/>
       </v-container>
 

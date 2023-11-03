@@ -4,7 +4,6 @@ import navbar from "@/components/navbar.vue";
 <template>
   <v-app>
     <v-container fluid>
-      <navbar/>
 
       <v-row class="my-4">
         <v-col cols="6" class="font-weight-bold">商品</v-col>
@@ -21,7 +20,7 @@ import navbar from "@/components/navbar.vue";
 <!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
         <v-col cols="6" class="text-right">
           <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
-          <v-btn small color="error" @click="removeFromWishlist(item.id, index)">刪除</v-btn>
+          <v-btn small color="error" @click="removeFromWishlist(item.productid, index)">刪除</v-btn>
         </v-col>
       </v-row>
 
@@ -40,7 +39,8 @@ export default {
         id: item.id,
         itemName: item.productname,
         imgUrl: `https://i.imgur.com/${item.productimage}`,
-        imgExtension: item.imageExtension || '.png'  // 假設從store中也可以取得檔名後綴，如果沒有則預設為.png
+        imgExtension: item.imageExtension || '.png',  // 假設從store中也可以取得檔名後綴，如果沒有則預設為.png
+        productid:item.productid
       }))
 
     };
@@ -48,16 +48,18 @@ export default {
   methods: {
     addToCart(item) {
       axios
-          .post("http://localhost:8080/customer/api/shoppingCart", {
-            productId: item.id
-          })
+          .post(`http://localhost:8080/customer/api/shoppingCart?productId=${item.productid}`)
           .then(response => {
-            console.log(response.data); // you might want to display this to the user
+            console.log(response.data); // 這裡可以顯示一些提示給使用者，如 "商品已加入購物車！"
+            // 商品成功加入購物車後，從願望清單中移除
+            this.removeFromWishlist(item.productid);
           })
           .catch(error => {
             console.error(error);
           });
     },
+
+
     removeFromWishlist(productId, index) {
       axios
           .delete(`http://localhost:8080/customer/api/wishlist/${productId}`)

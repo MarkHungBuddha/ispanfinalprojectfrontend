@@ -15,7 +15,7 @@ import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
 import navbar from "@/components/navbar.vue";
 import '@mdi/font/css/materialdesignicons.css'
-
+// import 'vuetify/dist/vuetify.min.css';
 // 設定 Axios
 axios.defaults.withCredentials = true;
 
@@ -28,6 +28,16 @@ const vuetify = createVuetify({
     components,
     directives,
 });
+axios.interceptors.response.use(
+    response => {
+        store.dispatch('updateApiCallStatus', true);
+        return response;
+    },
+    error => {
+        store.dispatch('updateApiCallStatus', true);  // 也可以在此處設置
+        return Promise.reject(error);
+    }
+);
 
 app.component('sidebar', sidebar);
 app.component('Home', Home);

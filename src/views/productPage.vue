@@ -5,6 +5,7 @@ import navbar from "@/components/navbar.vue";
   <v-app>
     <v-container>
 
+
       <!-- Breadcrumbs for Parent Category and Category -->
       <v-breadcrumbs divider=">">
         <v-breadcrumb-item>{{ productData.parentCategoryName }}</v-breadcrumb-item>
@@ -152,6 +153,7 @@ export default {
       productImages: [],
       productReviews: [],
       rating: 0, // for example, a 4 out of 5 stars rating
+      productId: null,
       productData: {
         productName: "",
         price: "",
@@ -170,7 +172,7 @@ export default {
   },
   async mounted() {
     const productId = this.$route.params.productId; // 從路由參數中取得 productId
-    console.log("productId=" + productId);
+    this.productId = this.productData.productId;
     await this.fetchProductData(productId);
     await this.fetchProductImages(productId);
     await this.fetchProductQandAs(productId);
@@ -252,10 +254,11 @@ export default {
         this.showErrorDialog(error.message || "Error adding to wishlist");
       }
     },
-
     async addToCart() {
+      console.log('Adding product to cart, productId:', this.productId);
       try {
         const response = await axios.post(`http://localhost:8080/customer/api/shoppingCart`, {
+
           productId: this.productData.productId
         });
         if (response.status === 200) {
@@ -270,7 +273,13 @@ export default {
         this.showErrorDialog(error.message || "Error adding to cart");
       }
     },
+    showErrorDialog(message) {
 
+      this.dialogMessage = message;
+      this.dialogIcon = "mdi-alert-circle";
+      this.dialogIconColor = "error";
+      this.dialog = true;
+    }
     // async submitQuestion() {
     //   try {
     //     console.log("Submitting question for product ID:", this.productData.productId);
@@ -289,12 +298,6 @@ export default {
     //     this.showErrorDialog(error.message || "Error submitting question");
     //   }
     // },
-    showErrorDialog(message) {
-      this.dialogMessage = message;
-      this.dialogIcon = "mdi-alert-circle";
-      this.dialogIconColor = "error";
-      this.dialog = true;
-    }
   },
 
 };

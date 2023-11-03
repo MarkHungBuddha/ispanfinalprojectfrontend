@@ -49,6 +49,13 @@ const routes = [
       name: 'uploadProduct',
       component: () => import("@/views/uploadProduct.vue"),
       meta: { title: '上傳商品' }
+  },
+  {
+    path:'/checkoutOrder',
+
+      name:'checkoutOrder',
+      component: () => import("@/views/checkoutOrder.vue"),
+      meta: { title: '結帳'}
   }
 
 
