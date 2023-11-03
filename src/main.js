@@ -1,45 +1,31 @@
 import { createApp } from 'vue';
-import axios from 'axios';  // 引入 Axios
-import './assets/main.css';
-import 'vuetify/styles';
+import axios from 'axios';
+import App from './App.vue';
+import router from './router';
+import store from './store';
 import { createVuetify } from 'vuetify';
-import store from './store';  // 引入 Vuex store
-
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
-import router from './router';
-import App from './App.vue';
-import sidebar from "@/components/sidebar.vue";
-import Home from "@/views/Home.vue";
-import productPage from "@/views/productPage.vue";
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/dist/vuetify.min.css'
-import { VOtpInput } from 'vuetify/labs/VOtpInput'
-// 設定 Axios
+import 'vuetify/styles'; // All of Vuetify's styles
+import 'material-design-icons-iconfont/dist/material-design-icons.css'; // Ensure you are using css-loader
+import '@mdi/font/css/materialdesignicons.css';
+
+// Set up Axios
 axios.defaults.withCredentials = true;
 
+// Create a new instance of Vuetify
+const vuetify = createVuetify({
+  components,
+  directives,
+  // Any additional Vuetify options
+});
+
+// Create a new Vue instance
 const app = createApp(App);
 
-
-const vuetify = createVuetify({
-    theme: {
-        dark: false,
-    },
-    components,
-    directives,
-});
-export default createVuetify({
-    components: {
-      VOtpInput,
-    },
-  })
-
-app.component('sidebar', sidebar);
-app.component('Home', Home);
-app.component('productPage', productPage);
-
+// Set axios as a global property
 app.config.globalProperties.$axios = axios;
 
-app.use(vuetify).use(router).use(store).mount('#app');  // 加入 .use(store)
+// Use Vuetify, Router, and Store
+app.use(vuetify).use(router).use(store).mount('#app');

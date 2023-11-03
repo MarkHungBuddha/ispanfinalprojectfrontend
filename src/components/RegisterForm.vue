@@ -1,166 +1,265 @@
 <template>
   <v-container>
-    <v-form @submit.prevent>
-      <v-responsive class="mx-auto" max-width="600">
-        <!-- 其他表单字段... -->
-        <v-text-field v-model="username" @blur="validateUsername" clearable label="帳號" required></v-text-field>
-        <div class="validation-result">
-          <v-icon v-if="isUsernameValid" class="success-icon">mdi-check-circle</v-icon>
-          <v-icon v-else-if="isUsernameValid === false" class="error-icon">mdi-close-circle</v-icon>
-          <span v-if="isUsernameValid" class="success-message">帳號可以使用</span>
-          <span v-else-if="isUsernameValid === false" class="error-icon">帳號無效</span>
+    <v-form @submit.prevent="registerUser">
+      <!-- Google Login Button -->
+      <v-btn @click="handleGoogleLogin" color="primary">使用 Google 登录</v-btn>
+      <!-- Username Field -->
+      <v-text-field
+        v-model="username"
+        label="帳號"
+        required
+        clearable
+        @blur="validateUsername"
+      ></v-text-field>
+      <!-- Validation for Username -->
+      <div v-if="usernameFeedback" class="validation-result">
+        <v-icon :class="usernameFeedback.type">{{ usernameFeedback.icon }}</v-icon>
+        <span :class="usernameFeedback.type">{{ usernameFeedback.message }}</span>
+      </div>
+      <!-- Password Field -->
+      <v-text-field
+        v-model="password"
+        label="密碼"
+        type="password"
+        required
+        clearable
+        @blur="validatePassword"
+        autocomplete="new-password"
+      ></v-text-field>
+      <!-- Validation for Password -->
+      <div v-if="passwordFeedback" class="validation-result">
+        <v-icon :class="passwordFeedback.type">{{ passwordFeedback.icon }}</v-icon>
+        <span :class="passwordFeedback.type">{{ passwordFeedback.message }}</span>
+      </div>
+      <!-- Email Field -->
+      <v-text-field
+      v-model="email"
+      label="Email"
+      type="email"
+      required
+      :readonly="googleSignedIn"
+    ></v-text-field>
+      <!-- Verification Code Section -->
+      <div v-if="!googleSignedIn">
+        <v-btn @click="sendVerificationCode" color="primary" :disabled="emailLocked">寄送驗證碼</v-btn>
+        <!-- Validation for Email -->
+        <div v-if="emailFeedback" class="validation-result">
+          <v-icon :class="emailFeedback.type">{{ emailFeedback.icon }}</v-icon>
+          <span :class="emailFeedback.type">{{ emailFeedback.message }}</span>
         </div>
-        <v-text-field v-model="password" @blur="validatePassword" clearable label="密碼" type="password" required autocomplete="new-password"></v-text-field>
-        <div class="validation-result">
-          <v-icon v-if="isPasswordValid" class="success-icon">mdi-check-circle</v-icon>
-          <v-icon v-else-if="isPasswordValid === false" class="error-icon">mdi-close-circle</v-icon>
-
-          <span v-if="isPasswordValid" class="success-message">密碼可以使用</span>
-          <span v-else-if="isPasswordValid === false" class="error-icon">密碼無效</span>
+        <v-text-field
+          v-model="verificationCode"
+          label="驗證碼"
+          required
+          v-if="emailLocked"
+        ></v-text-field>
+        <v-btn @click="confirmVerificationCode" color="primary" :disabled="!emailLocked">確認驗證碼</v-btn>
+        <!-- Validation for Verification Code -->
+        <div v-if="verificationFeedback" class="validation-result">
+          <v-icon :class="verificationFeedback.type">{{ verificationFeedback.icon }}</v-icon>
+          <span :class="verificationFeedback.type">{{ verificationFeedback.message }}</span>
         </div>
-        <v-text-field v-model="birthdate" label="生日" type="date" required></v-text-field>
-        <v-text-field v-model="lastname" @blur="validateLastname" :rules="lastnameRules" clearable hide-details="auto" label="姓氏"></v-text-field>
-        <v-text-field v-model="firstname" @blur="validateFirstname" :rules="firstnameRules" clearable hide-details="auto" label="名字"></v-text-field>
-        <v-text-field v-model="phone" @blur="validatePhone" :rules="phoneRules" clearable hide-details="auto" label="電話"></v-text-field>
-        <v-select v-model="gender" label="性別" :items="['男', '女', '其他']"></v-select>
-        <v-text-field v-if="gender === '其他'" v-model="customGender" label="自行輸入性別" maxlength="10"></v-text-field>
-
-        <!-- Email字段 -->
-        <v-row>
-          <v-col xs12 md6>
-            <v-text-field v-model="email" label="Email" type="email" required :disabled="emailLocked"></v-text-field>
-          </v-col>
-          <v-col xs12 md6>
-            <v-btn @click="sendVerificationCode" color="primary" class="ma-2">寄送驗證碼</v-btn>
-          </v-col>
-        </v-row>
-
-        <!-- 驗證碼字段 -->
-        <v-row>
-          <v-col xs12 md6>
-            <v-text-field v-model="verificationCode" label="驗證碼" required></v-text-field>
-          </v-col>
-          <v-col xs12 md6>
-            <v-btn @click="confirmVerificationCode" color="primary" class="ma-2">確認驗證碼</v-btn>
-          </v-col>
-        </v-row>
-
-        <!-- 提交按钮 -->
-        <v-btn type="submit" color="primary">提交</v-btn>
-      </v-responsive>
+      </div>
+      <!-- Submit Button -->
+      <v-btn type="submit" color="primary">提交</v-btn>
     </v-form>
   </v-container>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  data: () => ({
-    membershipType: '',
-    gender: '',
-    customGender: '',
-    username: '',
-    password: '',
-    firstname: '',
-    lastname: '',
-    birthdate: null,
-    phone: '',
-    otp: '',
-    email: '',
-    verificationCode: '',
-    emailLocked: false,
-    isUsernameValid: null, // 用于显示帳號验证结果
-    isPasswordValid: null, // 用于显示密碼验证结果
-  }),
-  computed: {
-    lastnameRules() {
-      return [
-        v => !!v || '姓氏不能為空',
-        v => /^[\u4e00-\u9fa5a-zA-Z\s]*$/.test(v) || '無效字符',
-      ];
-    },
-    firstnameRules() {
-      return [
-        v => !!v || '名字不能為空',
-        v => /^[\u4e00-\u9fa5a-zA-Z\s]*$/.test(v) || '無效字符',
-      ];
-    },
-    phoneRules() {
-      return [
-        v => !!v || '電話不能為空',
-        v => /^[0-9]*$/.test(v) || '無效字符',
-      ];
-    },
+  data() {
+    return {
+      username: '',
+      password: '',
+      email: '',
+      verificationCode: '',
+      usernameFeedback: null,
+      passwordFeedback: null,
+      emailFeedback: null,
+      emailLocked: false,
+      verificationFeedback: null,
+      googleSignedIn: false,
+      googleUserData: null,
+      isCodeVerified: false,
+    };
   },
   methods: {
-    clearValidation(field) {
-      // 清除验证状态，使其重新验证
-      if (field === 'username') {
-        this.isUsernameValid = null;
-      } else if (field === 'password') {
-        this.isPasswordValid = null;
+    validateUsername() {
+  // 檢查是否至少有5個字符且全部為英數字母
+  const usernamePattern = /^[A-Za-z0-9]{5,}$/;
+  if (!usernamePattern.test(this.username)) {
+    this.usernameFeedback = {
+      type: 'error-message',
+      icon: 'mdi-close-circle',
+      message: '帳號至少需要5個字符，且只能包含英文字母和數字。',
+    };
+  } else {
+    this.usernameFeedback = {
+      type: 'success-message',
+      icon: 'mdi-check-circle',
+      message: '帳號有效。',
+    };
+  }
+},
+validatePassword() {
+  // 檢查是否至少有8個字符且全部為英數字母
+  const passwordPattern = /^[A-Za-z0-9]{8,}$/;
+  if (!passwordPattern.test(this.password)) {
+    this.passwordFeedback = {
+      type: 'error-message',
+      icon: 'mdi-close-circle',
+      message: '密碼至少需要8個字符，且只能包含英文字母和數字。',
+    };
+  } else {
+    this.passwordFeedback = {
+      type: 'success-message',
+      icon: 'mdi-check-circle',
+      message: '密碼有效。',
+    };
+  }
+},
+    handleGoogleLogin() {
+      // 请求后端获取Google登录URL
+      axios.get('http://localhost:8080/public/api/google-login')
+        .then(response => {
+          // 在弹窗中打开Google登录页面
+          const googleLoginUrl = response.data.authUrl;
+          const popup = window.open(googleLoginUrl, 'google-login', 'width=500,height=500');
+
+          // 监听弹窗关闭
+          let popupTick = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(popupTick);
+              this.checkForGoogleCode();
+            }
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Error fetching Google login URL:', error);
+        });
+    },
+  
+    checkForGoogleCode() {
+      // 从URL中提取code
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        this.handleGoogleCallback(code);
       }
     },
     sendVerificationCode() {
-      const randomCode = Math.floor(1000 + Math.random() * 9000);
-      this.verificationCode = randomCode.toString();
-      // 发送验证码给用户的逻辑，可以在这里添加
+      axios.post('http://localhost:8080/email/public/api/sendEmail', { recipient: this.email })
+        .then(response => {
+          this.emailFeedback = {
+            type: 'success-message',
+            icon: 'mdi-check-circle',
+            message: '驗證碼已寄出。',
+          };
+          this.emailLocked = true;
+        })
+        .catch(error => {
+  console.error('Error sending verification code:', error);
+  this.emailFeedback = {
+    type: 'error-message',
+    icon: 'mdi-close-circle',
+    message: '驗證碼寄送失敗。',
+  };
+  this.emailLocked = false;
+});
     },
     confirmVerificationCode() {
-      if (this.verificationCode === this.generatedCode) {
-        this.verificationCodeValid = true;
-        this.emailLocked = true;
-      } else {
-        this.verificationCodeValid = false;
+      // 确认验证码逻辑...
+      axios.post('http://localhost:8080/email/public/api/verifyCode', null, {
+        params: {
+          email: this.email,
+          userInputCode: this.verificationCode
+        }
+      })
+      .then(response => {
+        this.verificationFeedback = {
+          type: response.data === "驗證成功" ? 'success-message' : 'error-message',
+          icon: response.data === "驗證成功" ? 'mdi-check-circle' : 'mdi-close-circle',
+          message: response.data,
+        };
+        // 验证成功后更新 isCodeVerified 状态并锁定电子邮件输入框
+        if(response.data === "驗證成功") {
+          this.isCodeVerified = true;
+          this.emailLocked = true;
+        } else {
+          this.isCodeVerified = false;
+        }
+      })
+      .catch(error => {
+        console.error('Error verifying code:', error);
+        this.verificationFeedback = {
+          type: 'error-message',
+          icon: 'mdi-close-circle',
+          message: '驗證碼確認失敗。',
+        };
+        this.isCodeVerified = false;
+      });
+    },
+    registerUser() {
+  if (this.googleSignedIn || this.isCodeVerified) {
+    // 准备要发送的数据，这里添加了一些后端要求的默认值
+    const userData = new URLSearchParams({
+      username: this.username,
+      passwdbcrypt: this.password,
+      email: this.email,
+      // 添加后端要求的默认值
+      firstname: '放', // 預設名字
+      lastname: '風吹', // 預設姓氏
+      gender: '男', // 預設性別
+      birthdate: '1990-01-01', // 預設生日
+      phone: '0912345678', // 預設手機號碼，符合台灣手機號碼格式
+      membertypeid: 3 // 預設會員類型ID
+    });
+
+    // 发送 POST 请求到注册接口
+    axios.post('http://localhost:8080/public/api/member/post', userData)
+    .then(response => {
+      // 处理响应...
+      if(response.data.okMsg) {
+        alert(response.data.okMsg);
+        // 可以重定向到登录页面或其他操作
+      } else if(response.data.errorMsg) {
+        alert(response.data.errorMsg);
       }
-    },
-    validateUsername() {
-      if (/^[a-zA-Z0-9@_]+$/.test(this.username)) {
-        this.isUsernameValid = true;
-      } else {
-        this.isUsernameValid = false;
-      }
-    },
-    validatePassword() {
-      if (/^[a-zA-Z0-9@_]+$/.test(this.password)) {
-        this.isPasswordValid = true;
-      } else {
-        this.isPasswordValid = false;
-      }
-    },
-    validateLastname() {
-      this.clearValidation('lastname');
-    },
-    validateFirstname() {
-      this.clearValidation('firstname');
-    },
-    validatePhone() {
-      this.clearValidation('phone');
-    },
-    // 其他方法...
-  },
-  watch: {
-    generatedCode: function (newCode) {
-      // 生成验证码的逻辑，可以在需要的地方设置生成的验证码
-      this.generatedCode = newCode;
-    },
-  },
+    })
+    .catch(error => {
+      console.error('Registration error:', error);
+      alert('註冊失敗');
+    });
+  } else {
+    alert('請先驗證Email。');
+  }
 }
+  },
+  mounted() {
+    // 监听message事件来接收弹窗传回的用户数据
+    window.addEventListener('message', (event) => {
+      if (event.origin === 'http://localhost:8080') {
+        this.googleUserData = event.data;
+        if (this.googleUserData && this.googleUserData.email) {
+          this.email = this.googleUserData.email;
+          this.googleSignedIn = true;
+          this.isCodeVerified = true; // 如果通过 Google 登录，则认为邮箱已验证
+        }
+      }
+    }, false);
+  },
+};
 </script>
 
 <style scoped>
-.success-icon {
+.validation-result .success-message {
   color: green;
 }
 
-.error-icon {
-  color: red;
-}
-
-.success-message {
-  color: green;
-}
-
-.error-message {
+.validation-result .error-message {
   color: red;
 }
 </style>

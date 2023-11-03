@@ -1,8 +1,7 @@
 // Plugins
 import vue from '@vitejs/plugin-vue'
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import Vuetify from '@vuetify/vite-plugin';
 import ViteFonts from 'unplugin-fonts/vite'
-
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
