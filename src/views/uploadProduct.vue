@@ -3,7 +3,7 @@ import navbar from "@/components/navbar.vue";
 import axios from 'axios';
 import sidebar from "@/components/sidebar.vue";
 
-import { VStepper } from 'vuetify/labs/VStepper'
+
 </script>
 <template>
   <v-app>
@@ -41,7 +41,7 @@ import { VStepper } from 'vuetify/labs/VStepper'
         </v-col>
 
 
-        <v-btn color="primary" @click="uploadProduct">送出</v-btn>
+        <v-btn color="primary" @click="uploadProduct">下一步</v-btn>
       </v-row>
 
 
@@ -54,6 +54,7 @@ import { VStepper } from 'vuetify/labs/VStepper'
 export default {
   data() {
     return {
+
       productName: "",
       productPrice: 0,
       productDiscountPrice: 0,
@@ -140,35 +141,33 @@ export default {
     async uploadProduct() {
       const selectedCategoryId = this.categoryMappings[this.selectedNewOption];
 
-      // 构建包含商品信息的对象（根据你的需求）
-      const productData = {
-        productname: this.productName,
-        price: this.productPrice,
-        specialprice: this.productDiscountPrice,
-        categoryid: selectedCategoryId,
-        quantity: this.productQuantity,
-        description: this.productDescription,
-      };
-      console.log("Sending request with productData:", productData);
+      // 用於存放待發送資料的 FormData 對象
+      const formData = new FormData();
+      formData.append('productname', this.productName);
+      formData.append('price', this.productPrice);
+      formData.append('specialprice', this.productDiscountPrice);
+      formData.append('categoryid', selectedCategoryId);
+      formData.append('quantity', this.productQuantity);
+      formData.append('description', this.productDescription);
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      };
-      try {
-        // 发送API请求并等待响应
-        const response = await axios.post('http://localhost:8080/seller/api/product', JSON.stringify(productData));
 
-        // 请求成功后跳转到指定页面
-        if (response.status === 200) {
-          // 使用Vue Router实现页面跳转
-          const router = useRouter();
-          router.push("/uploadImage");
+      // 發送表單數據
+      axios({
+        method: 'post',
+        url: 'http://localhost:8080/seller/api/product',
+        data: formData,
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(response => {
+        const productId = response.data.productId; // Correctly accessing productId from the response
+        if (productId) {
+          this.$router.push(`/uploadImage/${productId}`); // Using backticks and ${} to include the productId in the URL
+        } else {
+          console.error("Product ID was not returned from the API.");
         }
-      } catch (error) {
-        console.error("API请求失败: ", error);
-      }
+      }).catch(error => {
+        console.error("API請求失敗: ", error);
+      });
     },
     getNewOptions(category) {
       return this.newOptions[category] || [];

@@ -3,7 +3,6 @@ import navbar from "@/components/navbar.vue";
 import axios from 'axios';
 import sidebar from "@/components/sidebar.vue";
 
-import { VStepper } from 'vuetify/labs/VStepper'
 </script>
 <template>
   <v-app>
@@ -52,8 +51,18 @@ import { VStepper } from 'vuetify/labs/VStepper'
 <script>
 
 export default {
+  props: {
+    productId: {
+      type: [String, Number],
+      required: true
+    }
+  },
   data() {
     return {
+      product: null,
+      products: [],          // 原始产品列表
+      searchResults: [],     // 搜索结果
+      searchQuery: '',
       productName: "",
       productPrice: 0,
       productDiscountPrice: 0,
@@ -130,49 +139,83 @@ export default {
 
     };
   },
+
   watch: {
     selectedCategory(newCategory) {
       // 当选择新的商品分组时，清空新选项字段
       this.selectedNewOption = null;
     },
   },
+  created() {
+    // 在这里从 API 获取 product 数据
+    this.fetchProducts();
+  },
   methods: {
     async uploadProduct() {
-      const selectedCategoryId = this.categoryMappings[this.selectedNewOption];
+      const formData = new FormData();
 
-      // 构建包含商品信息的对象（根据你的需求）
-      const productData = {
+      // 填充表單數據
+      formData.append('productData', new Blob([JSON.stringify({
         productname: this.productName,
         price: this.productPrice,
         specialprice: this.productDiscountPrice,
-        categoryid: selectedCategoryId,
+        categoryid: this.categoryMappings[this.selectedNewOption],
         quantity: this.productQuantity,
         description: this.productDescription,
-      };
-      console.log("Sending request with productData:", productData);
+      })], {
+        type: "application/json"
+      }));
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      };
       try {
-        // 发送API请求并等待响应
-        const response = await axios.post('http://localhost:8080/seller/api/product/{id}', JSON.stringify(productData));
+        // 發送 PUT 請求
+        const response = await axios.put(`http://localhost:8080/seller/api/product/${this.productId}`, formData);
 
-        // 请求成功后跳转到指定页面
+        // 處理響應
         if (response.status === 200) {
-          // 使用Vue Router实现页面跳转
-          const router = useRouter();
-          router.push("/uploadImage");
+          this.$router.push(`/uploadImage/${this.productId}`);
+
+          // ...處理成功響應
         }
       } catch (error) {
-        console.error("API请求失败: ", error);
+        // ...處理錯誤
       }
     },
     getNewOptions(category) {
       return this.newOptions[category] || [];
     },
+
+    fetchProducts() {
+      axios.get('http://localhost:8080/seller/api/product', {
+        params: { id: this.productId },
+      })
+        .then((response) => {
+          this.product = response.data;
+
+          // 将获取的产品数据设置为表单的默认值
+          this.productName = this.product.productName;
+          this.productPrice = this.product.price;
+          this.productDiscountPrice = this.product.specialPrice;
+          this.productQuantity = this.product.quantity;
+          this.productDescription = this.product.description;
+          // 还可以设置其他表单元素的默认值
+
+        })
+        .catch((error) => {
+          console.error('API 请求失败：', error);
+        });
+    },
+
+    fetchProductImages() {
+      axios.get(`http://localhost:8080/public/productImage/${this.productId}`)
+        .then((response) => {
+          // Assuming the response is an array of image URLs
+          this.productImages = response.data;
+        })
+        .catch((error) => {
+          console.error('获取产品图像失败：', error);
+        });
+    },
+
   },
 };
 

@@ -56,6 +56,7 @@ import sidebar from "@/components/sidebar.vue";
                 <td class="quantity_style">{{ product.quantity }}</td>
                 <td class="edit_style">
                   <button @click="editPage(product.productId)">編輯商品</button>
+                  <br>
                   <button @click="deleteProduct(product.productId)">下架商品</button>
                 </td>
               </tr>
@@ -102,16 +103,16 @@ export default {
         });
     },
     deleteProduct(productId) {
-    axios.put(`http://localhost:8080/seller/api/${productId}/remove`)
-      .then(response => {
-        // 商品删除成功删除后的处理，可以刷新产品列表或进行其他操作
-        // 例如，你可以重新获取产品列表：
-        this.fetchProducts();
-      })
-      .catch(error => {
-        console.error('删除商品失败：', error);
-      });
-  },
+      axios.put(`http://localhost:8080/seller/api/${productId}/remove`)
+        .then(response => {
+          // 商品删除成功删除后的处理，可以刷新产品列表或进行其他操作
+          // 例如，你可以重新获取产品列表：
+          this.fetchProducts();
+        })
+        .catch(error => {
+          console.error('删除商品失败：', error);
+        });
+    },
     searchProducts() {
       axios.get('http://localhost:8080/seller/api/products/search', {
         params: {

@@ -71,7 +71,7 @@ const routes = [
     meta: { title: '商品管理' }
   },
   {
-    path: '/uploadImage',
+    path: '/uploadImage/:productId',
     name: 'uploadImage',
     component: () => import("@/views/uploadImage.vue"),
     meta: { title: '上傳照片' }
