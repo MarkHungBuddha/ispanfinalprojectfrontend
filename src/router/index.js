@@ -42,7 +42,7 @@ const routes = [
     path: '/register',
     name: 'register',
     component: () => import("@/views/register.vue"),
-    meta: { title: '登入' }
+    meta: { title: '註冊' }
   },
   {
     path: '/uploadProduct',
@@ -94,12 +94,6 @@ const routes = [
     name: 'showRevenue',
     component: () => import("@/views/showRevenue.vue"),
     meta: { title: '收入' }
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import("@/views/register.vue"),
-    meta: { title: '註冊' }
   },
   {
     path: '/member', // 修改会员资料的页面路径
