@@ -64,6 +64,12 @@ const routes = [
     meta: { title: '訂單' },
     props: true,
   },
+  {
+    path: '/sellerOrder',
+    name: 'sellerOrder',
+    component: () => import("@/views/sellerOrder.vue"),
+    meta: { title: '查看銷售訂單' }
+  },
 
 ]
 

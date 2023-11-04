@@ -4,14 +4,14 @@
       <v-container>
         <barList></barList>
         <navbar></navbar>
-        <sidebarBuyer></sidebarBuyer>
+        <sidebar></sidebar>
 
         <!-- 搜索訂單ID欄 -->
         <div class="selectbar">
           <v-text-field v-model="searchQuery" label="搜索訂單ID" @input="searchOrder"></v-text-field>
         </div>
 
-        <!-- 買家訂單頁面 -->
+        <!-- 賣家家訂單頁面 -->
         <!-- 標籤選項卡 -->
         <v-tabs v-model="tab" align-with-title :items="items" class="elevation-1 mt-5">
           <v-tab v-for="(item, index) in items" :key="item" :value="item" @click="handleTabClick(item)"
@@ -69,14 +69,14 @@
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 import barList from "@/components/barList.vue";
-import sidebarBuyer from '@/components/sidebarBuyer.vue';
+import sidebar from '@/components/sidebar.vue';
 
 
 export default {
   components: {
     navbar,
     barList,
-    sidebarBuyer,
+    sidebar,
   },
   data() {
     return {
@@ -117,7 +117,7 @@ export default {
       this.isLoading = true;
 
       axios
-        .get('http://localhost:8080/customer/api/findorders/Status', {
+        .get('http://localhost:8080/seller/api/sellerfindorders/Status', {
           params: {
             p: this.currentPage,
             statusid: statusid,
@@ -140,7 +140,7 @@ export default {
     fetchAllOrders() {
       this.isLoading = true;
       axios
-        .get('http://localhost:8080/customer/api/findAllOrders', {
+        .get('http://localhost:8080/seller/api/findSellerOrders', {
           params: { p: this.currentPage },
         })
         .then((response) => {
@@ -200,7 +200,7 @@ export default {
 }
 
 .light-gray-background {
-  background-color: #fadbe2;
+  background-color: #f9e3d7;
   /* 訂單背景色 */
 }
 
@@ -213,7 +213,7 @@ export default {
 }
 
 .tab--active {
-  background-color: #fcc5d0;
+  background-color: #f8cdb5;
   /* 指定選中標籤顏色 */
 }
 </style>

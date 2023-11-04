@@ -26,7 +26,7 @@
               <v-list-item>
                 <v-list-item-title>待回問題</v-list-item-title>
               </v-list-item>
-              <v-list-item>
+              <v-list-item to="/sellerOrder">
                 <v-list-item-title>待確認訂單</v-list-item-title>
               </v-list-item>
             </v-expansion-panel-text>

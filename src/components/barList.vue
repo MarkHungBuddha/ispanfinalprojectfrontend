@@ -7,7 +7,8 @@
     <router-link to="/login">登入</router-link> |
     <router-link to="/register">注冊</router-link> |
     <router-link to="/uploadProduct">上傳商品</router-link> |
-    <router-link to="/order">查看訂單</router-link> |
+    <router-link to="/order">買家訂單</router-link> |
+    <router-link to="/sellerOrder">賣家訂單</router-link> |
 </template>
     
 <script setup >
