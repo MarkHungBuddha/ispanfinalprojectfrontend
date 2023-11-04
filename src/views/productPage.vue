@@ -15,12 +15,12 @@ import navbar from "@/components/navbar.vue";
 
       <v-chip class="my-2">
         <span>{{ productData.sellerUsername }} ({{ productData.sellerFirstName }} {{
-            productData.sellerLastName
-          }})</span>
+          productData.sellerLastName
+        }})</span>
       </v-chip>
 
       <!-- Carousel to show product images -->
-      <v-carousel cycle height="400" hide-delimiter-background show-arrows="hover">
+      <v-carousel :key="productImages.length" cycle height="400" hide-delimiter-background show-arrows="hover">
         <v-carousel-item v-for="(imageCode, index) in productImages" :key="index">
           <v-img :src="`https://i.imgur.com/${imageCode}.jpeg`" aspect-ratio="1.7"></v-img>
         </v-carousel-item>
@@ -46,15 +46,15 @@ import navbar from "@/components/navbar.vue";
           <v-btn color="green" @click="addToCart" class="self-end">Add to Cart</v-btn>
         </v-col>
       </v-row>
-<!--      <v-dialog v-model="dialog" max-width="290">-->
-<!--        <v-card>-->
-<!--          <v-card-text>-->
-<!--            <v-icon :color="dialogIconColor">{{ dialogIcon }}</v-icon> {{ dialogMessage }}-->
-<!--          </v-card-text>-->
-<!--        </v-card>-->
-<!--      </v-dialog>-->
-<!--      <v-text-field v-model="question" clearable label="Ask a question"></v-text-field>-->
-<!--      <v-btn @click="submitQuestion">Submit Question</v-btn>-->
+      <!--      <v-dialog v-model="dialog" max-width="290">-->
+      <!--        <v-card>-->
+      <!--          <v-card-text>-->
+      <!--            <v-icon :color="dialogIconColor">{{ dialogIcon }}</v-icon> {{ dialogMessage }}-->
+      <!--          </v-card-text>-->
+      <!--        </v-card>-->
+      <!--      </v-dialog>-->
+      <!--      <v-text-field v-model="question" clearable label="Ask a question"></v-text-field>-->
+      <!--      <v-btn @click="submitQuestion">Submit Question</v-btn>-->
 
       <v-card>
         <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
@@ -134,15 +134,8 @@ import navbar from "@/components/navbar.vue";
 
           <v-card flat>
             <v-card-text>
-              <v-text-field
-                  v-model="question"
-                  label="Ask a question"
-                  clearable
-              ></v-text-field>
-              <v-btn
-                  color="primary"
-                  @click="submitQuestion"
-              >Submit Question</v-btn>
+              <v-text-field v-model="question" label="Ask a question" clearable></v-text-field>
+              <v-btn color="primary" @click="submitQuestion">Submit Question</v-btn>
             </v-card-text>
           </v-card>
 
@@ -161,8 +154,8 @@ export default {
     return {
 
       breadcrumbs: [
-        {text: '商品母分類', disabled: false},
-        {text: '商品分類', disabled: true}
+        { text: '商品母分類', disabled: false },
+        { text: '商品分類', disabled: true }
       ],
       productImages: [],
       productReviews: [],
@@ -195,7 +188,11 @@ export default {
 
     // await this.submitQuestion();
   },
+  created() {
+    const productId = this.$route.params.productId;
+  },
   methods: {
+
     async fetchProductAverageReview(productId) {
       try {
         const response = await axios.get(`http://localhost:8080/public/api/reviews/product/${productId}/average`);
@@ -207,7 +204,9 @@ export default {
       }
     },
     async fetchProductData(productId) {
+      this.productId = productId;
       try {
+
         const response = await axios.get(`http://localhost:8080/public/product/${productId}`);
         if (response.status === 200) {
           this.productData = response.data;
@@ -317,25 +316,31 @@ export default {
       }
     },
 
+
   },
 };
 </script>
 <style scoped>
 .product-description-card {
-  background-color: #f6f6f6; /* Light gray background */
+  background-color: #f6f6f6;
+  /* Light gray background */
   /* Add any other styling properties you'd like for the card */
 }
+
 .chat-message {
   display: unset !important;
   white-space: break-spaces;
 }
+
 .chat-screen {
   max-height: 1000px;
   overflow-y: auto;
 }
+
 .flex-none {
   flex: unset;
 }
+
 .received-message::after {
   content: ' ';
   position: absolute;
@@ -348,6 +353,7 @@ export default {
   border: 12px solid;
   border-color: #4caf50 transparent transparent transparent;
 }
+
 .sent-message::after {
   content: ' ';
   position: absolute;
@@ -360,6 +366,7 @@ export default {
   border: 12px solid;
   border-color: #1976d2 transparent transparent transparent;
 }
+
 .received-message {
   background-color: #f5f5f5;
   border-radius: 8px;
@@ -372,7 +379,8 @@ export default {
 }
 
 .chat-card {
-  max-width: 60%; /* 可根据需要调整，使其不超过75%的宽度 */
+  max-width: 60%;
+  /* 可根据需要调整，使其不超过75%的宽度 */
   margin: 0 auto;
 }
 
@@ -388,12 +396,13 @@ export default {
 
 v-card {
   /* 使v-card在容器中居中 */
-  max-width: 90%;   /* 设置v-card的最大宽度为90% */
+  max-width: 90%;
+  /* 设置v-card的最大宽度为90% */
   /* 设置v-card的下边距 */
   margin: 0 auto 10px;
 }
+
 .full-width-card {
   width: 100%;
 }
-
 </style>

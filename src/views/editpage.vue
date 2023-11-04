@@ -3,7 +3,6 @@ import navbar from "@/components/navbar.vue";
 import axios from 'axios';
 import sidebar from "@/components/sidebar.vue";
 
-
 </script>
 <template>
   <v-app>
@@ -41,7 +40,7 @@ import sidebar from "@/components/sidebar.vue";
         </v-col>
 
 
-        <v-btn color="primary" @click="uploadProduct">下一步</v-btn>
+        <v-btn color="primary" @click="uploadProduct">送出</v-btn>
       </v-row>
 
 
@@ -51,12 +50,19 @@ import sidebar from "@/components/sidebar.vue";
 
 <script>
 
-import axios from "axios";
-
 export default {
+  props: {
+    productId: {
+      type: [String, Number],
+      required: true
+    }
+  },
   data() {
     return {
-
+      product: null,
+      products: [],          // 原始产品列表
+      searchResults: [],     // 搜索结果
+      searchQuery: '',
       productName: "",
       productPrice: 0,
       productDiscountPrice: 0,
@@ -133,47 +139,83 @@ export default {
 
     };
   },
+
   watch: {
     selectedCategory(newCategory) {
       // 当选择新的商品分组时，清空新选项字段
       this.selectedNewOption = null;
     },
   },
+  created() {
+    // 在这里从 API 获取 product 数据
+    this.fetchProducts();
+  },
   methods: {
     async uploadProduct() {
-      const selectedCategoryId = this.categoryMappings[this.selectedNewOption];
-
-      // 用於存放待發送資料的 FormData 對象
       const formData = new FormData();
-      formData.append('productname', this.productName);
-      formData.append('price', this.productPrice);
-      formData.append('specialprice', this.productDiscountPrice);
-      formData.append('categoryid', selectedCategoryId);
-      formData.append('quantity', this.productQuantity);
-      formData.append('description', this.productDescription);
 
+      // 填充表單數據
+      formData.append('productData', new Blob([JSON.stringify({
+        productname: this.productName,
+        price: this.productPrice,
+        specialprice: this.productDiscountPrice,
+        categoryid: this.categoryMappings[this.selectedNewOption],
+        quantity: this.productQuantity,
+        description: this.productDescription,
+      })], {
+        type: "application/json"
+      }));
 
-      // 發送表單數據
-      axios({
-        method: 'post',
-        url: 'http://localhost:8080/seller/api/product',
-        data: formData,
-        withCredentials: true,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }).then(response => {
-        const productId = response.data.productId; // Correctly accessing productId from the response
-        if (productId) {
-          this.$router.push(`/uploadImage/${productId}`); // Using backticks and ${} to include the productId in the URL
-        } else {
-          console.error("Product ID was not returned from the API.");
+      try {
+        // 發送 PUT 請求
+        const response = await axios.put(`http://localhost:8080/seller/api/product/${this.productId}`, formData);
+
+        // 處理響應
+        if (response.status === 200) {
+          this.$router.push(`/uploadImage/${this.productId}`);
+
+          // ...處理成功響應
         }
-      }).catch(error => {
-        console.error("API請求失敗: ", error);
-      });
+      } catch (error) {
+        // ...處理錯誤
+      }
     },
     getNewOptions(category) {
       return this.newOptions[category] || [];
     },
+
+    fetchProducts() {
+      axios.get('http://localhost:8080/seller/api/product', {
+        params: { id: this.productId },
+      })
+        .then((response) => {
+          this.product = response.data;
+
+          // 将获取的产品数据设置为表单的默认值
+          this.productName = this.product.productName;
+          this.productPrice = this.product.price;
+          this.productDiscountPrice = this.product.specialPrice;
+          this.productQuantity = this.product.quantity;
+          this.productDescription = this.product.description;
+          // 还可以设置其他表单元素的默认值
+
+        })
+        .catch((error) => {
+          console.error('API 请求失败：', error);
+        });
+    },
+
+    fetchProductImages() {
+      axios.get(`http://localhost:8080/public/productImage/${this.productId}`)
+        .then((response) => {
+          // Assuming the response is an array of image URLs
+          this.productImages = response.data;
+        })
+        .catch((error) => {
+          console.error('获取产品图像失败：', error);
+        });
+    },
+
   },
 };
 

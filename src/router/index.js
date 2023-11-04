@@ -56,7 +56,47 @@ const routes = [
       name:'checkoutOrder',
       component: () => import("@/views/checkoutOrder.vue"),
       meta: { title: '結帳'}
+  },
+  {
+    path: '/productPageBack/:productId',
+    name: 'productPageBack',
+    component: () => import("@/views/productPageBack.vue"),
+    meta: { title: '商品頁面' },
+    props: true,
+  },
+  {
+    path: '/editpage/:productId',
+    name: 'editpage',
+    component: () => import("@/views/editpage.vue"),
+    meta: { title: '編輯頁面' },
+    props: true,
+  },
+  {
+    path: '/uploadProduct',
+    name: 'uploadProduct',
+    component: () => import("@/views/uploadProduct.vue"),
+    meta: { title: '上傳商品' }
+  },
+  {
+    path: '/showAllProduct',
+    name: 'showAllProduct',
+    component: () => import("@/views/showAllProduct.vue"),
+    meta: { title: '商品管理' }
+  },
+  {
+    path: '/uploadImage/:productId',
+    name: 'uploadImage',
+    component: () => import("@/views/uploadImage.vue"),
+    meta: { title: '上傳照片' }
+  },
+  {
+    path: '/showRevenue',
+    name: 'showRevenue',
+    component: () => import("@/views/showRevenue.vue"),
+    meta: { title: '收入' }
   }
+
+
 
 
 ]
