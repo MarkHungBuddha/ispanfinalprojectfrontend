@@ -54,8 +54,15 @@ const routes = [
     path: '/ProductSearch',
     name: 'ProductSearch',
     component: () => import("@/views/ProductSearch.vue"),
+    meta: { title: '首頁品項' }
+  },
+  {
+    path: '/ProductFuzzySearch',
+    name: 'ProductFuzzySearch',
+    component: () => import("@/views/ProductFuzzySearch.vue"),
     meta: { title: '搜尋' }
   },
+
 
 
 

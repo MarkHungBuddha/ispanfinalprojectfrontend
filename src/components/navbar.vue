@@ -6,13 +6,8 @@
       </v-btn>
     </v-toolbar-title>
 
-    <v-text-field
-        v-if="!isLoggedIn"
-        v-model="searchText"
-        label="Search"
-        hide-details
-        class="search-bar"
-    ></v-text-field>
+    <v-text-field v-if="!isLoggedIn" v-model="searchText" label="Search" hide-details class="search-bar"
+      @input="fetchProductsWithSearch"></v-text-field>
 
     <v-spacer></v-spacer>
 
@@ -35,42 +30,92 @@ export default {
   data() {
     return {
       searchText: '',
+      searchResults: [], // 搜索结果
+      isSearching: false, // 是否正在搜索
     };
   },
   computed: {
     isLoggedIn() {
       return this.$store.state.isLoggedIn;
-    }
+    },
   },
   methods: {
-    redirectTo(path) {
-      this.$router.push(path);
+    fetchProductsWithSearch() {
+      if (!this.searchText.trim()) {
+        // 如果搜索框為空或只有空格，則不進行搜索
+        this.clearSearchResults();
+        return;
+      }
+
+      // 開始搜索，可能還要顯示加載動畫
+      this.isSearching = true;
+
+      const params = {
+        productname: this.searchText,
+        // 其他需要的參數可以在這裡添加
+      };
+      axios.get('http://localhost:8080/public/api/products', { params })
+        .then(response => {
+          // 搜索成功，更新搜索結果
+          this.updateSearchResults(response.data.content);
+        })
+        .catch(error => {
+          // 處理錯誤
+          console.error('搜索請求失敗:', error);
+          this.clearSearchResults();
+        })
+        .finally(() => {
+          // 結束搜索
+          this.isSearching = false;
+        });
     },
-    redirectToShoppingCart() {
-      axios.get('http://localhost:8080/customer/api/shoppingCart')
-          .then(() => {
-            this.$router.push('/shoppingCart');
-          });
+    updateSearchResults(results) {
+      // 將搜索結果保存到數據屬性中
+      this.searchResults = results;
     },
-    redirectToWishList() {
-      axios.get('http://localhost:8080/customer/api/wishlist')
-          .then((response) => {
-            this.$store.commit('setWishList', response.data);
-            this.$router.push('/wishList');
-          });
+    clearSearchResults() {
+      // 清空搜索結果
+      this.searchResults = [];
     },
-    logout() {
-      axios.post('http://localhost:8080/customer/member/logout')
-          .then(() => {
-            this.$store.dispatch('updateLoginStatus', false);
-            this.$router.push('/');
-          });
-    }
+
   },
   watch: {
     isLoggedIn(newVal, oldVal) {
       console.log("isLoggedIn changed from", oldVal, "to", newVal);
-    }
+    },
+  },
+  created() {
+    console.log("isLoggedIn in child:", this.isLoggedIn);
+  },
+
+  redirectTo(path) {
+    this.$router.push(path);
+  },
+  redirectToShoppingCart() {
+    axios.get('http://localhost:8080/customer/api/shoppingCart')
+      .then(() => {
+        this.$router.push('/shoppingCart');
+      });
+  },
+  redirectToWishList() {
+    axios.get('http://localhost:8080/customer/api/wishlist')
+      .then((response) => {
+        this.$store.commit('setWishList', response.data);
+        this.$router.push('/wishList');
+      });
+  },
+  logout() {
+    axios.post('http://localhost:8080/customer/member/logout')
+      .then(() => {
+        this.$store.dispatch('updateLoginStatus', false);
+        this.$router.push('/');
+      });
+  },
+
+  watch: {
+    isLoggedIn(newVal, oldVal) {
+      console.log("isLoggedIn changed from", oldVal, "to", newVal);
+    },
   },
   created() {
     console.log("isLoggedIn in child:", this.isLoggedIn);
@@ -80,9 +125,11 @@ export default {
 
 <style>
 .icon-img {
-  width: 24px; /* Adjust as needed */
+  width: 24px;
+  /* Adjust as needed */
   height: 24px;
 }
+
 .custom-navbar {
   background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
 }
@@ -115,9 +162,10 @@ export default {
   background-color: #FF8E53;
   color: white;
 }
+
 .logo-img {
-  width: 40px; /* Adjust as needed */
+  width: 40px;
+  /* Adjust as needed */
   height: 80%;
 }
-
 </style>
