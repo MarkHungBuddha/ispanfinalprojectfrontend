@@ -182,7 +182,7 @@ export default {
     //按單筆訂單跳至訂單頁面
     goToOrderDetail(orderId) {
       // 或者使用命名路由和參數
-      this.$router.push({ name: 'orderDetail', params: { orderid: orderId } });
+      this.$router.push({ name: 'sellerOrderDetail', params: { orderid: orderId } });
     },
   },
   created() {

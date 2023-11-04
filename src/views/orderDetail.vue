@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-
+      <sidebarBuyer></sidebarBuyer>
       <!-- 上一頁按鈕 -->
       <v-btn icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
@@ -82,7 +82,8 @@
         </v-dialog>
 
         <!-- 顯示產品列表 -->
-        <v-card v-for="product in orderDetails.products" :key="product.productID" class="mb-3">
+        <v-card v-for="product in orderDetails.products" :key="product.productid" class="mb-3"
+          @click="navigateToProduct(product.productid)">
           <v-row>
             <!-- 產品圖片列 -->
             <v-col cols="4">
@@ -93,8 +94,8 @@
             <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
             <v-col cols="8" class="text-right product-details">
               <v-card-title>{{ product.productName }}</v-card-title>
-              <v-card-subtitle>
-                數量：{{ product.quantity }}，單價：{{ product.unitprice }}
+              <v-card-subtitle @click="navigateToProduct(product.productid)">
+                數量：{{ product.quantity }}，單價：{{ product.unitprice }}，商品id：{{ product.productid }}
               </v-card-subtitle>
             </v-col>
           </v-row>
@@ -112,9 +113,10 @@
 
 <script>
 import axios from 'axios';
-
+import sidebarBuyer from '@/components/sidebarBuyer.vue';
 
 export default {
+
   props: {
     orderid: {
       type: [String, Number],
@@ -300,6 +302,10 @@ export default {
         .catch(error => {
           console.error('修改地址失敗：', error);
         });
+    },
+    //訂單的商品可跳至商品頁面
+    navigateToProduct(productid) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
     },
 
   }

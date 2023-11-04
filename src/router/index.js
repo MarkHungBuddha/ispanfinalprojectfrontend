@@ -61,7 +61,7 @@ const routes = [
     path: '/orderDetail/:orderid',
     name: 'orderDetail',
     component: () => import("@/views/orderDetail.vue"),
-    meta: { title: '訂單' },
+    meta: { title: '買家訂單頁面' },
     props: true,
   },
   {
@@ -69,6 +69,20 @@ const routes = [
     name: 'sellerOrder',
     component: () => import("@/views/sellerOrder.vue"),
     meta: { title: '查看銷售訂單' }
+  },
+  {
+    //訂單商品跳到商品頁面
+    path: '/product/:productId',
+    name: 'ProductPage',
+    component: () => import("@/views/ProductPage.vue"),
+  },
+  {
+    //賣家訂單商品跳商品頁面
+    path: '/sellerOrderDetail/:orderid',
+    name: 'sellerOrderDetail',
+    component: () => import("@/views/sellerOrderDetail.vue"),
+    meta: { title: '賣家訂單頁面' },
+    props: true,
   },
 
 ]

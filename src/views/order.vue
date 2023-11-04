@@ -73,11 +73,7 @@ import sidebarBuyer from '@/components/sidebarBuyer.vue';
 
 
 export default {
-  components: {
-    navbar,
-    barList,
-    sidebarBuyer,
-  },
+
   data() {
     return {
       tab: null,
@@ -200,7 +196,7 @@ export default {
 }
 
 .light-gray-background {
-  background-color: #fadbe2;
+  background-color: #fde1e8;
   /* 訂單背景色 */
 }
 
