@@ -16,9 +16,9 @@
           <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
 
             <v-card>
-              <v-card-text class="d-flex flex-column align-center" @click="navigateToProduct(product.productid)">
+              <v-card-text class="d-flex flex-column align-center">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                  class="product-image mr-2"></v-img>
+                  class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
                 <div class="product-name">{{ product.productname }}</div>
                 <div class="original-price">原價: {{ product.price }}</div>
                 <div class="special-price">特價: {{ product.specialprice }}</div>
