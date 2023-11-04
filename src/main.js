@@ -16,7 +16,7 @@ import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
 import '@mdi/font/css/materialdesignicons.css'
 import barList from "@/components/barList.vue";
-import navbar from "@/components/navbar.vue";
+
 // 設定 Axios
 axios.defaults.withCredentials = true;
 
@@ -33,9 +33,7 @@ const vuetify = createVuetify({
 app.component('sidebar', sidebar);
 app.component('Home', Home);
 app.component('productPage', productPage);
-app.component('sidebarBuyer', sidebarBuyer);
-app.component('barList', barList);
-app.component('navbar', navbar);
+
 
 app.config.globalProperties.$axios = axios;
 
