@@ -1,6 +1,8 @@
 <script setup>
 import navbar from "@/components/navbar.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
+
+import otp from "@/components/OTP.vue";
 </script>
 
 <template>
@@ -8,6 +10,9 @@ import RegisterForm from "@/components/RegisterForm.vue";
     <v-main>
       <v-container>
         <register-form/>
+
+
+
       </v-container>
 
     </v-main>

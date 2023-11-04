@@ -7,16 +7,15 @@ import axios from 'axios';
 <template>
   <v-app>
     <v-container>
-      <navbar />
-      
+
       <!-- Display product images -->
       <v-row v-if="productImages.length > 0">
         <v-col v-for="(image, index) in productImages" :key="index" cols="4">
           <v-img v-for="(imagePath, index) in productImages" :key="index" :src="`https://i.imgur.com/${imagePath}.jpeg`"></v-img>
-          
+
         </v-col>
       </v-row>
-        
+
       <!-- Product Details -->
       <v-row v-if="product">
         <v-col cols="12">
@@ -62,7 +61,7 @@ export default {
         });
 
     },
-  
+
   fetchProductImages() {
       axios.get(`http://localhost:8080/public/productImage/${this.productId}`)
         .then((response) => {

@@ -94,8 +94,28 @@ const routes = [
     name: 'showRevenue',
     component: () => import("@/views/showRevenue.vue"),
     meta: { title: '收入' }
-  }
-
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import("@/views/register.vue"),
+    meta: { title: '註冊' }
+  },
+  {
+    path: '/member', // 修改会员资料的页面路径
+    component: () => import("@/views/member.vue"),
+    meta: { title: '會員資料' } // 修改会员资料的 Vue 组件
+  },
+  {
+    path: '/editProfile', // 修改会员资料的页面路径
+    component: () => import("@/views/editProfile.vue"),
+    meta: { title: '修改會員資料' } // 修改会员资料的 Vue 组件
+  },
+  // {
+  //   path: '/public/api/google-callback',
+  //   component: GoogleCallbackComponent, // 这应该是处理回调逻辑的Vue组件
+  //   props: (route) => ({ code: route.query.code }) // 将 URL 中的 code 参数作为 prop 传递给组件
+  // }
 
 
 

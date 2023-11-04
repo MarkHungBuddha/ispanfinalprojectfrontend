@@ -7,7 +7,6 @@ import sidebar from "@/components/sidebar.vue";
 <template>
   <v-app>
     <v-container>
-      <navbar />
 
       <v-row>
         <v-col cols="12">

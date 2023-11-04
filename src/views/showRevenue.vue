@@ -1,6 +1,5 @@
 <template>
     <v-container>
-        <navbar />
         <!-- 收入Dashboard标题 -->
         <v-row>
             <v-col cols="12">
@@ -43,7 +42,7 @@
         </v-row>
     </v-container>
 </template>
-  
+
 <script>
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
@@ -130,4 +129,3 @@ export default {
     },
 };
 </script>
-  

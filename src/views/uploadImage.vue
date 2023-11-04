@@ -5,7 +5,6 @@ import axios from 'axios';
 <template>
   <v-app>
     <v-container>
-      <navbar />
       <ProductImageUpload ref="uploader1" label="上傳商品圖片 (封面)" :od="1" />
       <ProductImageUpload ref="uploader2" label="上傳商品圖片" :od="2" />
       <ProductImageUpload ref="uploader3" label="上傳商品圖片" :od="3" />

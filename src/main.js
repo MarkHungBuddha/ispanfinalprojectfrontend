@@ -15,6 +15,8 @@ import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
 import navbar from "@/components/navbar.vue";
 import '@mdi/font/css/materialdesignicons.css'
+
+
 // import 'vuetify/dist/vuetify.min.css';
 // 設定 Axios
 axios.defaults.withCredentials = true;
