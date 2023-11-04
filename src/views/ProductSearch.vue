@@ -116,7 +116,7 @@
             <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
 
               <v-card>
-                <v-card-text class="d-flex flex-column align-center">
+                <v-card-text class="d-flex flex-column align-center" @click="navigateToProduct(product.productid)">
                   <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                     class="product-image mr-2"></v-img>
                   <div class="product-name">{{ product.productname }}</div>
@@ -144,6 +144,13 @@
                     {{ snackbarText }}
                     <v-btn color="white" text @click="snackbar = false">關閉</v-btn>
                   </v-snackbar>
+
+
+                  <div v-if="selectedProductDetails">
+                    <h2>{{ selectedProductDetails.productname }}</h2>
+                    <p>{{ selectedProductDetails.description }}</p>
+                    <!-- 其他需要顯示的產品信息 -->
+                  </div>
 
 
                 </v-card-text>
@@ -222,6 +229,7 @@ export default {
       wishlistSnackbarText: '',
       wishlistSnackbarColor: '',
 
+      selectedProductDetails: null, // 用於存儲從後端獲取的產品詳情
 
 
     };
@@ -297,8 +305,10 @@ export default {
       this.showLargeAppliances = true;
     },
 
-
-
+    //添加跳轉頁面到productPage
+    navigateToProduct(productid) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
+    },
 
 
 
@@ -414,6 +424,8 @@ export default {
         this.$set(this.products[productIndex], 'averageReview', averageReview);
       }
     },
+
+
 
 
 

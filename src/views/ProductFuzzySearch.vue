@@ -16,7 +16,7 @@
           <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
 
             <v-card>
-              <v-card-text class="d-flex flex-column align-center">
+              <v-card-text class="d-flex flex-column align-center" @click="navigateToProduct(product.productid)">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                   class="product-image mr-2"></v-img>
                 <div class="product-name">{{ product.productname }}</div>
@@ -277,6 +277,13 @@ export default {
         });
 
     },
+    //添加跳轉頁面到productPage
+    navigateToProduct(productid) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
+    },
+
+
+
     //願望清單
     addProductToWishlist(productId) {
       // 發送POST請求到後端API

@@ -62,8 +62,31 @@ const routes = [
     component: () => import("@/views/ProductFuzzySearch.vue"),
     meta: { title: '搜尋' }
   },
+  {
+    //訂單商品跳到商品頁面
+    path: '/product/:productId',
+    name: 'ProductPage',
+    component: () => import("@/views/ProductPage.vue"),
+  },
 
-
+  {
+    path: '/aa',
+    name: 'aa',
+    component: () => import("@/views/aa.vue"),
+    meta: { title: '搜' }
+  },
+  {
+    path: '/bb',
+    name: 'bb',
+    component: () => import("@/views/bb.vue"),
+    meta: { title: '搜b' }
+  },
+  {
+    path: '/aaa',
+    name: 'aaa',
+    component: () => import("@/views/aaa.vue"),
+    meta: { title: '搜' }
+  },
 
 
 ]
