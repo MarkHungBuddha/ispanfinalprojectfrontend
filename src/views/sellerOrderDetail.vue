@@ -74,6 +74,9 @@ import axios from 'axios';
 import sidebar from "@/components/sidebar.vue";
 
 export default {
+  components: {
+    sidebar,
+  },
   props: {
     orderid: {
       type: [String, Number],

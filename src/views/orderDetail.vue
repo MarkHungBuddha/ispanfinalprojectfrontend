@@ -118,7 +118,10 @@ import axios from 'axios';
 import sidebarBuyer from '@/components/sidebarBuyer.vue';
 
 export default {
+  components: {
 
+    sidebarBuyer,
+  },
   props: {
     orderid: {
       type: [String, Number],

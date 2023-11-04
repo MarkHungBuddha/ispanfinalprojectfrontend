@@ -73,7 +73,11 @@ import sidebarBuyer from '@/components/sidebarBuyer.vue';
 
 
 export default {
-
+  components: {
+    navbar,
+    barList,
+    sidebarBuyer,
+  },
   data() {
     return {
       tab: null,
