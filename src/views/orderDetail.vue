@@ -1,113 +1,115 @@
 <template>
   <v-app>
-    <v-container>
-      <sidebarBuyer></sidebarBuyer>
-      <!-- 上一頁按鈕 -->
-      <v-btn icon @click="goBack">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
+    <v-main>
+      <v-container>
+        <sidebarBuyer class="custom-sidebar"></sidebarBuyer>
+        <!-- 上一頁按鈕 -->
+        <v-btn icon @click="goBack">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
 
 
 
-      <!-- 添加class "order-card" 並設置max-width -->
-      <div v-if="orderDetails" class="mx-auto order-card">
+        <!-- 添加class "order-card" 並設置max-width -->
+        <div v-if="orderDetails" class="mx-auto order-card">
 
-        <!-- 訂單標題，顯示訂單編號 -->
-        <v-card-title>
-          訂單編號：{{ orderDetails.orderid }}
-        </v-card-title>
+          <!-- 訂單標題，顯示訂單編號 -->
+          <v-card-title>
+            訂單編號：{{ orderDetails.orderid }}
+          </v-card-title>
 
-        <!-- 訂單副標題，顯示訂單日期 -->
-        <v-card-subtitle>
-          訂單日期：{{ formatDate(orderDetails.merchanttradedate) }}
-        </v-card-subtitle>
+          <!-- 訂單副標題，顯示訂單日期 -->
+          <v-card-subtitle>
+            訂單日期：{{ formatDate(orderDetails.merchanttradedate) }}
+          </v-card-subtitle>
 
-        <!-- 訂單內容，顯示訂單的買家、金額、狀態和地址 -->
-        <v-card-text>
-          <div>買家：{{ orderDetails.buyer }}</div>
-          <div>訂單金額：{{ orderDetails.totalamount }}</div>
-          <!-- 訂單狀態，根據isOrderCompleted動態改變文字顏色 -->
-          <div :class="{ 'status-color-change': orderStatusClass }">
-            <div>訂單狀態：{{ orderDetails.statusname }}</div>
+          <!-- 訂單內容，顯示訂單的買家、金額、狀態和地址 -->
+          <v-card-text>
+            <div>買家：{{ orderDetails.buyer }}</div>
+            <div>訂單金額：{{ orderDetails.totalamount }}</div>
+            <!-- 訂單狀態，根據isOrderCompleted動態改變文字顏色 -->
+            <div :class="{ 'status-color-change': orderStatusClass }">
+              <div>訂單狀態：{{ orderDetails.statusname }}</div>
+            </div>
+            <div>送貨地址：{{ orderDetails.orderaddess }}</div>
+          </v-card-text>
+
+          <div v-if="orderDetails.statusname === '待付款' || orderDetails.statusname === '待出貨'">
+            <div v-if="!editingAddress">
+              <!-- 显示更改地址按钮 -->
+              <v-btn color="primary" @click="editingAddress = true">更改地址</v-btn>
+            </div>
+
+            <!-- 縣市區 -->
+            <div v-else>
+              <v-select v-model="selectedCity" :items="Object.keys(taiwanLocations)" label="選擇縣市"
+                @update:modelValue="updateDistricts"></v-select>
+
+              <v-select v-model="selectedDistrict" :items="selectedCity ? taiwanLocations[selectedCity] : []"
+                label="選擇區域"></v-select>
+
+              <v-text-field v-model="newAddress" label="詳細地址"></v-text-field>
+
+              <v-btn color="success" @click="confirmNewAddress">確定地址</v-btn>
+            </div>
           </div>
-          <div>送貨地址：{{ orderDetails.orderaddess }}</div>
-        </v-card-text>
 
-        <div v-if="orderDetails.statusname === '待付款' || orderDetails.statusname === '待出貨'">
-          <div v-if="!editingAddress">
-            <!-- 显示更改地址按钮 -->
-            <v-btn color="primary" @click="editingAddress = true">更改地址</v-btn>
+          <!-- 付款 按鈕 訂單狀態為'待付款'時顯示-->
+          <div class="d-flex justify-end" v-if="orderDetails.statusname === '待付款'">
+            <v-btn color="success" @click="payForOrder(orderDetails.orderid)">付款</v-btn>
           </div>
 
-          <!-- 縣市區 -->
-          <div v-else>
-            <v-select v-model="selectedCity" :items="Object.keys(taiwanLocations)" label="選擇縣市"
-              @update:modelValue="updateDistricts"></v-select>
-
-            <v-select v-model="selectedDistrict" :items="selectedCity ? taiwanLocations[selectedCity] : []"
-              label="選擇區域"></v-select>
-
-            <v-text-field v-model="newAddress" label="詳細地址"></v-text-field>
-
-            <v-btn color="success" @click="confirmNewAddress">確定地址</v-btn>
+          <!-- 完成訂單 按鈕 訂單狀態為'待收貨'時顯示-->
+          <div class="d-flex justify-end" v-if="orderDetails.statusname === '待收貨'">
+            <v-btn color="success" @click="completeOrder(orderDetails.orderid)">完成訂單</v-btn>
           </div>
-        </div>
 
-        <!-- 付款 按鈕 訂單狀態為'待付款'時顯示-->
-        <div class="d-flex justify-end" v-if="orderDetails.statusname === '待付款'">
-          <v-btn color="success" @click="payForOrder(orderDetails.orderid)">付款</v-btn>
-        </div>
+          <!-- 取消訂單 按鈕，當訂單狀態為 '待付款' 或 '待出貨' 時顯示 -->
+          <div class="d-flex justify-end" v-if="orderDetails.statusname === '待付款' || orderDetails.statusname === '待出貨'">
+            <v-btn color="red" @click="confirmCancelOrder(orderDetails.orderid)">取消訂單</v-btn>
+          </div>
 
-        <!-- 完成訂單 按鈕 訂單狀態為'待收貨'時顯示-->
-        <div class="d-flex justify-end" v-if="orderDetails.statusname === '待收貨'">
-          <v-btn color="success" @click="completeOrder(orderDetails.orderid)">完成訂單</v-btn>
-        </div>
+          <!-- 確認取消訂單的對話框 -->
+          <v-dialog v-model="showDialog" persistent max-width="300px">
+            <v-card>
+              <v-card-title class="headline">確認操作</v-card-title>
+              <v-card-text>您確定要取消這筆訂單嗎？</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="showDialog = false">不取消</v-btn>
+                <v-btn color="red darken-1" text @click="performCancelOrder">取消訂單</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
-        <!-- 取消訂單 按鈕，當訂單狀態為 '待付款' 或 '待出貨' 時顯示 -->
-        <div class="d-flex justify-end" v-if="orderDetails.statusname === '待付款' || orderDetails.statusname === '待出貨'">
-          <v-btn color="red" @click="confirmCancelOrder(orderDetails.orderid)">取消訂單</v-btn>
-        </div>
+          <!-- 顯示產品列表 -->
+          <v-card v-for="product in orderDetails.products" :key="product.productid" class="mb-3"
+            @click="navigateToProduct(product.productid)">
+            <v-row>
+              <!-- 產品圖片列 -->
+              <v-col cols="4">
+                <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
+                  class="product-image"></v-img>
+              </v-col>
 
-        <!-- 確認取消訂單的對話框 -->
-        <v-dialog v-model="showDialog" persistent max-width="300px">
-          <v-card>
-            <v-card-title class="headline">確認操作</v-card-title>
-            <v-card-text>您確定要取消這筆訂單嗎？</v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="showDialog = false">不取消</v-btn>
-              <v-btn color="red darken-1" text @click="performCancelOrder">取消訂單</v-btn>
-            </v-card-actions>
+              <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
+              <v-col cols="8" class="text-right product-details">
+                <v-card-title>{{ product.productName }}</v-card-title>
+                <v-card-subtitle @click="navigateToProduct(product.productid)">
+                  數量：{{ product.quantity }}，單價：{{ product.unitprice }}，商品id：{{ product.productid }}
+                </v-card-subtitle>
+              </v-col>
+            </v-row>
           </v-card>
-        </v-dialog>
 
-        <!-- 顯示產品列表 -->
-        <v-card v-for="product in orderDetails.products" :key="product.productid" class="mb-3"
-          @click="navigateToProduct(product.productid)">
-          <v-row>
-            <!-- 產品圖片列 -->
-            <v-col cols="4">
-              <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                class="product-image"></v-img>
-            </v-col>
+        </div>
+        <!-- 如果訂單詳情不存在，顯示警告信息 -->
+        <v-alert v-else type="warning">
+          訂單資料正在加載中，或者無法顯示訂單資料。
+        </v-alert>
 
-            <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
-            <v-col cols="8" class="text-right product-details">
-              <v-card-title>{{ product.productName }}</v-card-title>
-              <v-card-subtitle @click="navigateToProduct(product.productid)">
-                數量：{{ product.quantity }}，單價：{{ product.unitprice }}，商品id：{{ product.productid }}
-              </v-card-subtitle>
-            </v-col>
-          </v-row>
-        </v-card>
-
-      </div>
-      <!-- 如果訂單詳情不存在，顯示警告信息 -->
-      <v-alert v-else type="warning">
-        訂單資料正在加載中，或者無法顯示訂單資料。
-      </v-alert>
-
-    </v-container>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
@@ -345,5 +347,14 @@ export default {
 
 .v-text-field {
   margin-bottom: 10px;
+}
+
+.custom-sidebar {
+  /* 示例样式，根据需要调整 */
+  margin-top: 50px;
+  /* 给顶部留出空间 */
+  position: relative;
+  z-index: 5;
+  /* 如果需要的话 */
 }
 </style>
