@@ -3,6 +3,20 @@ import navbar from "@/components/navbar.vue";
 </script>
 <template>
   <v-app>
+    <v-overlay :value="isCheckingOut">
+      <v-progress-circular indeterminate color="pink-lighten-2"></v-progress-circular>
+      <span>結帳中，請稍後....</span>
+    </v-overlay>
+    <v-dialog v-model="showDialog" persistent>
+      <v-card>
+        <v-card-title class="headline">提示</v-card-title>
+        <v-card-text>{{ dialogMessage }}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="showDialog = false">確定</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-container fluid>
       <v-row class="my-4">
         <v-col cols="1"></v-col>
@@ -13,6 +27,7 @@ import navbar from "@/components/navbar.vue";
       </v-row>
 
       <v-divider></v-divider>
+
 
       <v-row v-for="(item, index) in itemList" :key="item.id" class="py-2 item-row align-center">
         <v-card class="pa-2 mb-2 w-100 condensed-card">
@@ -25,17 +40,18 @@ import navbar from "@/components/navbar.vue";
           </v-col>
 
           <v-col cols="2" class="d-flex align-center">
-            <v-btn icon="$vuetify" small color="red" @click="decrement(item)" variant="text">
+            <v-btn icon="$vuetify" small color="red" @click="decrement(item, index)" variant="text">
               <v-icon>mdi-minus</v-icon>
             </v-btn>
             <v-text-field
                 type="number"
                 v-model="item.quantity"
                 class="quantity-input"
-                @input="onQuantityChange(item)"
+                @input="onQuantityChange(item, index)"
             ></v-text-field>
 
-            <v-btn icon="$vuetify" small color="green" @click="increment(item)" variant="text">
+
+            <v-btn icon="$vuetify" small color="green" @click="increment(item, index)" variant="text">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </v-col>
@@ -66,19 +82,39 @@ import axios from "axios";
 export default {
   data() {
     return {
-      itemList: []
+      itemList: [],
+      showDialog: false,
+      dialogMessage: '',
+      isCheckingOut: false, // Add this new property
     };
   },
   methods: {
-    increment(item) {
-      item.quantity++;
-      this.changeQuantity(item.productid, item.quantity);
+    increment(item, index) {
+      let newQuantity = item.quantity + 1;
+      this.changeQuantity(item.productid, newQuantity, index);
     },
-    decrement(item) {
+    decrement(item, index) {
       if (item.quantity > 1) {
-        item.quantity--;
-        this.changeQuantity(item.productid, item.quantity);
+        let newQuantity = item.quantity - 1;
+        this.changeQuantity(item.productid, newQuantity, index);
+      } else {
+        // 數量為 1 時直接刪除
+        this.removeFromCart(item.productid, index);
       }
+    },
+    onQuantityChange(item, index) {
+      // 使用者直接修改數量欄位時，會調用這個方法
+      const quantity = parseInt(item.quantity); // 確保數量是整數
+      if (quantity < 1) {
+        // 如果數量小於1，則重設為1並返回
+        this.$set(this.itemList, index, {
+          ...item,
+          quantity: 1
+        });
+        return;
+      }
+      // 呼叫changeQuantity更新數量
+      this.changeQuantity(item.productid, quantity, index);
     },
     removeFromCart(transactionId, index) {
       axios
@@ -95,22 +131,32 @@ export default {
             console.error(error);
           });
     },
-    changeQuantity(productid, quantity) {
+    changeQuantity(productid, quantity, index) {
       axios
           .put(`http://localhost:8080/customer/api/change`, null, {
             params: {
-              productid: productid, // 這裡也要確保使用 'productid'
+              productid: productid,
               quantity: quantity
             }
           })
           .then(response => {
             console.log(response.data);
+            // 如果庫存沒問題，更新數量
+            this.itemList[index].quantity = quantity;
           })
           .catch(error => {
-            console.error(error);
+            if (error.response && error.response.status === 500) {
+              // 如果超出庫存，顯示錯誤並重設數量
+              this.showDialog = true;
+              this.dialogMessage = '超過庫存';
+              this.itemList[index].quantity = this.itemList[index].quantity - 1;
+            } else {
+              console.error(error);
+            }
           });
     },
     async checkoutItems() {
+      this.isCheckingOut = true; // Show the overlay
       // 過濾出已勾選的物品
       const checkedItems = this.itemList.filter(item => item.checked);
 
@@ -122,6 +168,7 @@ export default {
 
       // 輸出格式化後的物品數據
       console.log("即將發送的訂單數據:", productData);
+      this.isCheckingOut = false; // Hide the overlay
 
       try {
         // 使用axios發送API請求
@@ -129,6 +176,7 @@ export default {
 
         // 重定向到 /checkoutOrder 頁面並攜帶返回的數據
         const orderData = response.data;
+        console.log("orderData="+orderData.toString());
 // 使用名稱來導航，並且將數據作為查詢參數傳遞
         this.$router.push({
           name: 'checkoutOrder', // 使用路由配置中定義的名稱
@@ -138,6 +186,7 @@ export default {
       } catch (error) {
         // 處理任何錯誤
         console.error("結帳過程中出錯:", error.response ? error.response.data : error.message);
+        this.isCheckingOut = false; // Hide the overlay even on error
       }
     }
   },
@@ -250,6 +299,13 @@ body {
 /* Added condensed card styles */
 .condensed-card {
   padding: 8px !important;
+}
+
+.v-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Stack the circular progress and message vertically */
 }
 
 </style>

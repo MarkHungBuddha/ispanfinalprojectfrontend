@@ -1,6 +1,69 @@
+
+
+<template>
+  <v-container>
+    <!-- 顯示每個商品的內容，用 v-card 包起來 -->
+    <v-row>
+      <v-col
+          cols="12"
+          sm="6"
+          md="4"
+          v-for="item in orderDetails.productIDandQuentities"
+          :key="item.productID"
+      >
+        <v-card>
+          <v-card-title>{{ item.name }}</v-card-title>
+          <v-card-text>
+            <div>Product ID: {{ item.productID }}</div>
+            <div>Quantity: {{ item.quantity }}</div>
+            <div>Price: ${{ item.price.toFixed(2) }}</div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- 顯示總價 -->
+    <v-row>
+      <v-col cols="12">
+        <v-card color="grey lighten-3" class="pa-3">
+          <div class="text-h5">Total Price: ${{ orderDetails.totalPrice.toFixed(2) }}</div>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-card outlined>
+      <v-card-title>Order Address</v-card-title>
+      <!-- 縣市選擇 -->
+      <v-select
+          :items="cityList"
+          item-text="name"
+          item-value="name"
+          label="選擇縣市"
+          v-model="selectedCity"
+      ></v-select>
+
+      <!-- 行政區選擇，當選擇縣市後顯示 -->
+      <v-select
+          v-if="selectedCity"
+          :items="districts"
+          label="選擇行政區"
+          v-model="selectedDistrict"
+      ></v-select>
+
+      <!-- 顯示地址 -->
+      <!-- Address input field, automatically updated when city or district is selected -->
+      <v-text-field
+          label="Address"
+          v-model="fullAddress"
+          :disabled="true"
+      ></v-text-field>
+
+      <!-- Submit button -->
+      <v-btn color="primary" @click="submitOrder">下單</v-btn>
+    </v-card>
+  </v-container>
+</template>
 <script setup>
-import { ref, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
 const cityList = ref([
       {
         name: '臺北市',
@@ -75,119 +138,51 @@ const cityList = ref([
 
     ]
 );
+import { ref, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
-const route = useRoute();
-const orderDetails = ref(route.query.orderDto ? JSON.parse(route.query.orderDto) : null);
-
-
-
+const store = useStore();
+const router = useRouter();
+// 選擇的縣市
 const selectedCity = ref(null);
+// 選擇的行政區
 const selectedDistrict = ref(null);
-const address = ref('');
+// 組合的地址
+const orderAddress = ref('');
 
-const selectedCityDistricts = computed(() => {
+// 監聽縣市和行政區的變化，更新地址
+watch([selectedCity, selectedDistrict], () => {
+  orderAddress.value = selectedCity.value + (selectedDistrict.value ? ` ${selectedDistrict.value}` : '');
+});
+
+// 行政區的計算屬性，根據選擇的縣市過濾
+const districts = computed(() => {
   const city = cityList.value.find(c => c.name === selectedCity.value);
   return city ? city.districts : [];
 });
 
-const updateAddress = (district) => {
-  if (selectedCity.value && district) {
-    address.value = `${selectedCity.value}${district}`;
-  } else {
-    address.value = '';
+// 從 Vuex 獲取 checkoutOrderDto
+const checkoutOrderDto = computed(() => store.state.checkoutOrderDto);
+
+// 提交訂單的函數
+const submitOrder = async () => {
+  try {
+    const data = checkoutOrderDto.value;
+    const params = new URLSearchParams({ orderAddress: orderAddress.value });
+
+    const response = await axios.post(`http://localhost:8080/customer/api/order/addOrder?${params.toString()}`, data);
+
+    if (response.status === 200) {
+      router.push('/order');
+    }
+  } catch (error) {
+    console.error('下單時發生錯誤:', error);
   }
 };
 
-watch(selectedCity, (newCity) => {
-  if (!newCity) {
-    selectedDistrict.value = null;
-    address.value = '';
-  } else {
-    // Reset selectedDistrict when selectedCity changes
-    selectedDistrict.value = null;
-  }
-});
-
-export default {
-  setup() {
-    // Expose to the template
-    return {
-      cityList,
-      selectedCity,
-      selectedDistrict,
-      address,
-      selectedCityDistricts,
-      updateAddress,
-    };
-  }
-};
-
-const placeOrder = () => {
-  console.log('Order placed with address:', address.value);
-  // 這裡實現下單邏輯，比如發送POST請求等
-};
 </script>
-
-<template>
-  <v-container>
-    <!-- 顯示每個商品的內容，用 v-card 包起來 -->
-    <v-row>
-      <v-col
-          cols="12"
-          sm="6"
-          md="4"
-          v-for="item in orderDetails.productIDandQuentities"
-          :key="item.productID"
-      >
-        <v-card>
-          <v-card-title>{{ item.name }}</v-card-title>
-          <v-card-text>
-            <div>Product ID: {{ item.productID }}</div>
-            <div>Quantity: {{ item.quantity }}</div>
-            <div>Price: ${{ item.price.toFixed(2) }}</div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- 顯示總價 -->
-    <v-row>
-      <v-col cols="12">
-        <v-card color="grey lighten-3" class="pa-3">
-          <div class="text-h5">Total Price: ${{ orderDetails.totalPrice.toFixed(2) }}</div>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-card outlined>
-      <v-card-title>Order Address</v-card-title>
-      <!-- 當選擇的縣市改變時觸發 -->
-      <v-select
-          v-model="selectedDistrict"
-          :items="selectedCityDistricts"
-          label="Select District"
-          @change="updateAddress"
-      ></v-select>
-
-
-
-      <!-- 選擇行政區 -->
-      <v-select
-          v-model="selectedDistrict"
-          :items="districts"
-          label="Select District"
-          @change="updateAddress(selectedDistrict)"
-      ></v-select>
-
-      <!-- 顯示地址 -->
-      <div>地址: {{ address }}</div>
-
-      <!-- 下單按鈕 -->
-      <v-btn color="primary" @click="placeOrder">下單</v-btn>
-    </v-card>
-  </v-container>
-</template>
-
 
 <style scoped>
 /* 可以在這裡添加你需要的樣式 */

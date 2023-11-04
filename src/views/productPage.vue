@@ -132,6 +132,20 @@ import navbar from "@/components/navbar.vue";
             </v-container>
           </v-window-item>
 
+          <v-card flat>
+            <v-card-text>
+              <v-text-field
+                  v-model="question"
+                  label="Ask a question"
+                  clearable
+              ></v-text-field>
+              <v-btn
+                  color="primary"
+                  @click="submitQuestion"
+              >Submit Question</v-btn>
+            </v-card-text>
+          </v-card>
+
         </v-window>
       </v-card>
     </v-container>
@@ -172,14 +186,13 @@ export default {
   },
   async mounted() {
     const productId = this.$route.params.productId; // 從路由參數中取得 productId
-    this.productId = this.productData.productId;
+    this.productId = productId; // 將 productId 設定在元件的數據中
     await this.fetchProductData(productId);
     await this.fetchProductImages(productId);
     await this.fetchProductQandAs(productId);
     await this.fetchProductAverageReview(productId);
     await this.fetchProductReviews(productId);
-    await this.addToWishlist();
-    await this.addToCart();
+
     // await this.submitQuestion();
   },
   methods: {
@@ -255,12 +268,10 @@ export default {
       }
     },
     async addToCart() {
-      console.log('Adding product to cart, productId:', this.productId);
       try {
-        const response = await axios.post(`http://localhost:8080/customer/api/shoppingCart`, {
-
-          productId: this.productData.productId
-        });
+        // 假定 productId 應該是 URL 參數
+        const addToCartUrl = `http://localhost:8080/customer/api/shoppingCart?productId=${this.productId}`;
+        const response = await axios.post(addToCartUrl);
         if (response.status === 200) {
           this.dialogMessage = "商品已加入購物車";
           this.dialogIcon = "mdi-check-circle";
@@ -273,33 +284,40 @@ export default {
         this.showErrorDialog(error.message || "Error adding to cart");
       }
     },
+
     showErrorDialog(message) {
 
       this.dialogMessage = message;
       this.dialogIcon = "mdi-alert-circle";
       this.dialogIconColor = "error";
       this.dialog = true;
-    }
-    // async submitQuestion() {
-    //   try {
-    //     console.log("Submitting question for product ID:", this.productData.productId);
-    //     const response = await axios.post(`http://localhost:8080/customer/api/product/qanda/add/${this.productData.productId}`, {
-    //       question: this.question
-    //     });
-    //     if (response.status === 200) {
-    //       this.dialogMessage = "問題已提交";
-    //       this.dialogIcon = "mdi-check-circle";
-    //       this.dialogIconColor = "success";
-    //       this.dialog = true;
-    //     } else {
-    //       this.showErrorDialog("Failed to submit question");
-    //     }
-    //   } catch (error) {
-    //     this.showErrorDialog(error.message || "Error submitting question");
-    //   }
-    // },
-  },
+    },
+    async submitQuestion() {
+      // Make sure there's a question to submit
+      if (!this.question.trim()) {
+        this.showErrorDialog("Please enter a question before submitting.");
+        return;
+      }
+      try {
+        // Constructing the URL with the question as a query parameter
+        const questionUrl = `http://localhost:8080/customer/api/product/qanda/add/${this.productId}?question=${encodeURIComponent(this.question)}`;
+        const response = await axios.post(questionUrl); // Sending the GET request to the specified URL
+        if (response.status === 200) {
+          this.productQandAs.push(response.data);
+          this.question = ''; // Clear the input field after successful submission
+          this.dialogMessage = "Your question has been submitted successfully.";
+          this.dialogIcon = "mdi-check-circle";
+          this.dialogIconColor = "green";
+          this.dialog = true;
+        } else {
+          this.showErrorDialog("Failed to submit question");
+        }
+      } catch (error) {
+        this.showErrorDialog(error.response?.data?.message || "Error submitting question");
+      }
+    },
 
+  },
 };
 </script>
 <style scoped>
