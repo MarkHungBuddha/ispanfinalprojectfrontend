@@ -8,7 +8,7 @@
 
         <!-- 搜索訂單ID欄 -->
         <div class="selectbar">
-          <v-text-field v-model="searchQuery" label="搜索訂單ID" @input="searchOrder"></v-text-field>
+          <v-text-field v-model="searchQuery" label="買家搜索訂單ID" @input="searchOrder"></v-text-field>
         </div>
 
         <!-- 買家訂單頁面 -->
