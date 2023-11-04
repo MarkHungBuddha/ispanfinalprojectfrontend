@@ -75,6 +75,12 @@ const routes = [
     name: 'uploadImage',
     component: () => import("@/views/uploadImage.vue"),
     meta: { title: '上傳照片' }
+  },
+  {
+    path: '/showRevenue',
+    name: 'showRevenue',
+    component: () => import("@/views/showRevenue.vue"),
+    meta: { title: '收入' }
   }
 ]
 
