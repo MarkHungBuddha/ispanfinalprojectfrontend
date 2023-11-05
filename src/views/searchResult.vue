@@ -272,6 +272,10 @@ export default {
       }
     },
 
+    created() {
+      this.fetchProducts(this.$route.query.search);
+      this.fetchWishlist();
+    },
 
 
     // 評價

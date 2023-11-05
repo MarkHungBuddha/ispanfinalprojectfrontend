@@ -91,11 +91,12 @@ export default {
     },
     onClick() {
       console.log('Search Text:', this.searchText); // 加入這行來輸出搜尋文本
+      const search = this.searchText;
       this.loading = true;
       // 執行搜尋
       axios.get("http://localhost:8080/public/api/products", {
         params: {
-          productname: this.searchText
+          productname: search,
         }
       }).then((response) => {
         this.loading = false;
