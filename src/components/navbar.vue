@@ -4,26 +4,55 @@
       <v-btn text @click="redirectTo('/')">
         <img src="https://i.imgur.com/tsjp9Vx.jpg" alt="Logo" class="logo-img">
       </v-btn>
+      <v-btn v-if="isLoggedIn" text @click="redirectTo('/seller')" icon>
+        <img src="https://i.imgur.com/IqO0TWs.png" alt="Seller" class="icon-img">
+      </v-btn>
     </v-toolbar-title>
 
-    <v-text-field
-        v-if="!isLoggedIn"
-        v-model="searchText"
-        label="Search"
-        hide-details
-        class="search-bar"
-    ></v-text-field>
+    <!-- 新的搜尋框組件 -->
+
+      <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
+        <v-card-text style="padding: 0;">
+          <v-text-field
+              v-model="searchText"
+              :loading="loading"
+              density="compact"
+              variant="solo"
+              label="Search templates"
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              @click:append-inner="onClick"
+          ></v-text-field>
+        </v-card-text>
+      </v-card>
+
+
+
 
     <v-spacer></v-spacer>
 
+    <!-- 購物車按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon>
       <img src="https://i.imgur.com/kpCQMH5.png" alt="Shopping Cart" class="icon-img">
     </v-btn>
+    <!-- 願望清單按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectToWishList" icon>
       <img src="https://i.imgur.com/SDt6WzE.png" alt="Wish List" class="icon-img">
     </v-btn>
+    <!-- 訂單按鈕 -->
+    <v-btn v-if="isLoggedIn" @click="redirectTo('/order')" icon>
+      <img src="https://i.imgur.com/lEcgsZg.png" alt="Order" class="icon-img">
+    </v-btn>
+    <!-- 會員中心按鈕 -->
+    <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" icon>
+      <img src="https://i.imgur.com/WYW1y2p.png" alt="Member" class="icon-img">
+    </v-btn>
+    <!-- 登出按鈕 -->
     <v-btn v-if="isLoggedIn" @click="logout" class="custom-btn">登出</v-btn>
+    <!-- 登入按鈕 -->
     <v-btn v-else @click="redirectTo('/login')" class="custom-btn">登入</v-btn>
+    <!-- 註冊按鈕 -->
     <v-btn v-if="!isLoggedIn" @click="redirectTo('/register')" class="custom-btn">註冊</v-btn>
   </v-toolbar>
 </template>
@@ -35,6 +64,7 @@ export default {
   data() {
     return {
       searchText: '',
+      loading: false
     };
   },
   computed: {
@@ -59,6 +89,24 @@ export default {
             this.$router.push('/wishList');
           });
     },
+    onClick() {
+      console.log('Search Text:', this.searchText); // 加入這行來輸出搜尋文本
+      this.loading = true;
+      // 執行搜尋
+      axios.get("http://localhost:8080/public/api/products", {
+        params: {
+          productname: this.searchText
+        }
+      }).then((response) => {
+        this.loading = false;
+        // 導航到 searchResult.vue 並帶上搜尋字串
+        this.$router.push({ name: 'searchResult', query: { search: this.searchText } });
+      }).catch((error) => {
+        this.loading = false;
+        console.error("Error during search:", error);
+      });
+    },
+
     logout() {
       axios.post('http://localhost:8080/customer/member/logout')
           .then(() => {

@@ -157,36 +157,28 @@ export default {
     },
     async checkoutItems() {
       this.isCheckingOut = true; // Show the overlay
-      // 過濾出已勾選的物品
       const checkedItems = this.itemList.filter(item => item.checked);
-
-      // 將物品格式化為所需的JSON結構
       const productData = checkedItems.map(item => ({
         productID: item.productid,
         quantity: item.quantity
       }));
 
-      // 輸出格式化後的物品數據
       console.log("即將發送的訂單數據:", productData);
       this.isCheckingOut = false; // Hide the overlay
 
       try {
-        // 使用axios發送API請求
         const response = await axios.post("http://localhost:8080/customer/api/order/checkout", productData);
-
-        // 重定向到 /checkoutOrder 頁面並攜帶返回的數據
         const orderData = response.data;
-        console.log("orderData="+orderData.toString());
-// 使用名稱來導航，並且將數據作為查詢參數傳遞
-        this.$router.push({
-          name: 'checkoutOrder', // 使用路由配置中定義的名稱
-          query: {orderDto: JSON.stringify(orderData)} // 將數據轉為字符串格式作為查詢參數
-        });
+        console.log("orderData=", orderData);
 
+        // 保存 orderData 到 Vuex store
+        this.$store.dispatch('saveOrderData', orderData);
+
+        // 然后跳转到 checkoutOrder 路由
+        this.$router.push({ name: 'checkoutOrder' });
       } catch (error) {
-        // 處理任何錯誤
         console.error("結帳過程中出錯:", error.response ? error.response.data : error.message);
-        this.isCheckingOut = false; // Hide the overlay even on error
+        this.isCheckingOut = false;
       }
     }
   },

@@ -1,6 +1,7 @@
 <template>
     <v-container>
-        <!-- 收入Dashboard标题 -->
+      <sidebar></sidebar>
+      <!-- 收入Dashboard标题 -->
         <v-row>
             <v-col cols="12">
                 <h1 class="display-2">收入Dashboard</h1>

@@ -8,7 +8,7 @@ import sidebar from "@/components/sidebar.vue";
 <template>
   <v-app>
     <v-container>
-
+      <sidebar></sidebar>
       <v-row>
         <v-col cols="12">
           <v-text-field label="商品名稱" v-model="productName"></v-text-field>

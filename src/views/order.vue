@@ -2,9 +2,9 @@
   <v-app>
     <v-main>
       <v-container>
-        <barList></barList>
-        <navbar></navbar>
-        <sidebarBuyer></sidebarBuyer>
+<!--        <barList></barList>-->
+<!--        <navbar></navbar>-->
+<!--        <sidebarBuyer></sidebarBuyer>-->
 
         <!-- 搜索訂單ID欄 -->
         <div class="selectbar">
@@ -68,15 +68,15 @@
 <script>
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
-import barList from "@/components/barList.vue";
-import sidebarBuyer from '@/components/sidebarBuyer.vue';
+// import barList from "@/components/barList.vue";
+// import sidebarBuyer from '@/components/sidebarBuyer.vue';
 
 
 export default {
   components: {
     navbar,
-    barList,
-    sidebarBuyer,
+    // barList,
+    // sidebarBuyer,
   },
   data() {
     return {
@@ -186,7 +186,7 @@ export default {
     },
   },
   created() {
-    this.fetchAllOrders(); // 預設載入 '全部訂單' 
+    this.fetchAllOrders(); // 預設載入 '全部訂單'
   },
 };
 </script>

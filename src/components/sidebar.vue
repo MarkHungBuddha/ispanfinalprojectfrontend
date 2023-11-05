@@ -23,7 +23,7 @@
               訂單管理
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-list-item>
+              <v-list-item @click="Unanswer">
                 <v-list-item-title>待回問題</v-list-item-title>
               </v-list-item>
               <v-list-item @click="ManageOrders">
@@ -69,6 +69,9 @@ export default {
     },
     FindRevenue() {
       this.$router.push('/showRevenue');
+    },
+    Unanswer(){
+      this.$router.push('/unanswer');
     }
   }
 };

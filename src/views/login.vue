@@ -52,21 +52,31 @@ export default {
     async handleLogin() {
       if (this.$refs.form.validate()) {
         try {
-          const response = await axios.post(`http://localhost:8080/public/api/member/memberLogin?username=${this.username}&passwdbcrypt=${this.password}`);
+          const loginResponse = await axios.post(`http://localhost:8080/public/api/member/memberLogin?username=${this.username}&passwdbcrypt=${this.password}`);
 
-          if (response.data && response.data.success) {
+          if (loginResponse.data && loginResponse.data.success) {
             // 登入成功，進行相應操作
             this.$store.dispatch('updateLoginStatus', true);  // 更新登录状态
-            console.log(response.data.success);
-            alert(response.data.success);
+            console.log(loginResponse.data.success);
+            alert(loginResponse.data.success);
+
+            // 現在，我們需要調用checkLoginStatus API來獲取memberid
+            const statusResponse = await axios.get(`http://localhost:8080/public/api/checkLoginStatus`);
+            // console.log("memberId:"+statusResponse.data.memberId);
+            if (statusResponse.data && statusResponse.data.isLoggedIn) {
+              // 將memberid存儲到store
+              const memberid=statusResponse.data.memberId;
+              console.log("memberid:"+memberid);
+              this.$store.dispatch('updateMemberId', memberid);
+            }
 
             // 跳转到首页
             this.$router.push('/');  // assuming '/' is your homepage route path
 
-          } else if (response.data && response.data.error) {
+          } else if (loginResponse.data && loginResponse.data.error) {
             // 登入失敗，顯示後端返回的錯誤信息
-            console.error(response.data.error);
-            alert(response.data.error);
+            console.error(loginResponse.data.error);
+            alert(loginResponse.data.error);
           } else {
             console.error("未知的響應格式");
           }

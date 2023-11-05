@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import ProductList from "@/views/ProductList.vue";
 
 const routes = [
   {
@@ -130,12 +131,7 @@ const routes = [
     component: () => import("@/views/sellerOrder.vue"),
     meta: { title: '查看銷售訂單' }
   },
-  {
-    //訂單商品跳到商品頁面
-    path: '/product/:productId',
-    name: 'ProductPage',
-    component: () => import("@/views/ProductPage.vue"),
-  },
+
   {
     //賣家訂單商品跳商品頁面
     path: '/sellerOrderDetail/:orderid',
@@ -144,6 +140,30 @@ const routes = [
     meta: { title: '賣家訂單頁面' },
     props: true,
   },
+  {
+    path: '/products/:category',
+    name: 'ProductList',
+    component: () => import('@/views/ProductList.vue'), // 使用箭頭函數來動態導入
+    props: true,
+    meta: {
+      title: (route) => `${route.params.category}分類商品` // 使用一個函數來動態設置標題
+    }
+  },
+  {
+    path: '/searchResult',
+    name: 'searchResult',
+    component: () => import('@/views/searchResult.vue'), // 使用箭頭函數來動態導入
+    props: true,
+    meta: { title: '搜尋結果' },
+  },
+  {
+    path: '/unanswer',
+    name: 'unanswer',
+    component: () => import('@/views/unAnswerQuestion.vue'), // 使用箭頭函數來動態導入
+    props: true,
+    meta: { title: '未回答問題' },
+  },
+
   // {
   //   path: '/public/api/google-callback',
   //   component: GoogleCallbackComponent, // 这应该是处理回调逻辑的Vue组件
@@ -159,9 +179,21 @@ const router = createRouter({
   routes
 });
 
-// After each route change, update the document's title
-router.afterEach((to) => {
-  document.title = to.meta.title || 'Default Title';
+// 為了使用 meta 屬性中的 title，你可以設置一個全局的前置守衛
+router.beforeEach((to, from, next) => {
+  // 檢查 meta.title 是否為函數，如果是，則以當前路由作為參數調用它
+  if (typeof to.meta.title === 'function') {
+    document.title = to.meta.title(to) || 'Default Title';
+  } else {
+    document.title = to.meta.title || 'Default Title';
+  }
+  next();
 });
+
+
+// After each route change, update the document's title
+// router.afterEach((to) => {
+//   document.title = to.meta.title || 'Default Title';
+// });
 
 export default router;

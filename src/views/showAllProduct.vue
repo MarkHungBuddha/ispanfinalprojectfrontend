@@ -7,8 +7,8 @@ import sidebar from "@/components/sidebar.vue";
 <template>
   <v-app>
     <v-container>
+      <sidebar></sidebar>
       <div class="main-content">
-          <sidebar />
         <div class="content">
           <h1>商品列表</h1>
           <v-card>

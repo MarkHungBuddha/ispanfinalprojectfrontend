@@ -1,10 +1,14 @@
-import { createStore } from 'vuex';
+import {createStore} from 'vuex';
 
 export default createStore({
     state: {
         isLoggedIn: false,
         apiCallFinished: false,
-        wishlist: []
+        wishlist: [],
+        memberId: null,
+    },
+    getters: {
+        memberId: state => state.memberId,
     },
     mutations: {
         setLoginStatus(state, status) {
@@ -15,17 +19,35 @@ export default createStore({
         },
         setApiCallFinished(state, payload) {
             state.apiCallFinished = payload;
-        }
+        },
+        setOrderData(state, data) {
+            state.orderData = data;
+        },
+        clearOrderData(state) {
+            state.orderData = null;
+        },
+        SET_MEMBER_ID(state, memberId) {
+            state.memberId = memberId;
+        },
 
     },
     actions: {
-        updateLoginStatus({ commit }, status) {
+        updateLoginStatus({commit}, status) {
             commit('setLoginStatus', status);
         },
-    // 添加這個 action
-    updateApiCallStatus({ commit }, status) {
-        commit('setApiCallFinished', status);
-    }
+        // 添加這個 action
+        updateApiCallStatus({commit}, status) {
+            commit('setApiCallFinished', status);
+        },
+        saveOrderData({commit}, data) {
+            commit('setOrderData', data);
+        },
+        removeOrderData({commit}) {
+            commit('clearOrderData');
+        },
+        updateMemberId(context, memberId) {
+            context.commit('SET_MEMBER_ID', memberId);
+        },
 
     }
 });

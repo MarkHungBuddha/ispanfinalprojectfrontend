@@ -2,7 +2,6 @@
   <v-app>
     <v-main>
       <v-container>
-        <sidebarBuyer class="custom-sidebar"></sidebarBuyer>
         <!-- 上一頁按鈕 -->
         <v-btn icon @click="goBack">
           <v-icon>mdi-arrow-left</v-icon>
@@ -84,12 +83,12 @@
 
           <!-- 顯示產品列表 -->
           <v-card v-for="product in orderDetails.products" :key="product.productid" class="mb-3"
-            @click="navigateToProduct(product.productid)">
+                  @click="navigateToProduct(product.productid)">
             <v-row>
               <!-- 產品圖片列 -->
               <v-col cols="4">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                  class="product-image"></v-img>
+                       class="product-image"></v-img>
               </v-col>
 
               <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
@@ -100,7 +99,19 @@
                 </v-card-subtitle>
               </v-col>
             </v-row>
+            <v-card v-if="canAddReview" class="mt-3">
+              <v-card-title>增加評論</v-card-title>
+              <v-card-text>
+                <v-rating v-model="product.rating" dense color="amber" half-increments @click.stop></v-rating>
+                <v-text-field v-model="product.reviewcontent" label="評論內容" :rules="[rules.required]" @click.stop></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" @click.stop="createProductReview(product)">提交評論</v-btn>
+              </v-card-actions>
+            </v-card>
           </v-card>
+
+
 
         </div>
         <!-- 如果訂單詳情不存在，顯示警告信息 -->
@@ -116,10 +127,10 @@
 <script>
 import axios from 'axios';
 import sidebarBuyer from '@/components/sidebarBuyer.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
-
     sidebarBuyer,
   },
   props: {
@@ -205,12 +216,67 @@ export default {
       },
       selectedCity: '', // 使用者選擇的縣市
       selectedDistrict: '', // 使用者選擇的區域
+      canAddReview: false,
+      rules: {
+        required: value => !!value || 'Required.', // This is a simple required rule
+        // ... you can add other rules as needed
+      },
     };
   },
   created() {
     this.fetchOrderDetails();
   },
+  computed: {
+    memberId() {
+      return this.$store.getters.memberId;
+    }
+  },
+  mounted() {
+    // 检查订单状态是否允许添加评价
+    this.checkOrderStatus();
+  },
   methods: {
+    // 检查订单状态的方法
+    checkOrderStatus() {
+      axios.get(`http://localhost:8080/customer/api/order/${this.orderid}/status`)
+          .then(response => {
+            this.canAddReview = response.data;
+          })
+          .catch(error => {
+            console.error('检查订单状态失败：', error);
+          });
+    },
+
+    // 创建产品评价的方法
+    methods: {
+      createProductReview(product) {
+        // 使用计算属性中的 memberId
+        if (!this.memberId) {
+          console.error('memberId is null, cannot create product review');
+          return; // memberId 是 null，直接返回
+        }
+
+        // 注意：这里也改为使用计算属性的 memberId
+        const productReviewDTO = {
+          productid: product.productid,
+          memberid: this.memberId, // 使用计算属性的 memberId
+          orderid: this.orderid,
+          orderdetailid: product.orderdetailid,
+          rating: product.rating,
+          reviewcontent: product.reviewcontent,
+          reviewtime: new Date().toISOString(), // 获取当前时间并转换为 ISO 8601 字符串
+        };
+
+        axios.post('http://localhost:8080/customer/api/reviews', productReviewDTO)
+            .then(response => {
+              // 处理成功提交评价的逻辑...
+            })
+            .catch(error => {
+              console.error('提交评价失败：', error);
+            });
+      }
+    },
+
     // 方法：獲取訂單詳情
     fetchOrderDetails() {
       axios.get(`http://localhost:8080/customer/api/findOneOrder`, {
