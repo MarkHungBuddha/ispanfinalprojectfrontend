@@ -72,12 +72,6 @@ const routes = [
     props: true,
   },
   {
-    path: '/uploadProduct',
-    name: 'uploadProduct',
-    component: () => import("@/views/uploadProduct.vue"),
-    meta: { title: '上傳商品' }
-  },
-  {
     path: '/showAllProduct',
     name: 'showAllProduct',
     component: () => import("@/views/showAllProduct.vue"),
@@ -104,6 +98,51 @@ const routes = [
     path: '/editProfile', // 修改会员资料的页面路径
     component: () => import("@/views/editProfile.vue"),
     meta: { title: '修改會員資料' } // 修改会员资料的 Vue 组件
+  },
+  {
+    path: '/ProductFuzzySearch',
+    name: 'ProductFuzzySearch',
+    component: () => import("@/views/ProductFuzzySearch.vue"),
+    meta: { title: '搜尋' }
+  },
+  {
+    //訂單商品跳到商品頁面
+    path: '/product/:productId',
+    name: 'ProductPage',
+    component: () => import("@/views/ProductPage.vue"),
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => import("@/views/order.vue"),
+    meta: { title: '查看訂單' }
+  },
+  {
+    path: '/orderDetail/:orderid',
+    name: 'orderDetail',
+    component: () => import("@/views/orderDetail.vue"),
+    meta: { title: '買家訂單頁面' },
+    props: true,
+  },
+  {
+    path: '/sellerOrder',
+    name: 'sellerOrder',
+    component: () => import("@/views/sellerOrder.vue"),
+    meta: { title: '查看銷售訂單' }
+  },
+  {
+    //訂單商品跳到商品頁面
+    path: '/product/:productId',
+    name: 'ProductPage',
+    component: () => import("@/views/ProductPage.vue"),
+  },
+  {
+    //賣家訂單商品跳商品頁面
+    path: '/sellerOrderDetail/:orderid',
+    name: 'sellerOrderDetail',
+    component: () => import("@/views/sellerOrderDetail.vue"),
+    meta: { title: '賣家訂單頁面' },
+    props: true,
   },
   // {
   //   path: '/public/api/google-callback',

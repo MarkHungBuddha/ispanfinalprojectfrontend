@@ -3,33 +3,52 @@
     <v-list>
       <v-list-item-group>
         <v-expansion-panels>
+
           <v-expansion-panel>
             <v-expansion-panel-title>
               商品管理
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-list-item>
-                <v-list-item-title @click="UploadProduct">新增商品</v-list-item-title>
+              <v-list-item @click="UploadProduct">
+                <v-list-item-title>新增商品</v-list-item-title>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title @click="FindProduct">商品管理</v-list-item-title>
+              <v-list-item @click="FindProduct">
+                <v-list-item-title>商品列表</v-list-item-title>
               </v-list-item>
             </v-expansion-panel-text>
           </v-expansion-panel>
-          <!-- 其他 v-expansion-panel 結構省略... -->
+
           <v-expansion-panel>
             <v-expansion-panel-title>
-              營收分析
+              訂單管理
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-list-item>
-                <v-list-item-title @click="FindRevenue">收入</v-list-item-title>
+                <v-list-item-title>待回問題</v-list-item-title>
               </v-list-item>
-              <v-list-item>
-                <v-list-item-title>回復</v-list-item-title>
+              <v-list-item @click="ManageOrders">
+                <v-list-item-title>訂單管理</v-list-item-title>
               </v-list-item>
             </v-expansion-panel-text>
           </v-expansion-panel>
+
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              數據分析
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list-item>
+                <v-list-item-title>提問數量</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-title>評論數量</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="FindRevenue">
+                <v-list-item-title>營收分析</v-list-item-title>
+              </v-list-item>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
         </v-expansion-panels>
       </v-list-item-group>
     </v-list>
@@ -44,6 +63,9 @@ export default {
     },
     FindProduct() {
       this.$router.push('/showAllProduct');
+    },
+    ManageOrders() {
+      this.$router.push('/sellerOrder');
     },
     FindRevenue() {
       this.$router.push('/showRevenue');

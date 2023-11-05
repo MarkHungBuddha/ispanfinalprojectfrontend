@@ -15,6 +15,9 @@ import Home from "@/views/Home.vue";
 import productPage from "@/views/productPage.vue";
 import navbar from "@/components/navbar.vue";
 import '@mdi/font/css/materialdesignicons.css'
+import ProductSearch from "@/components/ProductSearchBar.vue";
+import productCategoryCard from "@/components/productCategoryCard.vue";
+import ProductSearchBar from "@/components/ProductSearchBar.vue";
 
 
 // import 'vuetify/dist/vuetify.min.css';
@@ -45,6 +48,10 @@ app.component('sidebar', sidebar);
 app.component('Home', Home);
 app.component('productPage', productPage);
 app.component('navbar', navbar);
+app.component('ProductSearch', ProductSearch)
+app.component('productCategortCard',productCategoryCard)
+app.component('ProductSearchBar',ProductSearchBar)
+
 
 app.config.globalProperties.$axios = axios;
 

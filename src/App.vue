@@ -1,5 +1,10 @@
+<script setup>
+
+import ProductSearch from '@/components/ProductSearchBar.vue';
+</script>
 <template>
   <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
+  <product-search></product-search>
   <router-view :is-logged-in="isLoggedIn"></router-view>
   <div v-if="overlay" class="text-center">
     <v-overlay class="align-center justify-center">
