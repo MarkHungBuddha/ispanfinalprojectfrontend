@@ -10,7 +10,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">行動通訊</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">行動通訊</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(title, index) in items" :key="index" @click="fetchProducts(title)">
@@ -24,7 +24,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">大型家電</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">大型家電</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(appliance, index) in appliances" :key="index" @click="fetchProducts(appliance)">
@@ -38,7 +38,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">電腦資訊</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">電腦資訊</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(info, index) in computerInfo" :key="index" @click="fetchProducts(info)">
@@ -52,7 +52,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">電腦周邊</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">電腦周邊</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
@@ -67,7 +67,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">小型家電</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">小型家電</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
@@ -82,7 +82,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">視聽娛樂</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">視聽娛樂</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
@@ -97,7 +97,7 @@
             <div class="text-center">
               <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
-                  <v-btn color="primary" v-bind="props" @mouseenter="showItems">辦公耗材</v-btn>
+                  <v-btn color="#008080" v-bind="props" @mouseenter="showItems">辦公耗材</v-btn>
                 </template>
                 <v-list>
                   <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
@@ -113,15 +113,16 @@
           <!-- 畫面呈現區 -->
           <v-row>
 
-            <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
+            <v-col v-for="(product, index) in products" :key="index" class="product-col">
 
-              <v-card>
+
+              <v-card class="product-card">
                 <v-card-text class="d-flex flex-column align-center">
                   <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                     class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
                   <div class="product-name">{{ product.productname }}</div>
                   <div class="original-price">原價: {{ product.price }}</div>
-                  <div class="special-price">特價: {{ product.specialprice }}</div>
+                  <div v-if="product.specialprice > 0" class="special-price">特價: {{ product.specialprice }}</div>
 
                   <div v-if="product.averageReview">
                     平均評價: {{ product.averageReview.toFixed(2) }}
@@ -140,9 +141,9 @@
                     <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
                   </v-btn>
                   <!-- 願望清單的彈跳提示 -->
-                  <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
-                    {{ snackbarText }}
-                    <v-btn color="white" text @click="snackbar = false">關閉</v-btn>
+                  <v-snackbar v-model="wishlistSnackbar" :color="wishlistSnackbarColor" timeout="3000">
+                    {{ wishlistSnackbarText }}
+                    <v-btn color="white" text @click="wishlistSnackbar = false">關閉</v-btn>
                   </v-snackbar>
 
 
@@ -163,7 +164,7 @@
         <!-- 分頁控件 -->
         <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
 
-        <v-row>
+        <!-- <v-row>
           <v-col cols="300" sm="4">
             <v-switch v-model="priceFilter" label="啟用價格範圍過濾"></v-switch>
           </v-col>
@@ -176,7 +177,7 @@
           <v-col cols="12" sm="4" class="d-flex align-end">
             <v-btn color="primary" @click="applyFilters">應用篩選</v-btn>
           </v-col>
-        </v-row>
+        </v-row> -->
 
 
 
@@ -267,7 +268,7 @@ export default {
             minPrice: this.minPrice,
             maxPrice: this.maxPrice,
             page: this.currentPage,
-            pageSize: 4,
+            pageSize: 5,
           },
         })
         .then((response) => {
@@ -288,7 +289,6 @@ export default {
             this.products = [];
             this.totalPages = 1;
             // 可以在這裡添加一個用戶提示，告知沒有找到產品
-            // alert('沒有找到產品。');
           }
         })
         .catch((error) => {
@@ -359,7 +359,7 @@ export default {
           // 成功添加到願望清單後的操作
           alert('成功添加到願望清單');
           // 可以根據需要更新願望清單狀態或UI
-          this.updateWishlistStatus(productId, true);
+          this.updateWishlistStatus(productId, response.data.inWishlist); // 假设response中包含了inWishlist状态
         })
         .catch(error => {
           // 處理錯誤
@@ -436,6 +436,38 @@ export default {
 </script>
   
 <style>
+/* 去除行和列的内边距和外边距 */
+.v-row,
+.v-col {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.product-col {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 商品卡片样式 */
+.product-card {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 !important;
+  /* 移除外边距 */
+  width: 100%;
+  /* 卡片宽度设置为100% 列的宽度 */
+  height: auto;
+  /* 高度自适应内容 */
+}
+
+.product-card-spacing {
+  margin-left: 4px;
+  /* 减少左外边距 */
+  margin-right: 4px;
+  /* 减少右外边距 */
+}
+
 .smaller-card {
   max-width: 200px;
   margin: 0 auto;
@@ -450,16 +482,14 @@ export default {
   margin-top: 20px;
 }
 
+/* 根据固定大小调整图片样式 */
 .product-image {
   width: 100%;
-  /* 使用百分比確保圖片寬度對應到卡片寬度 */
-  height: 200px;
-  /* 固定高度 */
+  /* 图片宽度与卡片相同 */
+  height: 100px;
+  /* 指定一个固定高度 */
   object-fit: cover;
-  /* 覆蓋或包含圖片以適應給定的框架，可能的值還有 contain, cover, fill 等 */
-  margin-right: auto;
-  /* 移除 mr-2 並使用自動外邊距確保居中顯示 */
-  margin-left: auto;
+  /* 图片覆盖整个可用空间，可能会被裁剪 */
 }
 
 .v-card-title {
@@ -475,13 +505,11 @@ export default {
 }
 
 .product-name {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  white-space: normal;
-  line-height: 1.2;
   text-align: center;
-  /* 確保文字居中對齊 */
+  margin-top: auto;
+  /* 在flex容器中推动元素向下对齐 */
+  margin-bottom: auto;
+  /* 在flex容器中推动元素向上对齐 */
 }
 
 .original-price {
@@ -507,27 +535,91 @@ export default {
 
 .wishlist-btn {
   position: absolute;
-  bottom: 16px;
-  /* 距離卡片底部的距離，根據需要調整 */
-  right: 16px;
-  /* 距離卡片右側的距離，根據需要調整 */
-  z-index: 2;
-  /* 確保按鈕在卡片之上 */
+  top: 8px;
+  /* 或者根据需要调整 */
+  right: 1px;
+  /* 或者根据需要调整 */
+  z-index: 1;
+  /* 保证按钮在卡片内容之上 */
+  z-index: 1;
+  /* 保证按钮在内容上方 */
+  padding: 4px;
+  /* 减小内边距减小按钮大小 */
+  border-radius: 0%;
+
 }
 
 .v-card {
-  margin-bottom: 24px;
-  /* 或者根據需要調整，以提供足夠的空間 */
+  width: 300px;
+  /* 指定固定宽度 */
+  height: 350px;
+  /* 指定固定高度 */
+  margin-bottom: 8px;
+  /* 保留一些底部间隙 */
+  overflow: hidden;
+  /* 隐藏溢出的内容 */
 
+  display: flex;
+  /* 使用flex布局，以便内部元素可以使用flex-grow等属性 */
+  flex-direction: column;
+  /* 子元素垂直排列 */
 }
 
 .category-bar {
   border: 1px solid #ddd;
   /* 給分類按鈕外圍加上邊框 */
-  padding: 8px;
+  padding: 6px;
   /* 內部間距 */
   margin-bottom: 16px;
   /* 與下面內容的間距 */
+}
+
+.work-area {
+  display: flex;
+  justify-content: center;
+  /* 水平置中 */
+  align-items: center;
+  /* 垂直置中 */
+  height: 100vh;
+  /* 可視視窗高度 */
+}
+
+/* 如果工作區內有多個元素並且只希望按鈕置中 */
+.button-container {
+  display: flex;
+  justify-content: center;
+  /* 水平置中 */
+  align-items: center;
+  /* 垂直置中 */
+  height: 100%;
+  /* 父容器高度 */
+}
+
+.product-card {
+  /* ... 其他样式保持不变 ... */
+  position: relative;
+  /* 为了绝对定位的 .wishlist-btn 提供参照 */
+}
+
+.v-btn {
+  padding: 12px 30px;
+  /* 增加內邊距 */
+  font-size: 16px;
+  /* 調整字體大小，根據需要調整 */
+  min-width: 120px;
+  /* 設定最小寬度 */
+  min-height: 48px;
+  /* 設定最小高度 */
+  margin-top: auto;
+  /* 上邊距自動 */
+  margin-bottom: auto;
+  /* 下邊距自動 */
+  white-space: nowrap;
+  /* 防止文字換行 */
+  overflow: hidden;
+  /* 隱藏超出按鈕範圍的文字 */
+  text-overflow: ellipsis;
+  /* 超出部分顯示為省略號 */
 }
 </style>
   

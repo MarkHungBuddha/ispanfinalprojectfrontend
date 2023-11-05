@@ -3,42 +3,42 @@
     <v-main>
       <v-container>
 
-        <!-- 头部，包含搜索栏和购物车图标 -->
-        <v-row class="mb-5">
-          <v-col>
-            <v-text-field clearable prepend-inner-icon="mdi-magnify" placeholder="搜索商品..."></v-text-field>
-          </v-col>
-          <v-col class="text-right">
-            <v-btn icon>
-              <v-badge color="red" content="3">
-                <v-icon large>mdi-cart</v-icon>
-              </v-badge>
-            </v-btn>
-          </v-col>
-        </v-row>
-
         <!-- 商品目录标题 -->
         <v-row>
           <v-col>
-            <h1 class="display-1">商品目录</h1>
+            <div class="raised-box">
+              <h1 class="display-1">每日新發現</h1>
+            </div>
           </v-col>
         </v-row>
 
-        <!-- 商品卡片 -->
+        <!-- 分类列表和商品卡片的工作区 -->
         <v-row no-gutters>
-          <v-col cols="12" class="workspaces">
-            <v-row>
-              <v-col v-for="(product, index) in displayedProducts" :key="index" cols="12" sm="6" md="4" lg="3">
+          <!-- 分类列表的工作区 -->
+          <v-col cols="5" md="2">
+            <div class="category-section">
+              <v-list>
+                <v-list-item v-for="category in categories" :key="category" @mouseover="selectCategory(category)">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ category }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </div>
+          </v-col>
+
+          <!-- 商品卡片的工作区 -->
+          <v-col cols="5" md="7">
+            <v-row no-gutters>
+              <v-col v-for="(product, index) in displayedProducts" :key="index" cols="5" sm="6" md="4" lg="3">
                 <v-card class="product-card">
-                  <v-card-text class="d-flex flex-column align-center">
-                    <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                      class="product-image"></v-img>
-                    <div class="product-name">{{ product.productname }}</div>
+                  <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image" class="product-image"
+                    @click="navigateToProduct(product.productid)"></v-img>
+                  <div class="product-name">{{ product.productname }}</div>
+                  <div class="price-text">
                     <div class="original-price">原價: {{ product.price }}</div>
-                    <div class="special-price">特價: {{ product.specialprice }}</div>
-                    <v-btn block color="primary" @click="fetchCategoryProducts(category)"> {{ category }}
-                    </v-btn>
-                  </v-card-text>
+                    <div v-if="product.specialprice > 0" class="special-price">特價: {{ product.specialprice }}</div>
+                  </div>
                 </v-card>
               </v-col>
             </v-row>
@@ -56,16 +56,63 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      selectedCategory: "",
+      selectedCategoryName: "",
+      selectedCategoryImagepath: "",
+      selectedCategoryPrice: 0,
+      selectedCategorySpecialPrice: 0,
+      showPriceAndSpecialPrice: false,
+
+
+      products: [],
       displayedProducts: [], // 存放API取得的產品資料
       categories: [ // 添加大分類的數據
-        '筆記型電腦', '主機板', '記憶體', '光碟機',
-        '機殼', '散熱風扇', '顯示卡', '硬碟_SSD',
+        '筆記型電腦', '主機板', '記憶體', '光碟機', '顯示卡', '硬碟_SSD',
         '桌上型電腦', '電供_線材', '軟體'
       ],
 
+      currentPage: 1,
+      totalPages: 1, // 初始化总页数为1
+      showLargeAppliances: false, // 控制大型家電内容的显示状态
+      minPrice: 0,
+      maxPrice: 9999999,
+      priceFilter: false,
+
+      // 願望清單彈跳
+      snackbar: false, // 控制Snackbar顯示的變量
+      snackbarText: '', // 顯示在Snackbar中的消息
+      snackbarColor: '', // Snackbar的顏色
+      // 購物車彈跳
+      wishlistSnackbar: false,
+      wishlistSnackbarText: '',
+      wishlistSnackbarColor: '',
+
+      selectedProductDetails: null, // 用於存儲從後端獲取的產品詳情
+
     };
   },
+  watch: {
+    currentPage(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.fetchProducts(this.selectedCategoryName);
+      }
+    }
+  },
+  //願望清單 生命茅點
+  created() {
+    if (Array.isArray(this.displayedProducts)) {
+      this.displayedProducts.forEach(product => {
+        product.inWishlist = localStorage.getItem(product.productid) === 'true';
+      });
+    }
+  },
   methods: {
+    selectCategory(category) {
+      // 在這裡實現選擇商品類別後的邏輯
+      console.log(`Selected category: ${category}`);
+      // 根據選擇的類別拉取產品資料
+      this.fetchCategoryProducts(category);
+    },
 
     fetchCategoryProducts(categoryName) {
       // 使用axios調用API
@@ -85,18 +132,21 @@ export default {
         }
       }).catch(error => {
         console.error("Error fetching category products:", error);
-        this.displayedProducts = []; // 出错时清空数组        });
+        this.displayedProducts = []; // 出错时清空数组});
       });
     },
+
+    //添加跳轉頁面到productPage
+    navigateToProduct(productid) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
+    },
+
     selectProduct(product) {
       // 在这里实现选择商品后的逻辑
       console.log('选择的商品:', product.productname);
       // 例如，添加商品到购物车的代码
     },
-    navigateToProduct(productId) {
-      // 实现导航到商品详细页面的逻辑
-      // this.$router.push({ name: 'ProductDetails', params: { productId } });
-    },
+
 
   },
   // 当组件创建完成后立即获取数据
@@ -155,14 +205,15 @@ export default {
 }
 
 .product-card {
+  width: 100%;
+  /* 或者其他尺寸，取决于您希望卡片如何显示 */
+  max-width: 250px;
+  /* 最大宽度，以确保卡片不会变得太大 */
+  margin-bottom: 16px;
+  /* 添加适当的底部外边距 */
+  margin: 0;
 
-  height: auto;
-  width: 250px;
-  /* 設定固定寬度 */
-  height: 350px;
-  /* 設定固定高度 */
-  display: flex;
-  flex-direction: column;
+
 }
 
 /* 添加样式 */
@@ -175,5 +226,70 @@ export default {
 .v-btn--icon {
   margin-right: 1rem;
   /* 图标间隔 */
+}
+
+.original-price {
+  font-size: 16px;
+  /* 設定原價的字體大小 */
+}
+
+.special-price {
+  font-size: 20px;
+  /* 設定特價的字體大小 */
+  color: red;
+  /* 特價顯示為紅色 */
+}
+
+.price-text {
+  text-align: center;
+  /* 将文本居中对齐 */
+}
+
+.price-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* 使子元素垂直堆叠 */
+}
+
+.raised-box {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  /* 添加阴影创建浮起效果 */
+  padding: 1rem;
+  /* 添加一些内边距 */
+  border-radius: 8px;
+  /* 如果需要可以加圆角 */
+  background-color: white;
+  /* 设置背景颜色 */
+  margin: 1rem 0;
+  /* 添加一些外边距 */
+
+  /* 添加置中样式 */
+  display: flex;
+  justify-content: center;
+  /* 水平居中 */
+  align-items: center;
+  /* 垂直居中 */
+  text-align: center;
+  /* 文本对齐方式为居中 */
+}
+
+.product-workspace {
+  /* 确保工作区内的卡片有合适的间隔和布局 */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  /* 或者flex-start等，取决于您的具体需要 */
+  align-items: stretch;
+  /* 确保卡片在垂直方向上拉伸以填满可用空间 */
+  padding: 16px;
+  /* 根据需要添加适当的内边距 */
+}
+
+.category-section {
+  border: 1px solid #ddd;
+  /* 为整个分类列表添加边框 */
+  /* 其他样式 */
 }
 </style>

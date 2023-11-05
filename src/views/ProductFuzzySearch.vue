@@ -13,7 +13,7 @@
         <!-- 畫面呈現區 -->
         <v-row>
 
-          <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
+          <v-col v-for="(product, index) in products" :key="index">
 
             <v-card>
               <v-card-text class="d-flex flex-column align-center">
@@ -29,20 +29,15 @@
 
 
                 <v-btn color="success" @click="addProductToCart(product.productid)">加入購物車</v-btn>
-                <!-- 加入購物車的彈跳提示 -->
-                <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
-                  {{ snackbarText }}
-                  <v-btn color="white" text @click="snackbar = false">關閉</v-btn>
-                </v-snackbar>
 
                 <!-- 心形圖示按鈕 -->
                 <v-btn icon flat class="wishlist-btn" @click="toggleWishlist(product)">
                   <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
                 </v-btn>
                 <!-- 願望清單的彈跳提示 -->
-                <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
-                  {{ snackbarText }}
-                  <v-btn color="white" text @click="snackbar = false">關閉</v-btn>
+                <v-snackbar v-model="wishlistSnackbar" :color="wishlistSnackbarColor" timeout="3000">
+                  {{ wishlistSnackbarText }}
+                  <v-btn color="white" text @click="wishlistSnackbar = false">關閉</v-btn>
                 </v-snackbar>
 
 
@@ -92,16 +87,6 @@ export default {
         selectedCategoryPrice: 0,
         selectedCategorySpecialPrice: 0,
         showPriceAndSpecialPrice: false,
-        // 購物車彈跳
-        cartSnackbar: false,
-        cartSnackbarText: '',
-        cartSnackbarColor: '',
-
-        // 願望清單彈跳
-        wishlistSnackbar: false,
-        wishlistSnackbarText: '',
-        wishlistSnackbarColor: '',
-
       },
 
       headers: [
@@ -247,6 +232,8 @@ export default {
 
       axios
         .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
+          withCredentials: true,
+
           params: {
             productId: productid,
           }
@@ -293,7 +280,7 @@ export default {
           // 成功添加到願望清單後的操作
           alert('成功添加到願望清單');
           // 可以根據需要更新願望清單狀態或UI
-          this.updateWishlistStatus(productId, true);
+          this.updateWishlistStatus(productId, response.data.inWishlist); // 假设response中包含了inWishlist状态
         })
         .catch(error => {
           // 處理錯誤
@@ -337,4 +324,20 @@ export default {
 
 </script>
     
-<style></style>
+<style>
+.v-row,
+.v-col {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.product-card {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+  /* 卡片寬度設定為 100% */
+  height: auto;
+  /* 高度根據內容自動調整 */
+}
+</style>
