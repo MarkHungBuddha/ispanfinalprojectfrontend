@@ -135,20 +135,26 @@ export default {
     }
   },
   methods: {
+    
     async fetchUserProfile() {
-      try {
-        const response = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
-        const data = response.data;
-        if (data.isLoggedIn) {
-          this.user.username = data.username;
-          this.user.membertype = data.role;
-          this.isLoggedIn = true;
-          this.fetchMemberData(data.userId);
+    try {
+      const response = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
+      const data = response.data;
+      if (data.isLoggedIn) {
+        this.user.username = data.username;
+        this.user.membertype = data.role;
+        this.isLoggedIn = true;
+        // 确保使用正确的键来获取用户ID
+        if(data.memberId !== undefined) {
+          this.fetchMemberData(data.memberId);
+        } else {
+          console.error("用户ID未定义。");
         }
-      } catch (error) {
-        console.error("Failed to fetch user profile: ", error);
       }
-    },
+    } catch (error) {
+      console.error("Failed to fetch user profile: ", error);
+    }
+  },
     fetchMemberData(userId) {
       axios.get(`http://localhost:8080/public/api/member/${userId}`)
         .then((response) => {

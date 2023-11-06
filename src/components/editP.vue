@@ -61,6 +61,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
+                    ref="birthdate"
                     v-model="user.birthdate"
                     label="出生日期"
                     prepend-icon="mdi-calendar"
@@ -191,12 +192,14 @@ export default {
   methods: {
     setupFlatpickr() {
       this.$nextTick(() => {
-        flatpickr(this.$refs.birthdate, {
-          dateFormat: 'Y-m-d',
-          onValueUpdate: (selectedDates, dateStr) => {
-            this.user.birthdate = dateStr;
-          },
-        });
+        if(this.$refs.birthdate && this.$refs.birthdate.$el) {
+          flatpickr(this.$refs.birthdate.$el.querySelector('input'), {
+            dateFormat: 'Y-m-d',
+            onChange: (selectedDates, dateStr) => {
+              this.user.birthdate = dateStr;
+            },
+          });
+        }
       });
     },
     fetchUserProfile() {
@@ -225,9 +228,12 @@ export default {
         });
     },
     submit() {
-      if (this.$refs.form.validate()) {
-        axios.put(`http://localhost:8080/public/api/member/update/${this.user.id}`, this.user)
-          .then(response => {
+  if (this.$refs.form.validate()) {
+    // 创建一个不包含密码的用户对象副本
+    const userToUpdate = { ...this.user };
+    delete userToUpdate.passwdbcrypt;
+    axios.put(`http://localhost:8080/public/api/member/update/${this.user.id}`, userToUpdate)
+      .then(response => {
             if (response.data.success) {
               // 设置并显示成功的 snackbar
               this.snackbar.show = true;
@@ -291,6 +297,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 @import "flatpickr/dist/flatpickr.css";
