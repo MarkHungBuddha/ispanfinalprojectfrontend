@@ -1,112 +1,113 @@
 <template>
-  <v-row class="category-bar">
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >行動通訊</v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-                v-for="(title, index) in items"
-                :key="index"
-                @click="handleCategoryClick(title)"
-            >
-              <v-list-item-title>{{ title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >大型家電</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(appliance, index) in appliances" :key="index" @click="handleCategoryClick(appliance)">
-              <v-list-item-title>{{ appliance }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >電腦資訊</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(info, index) in computerInfo" :key="index" @click="handleCategoryClick(info)">
-              <v-list-item-title>{{ info }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >電腦周邊</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
-                         @click="handleCategoryClick(computerPeripheral)">
-              <v-list-item-title>{{ computerPeripheral }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >小型家電</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
-                         @click="handleCategoryClick(smallAppliance)">
-              <v-list-item-title>{{ smallAppliance }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >視聽娛樂</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
-                         @click="handleCategoryClick(entertainment)">
-              <v-list-item-title>{{ entertainment }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-    <v-col>
-      <div class="text-center">
-        <v-menu open-on-hover>
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >辦公耗材</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
-                         @click="handleCategoryClick(officeSupply)">
-              <v-list-item-title>{{ officeSupply }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </v-col>
-  </v-row>
+  <!-- 使用 v-toolbar 來布置水平導航菜單 -->
+  <v-toolbar flat dense class="category-bar">
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">行動通訊</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(title, index) in items" :key="index" @click="handleCategoryClick(title)">
+            <v-list-item-title>{{ title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">大型家電</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(appliance, index) in appliances" :key="index" @click="handleCategoryClick(appliance)">
+            <v-list-item-title>{{ appliance }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">電腦資訊</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(info, index) in computerInfo" :key="index" @click="handleCategoryClick(info)">
+            <v-list-item-title>{{ info }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">電腦周邊</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
+            @click="handleCategoryClick(computerPeripheral)">
+            <v-list-item-title>{{ computerPeripheral }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">小型家電</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
+            @click="handleCategoryClick(smallAppliance)">
+            <v-list-item-title>{{ smallAppliance }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">視聽娛樂</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
+            @click="handleCategoryClick(entertainment)">
+            <v-list-item-title>{{ entertainment }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+    <div class="text-center">
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">辦公耗材</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
+            @click="handleCategoryClick(officeSupply)">
+            <v-list-item-title>{{ officeSupply }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+
+
+  </v-toolbar>
 </template>
 
 <script>
@@ -174,45 +175,45 @@ export default {
       }
 
       axios
-          .get("http://localhost:8080/public/api/categoryname", {
-            params: {
-              categoryname: categoryName,
-              minPrice: this.minPrice,
-              maxPrice: this.maxPrice,
-              page: this.currentPage,
-              pageSize: 4,
-            },
-          })
-          .then((response) => {
-            if (response.data && response.data.content && response.data.content.length > 0) {
-              this.products = response.data.content;
-              this.products.forEach(product => {
-                product.inWishlist = localStorage.getItem(product.productid) === 'true';
-                if (product && product.productId) {
-                  this.fetchAverageReview(product.productId);
-                }
-                this.navigateToProducts(categoryName);
-              });
-              this.totalPages = response.data.totalPages;
+        .get("http://localhost:8080/public/api/categoryname", {
+          params: {
+            categoryname: categoryName,
+            minPrice: this.minPrice,
+            maxPrice: this.maxPrice,
+            page: this.currentPage,
+            pageSize: 4,
+          },
+        })
+        .then((response) => {
+          if (response.data && response.data.content && response.data.content.length > 0) {
+            this.products = response.data.content;
+            this.products.forEach(product => {
+              product.inWishlist = localStorage.getItem(product.productid) === 'true';
+              if (product && product.productId) {
+                this.fetchAverageReview(product.productId);
+              }
+              this.navigateToProducts(categoryName);
+            });
+            this.totalPages = response.data.totalPages;
 
-              // 循環調用fetchAverageReview為每個產品獲取平均評價
+            // 循環調用fetchAverageReview為每個產品獲取平均評價
 
-            } else {
-              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
-              this.products = [];
-              this.totalPages = 1;
-              // 可以在這裡添加一個用戶提示，告知沒有找到產品
-              // alert('沒有找到產品。');
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching products:", error);
-            // 處理錯誤情況，如API呼叫失敗等
+          } else {
+            // 如果返回的內容為空，則清空產品列表並設置總頁數為1
             this.products = [];
             this.totalPages = 1;
-            // 提示用戶檢查錯誤
-            // alert('檢索產品時發生錯誤。');
-          });
+            // 可以在這裡添加一個用戶提示，告知沒有找到產品
+            // alert('沒有找到產品。');
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          // 處理錯誤情況，如API呼叫失敗等
+          this.products = [];
+          this.totalPages = 1;
+          // 提示用戶檢查錯誤
+          // alert('檢索產品時發生錯誤。');
+        });
     },
     navigateToProducts(category) {
       this.$router.push({ name: 'ProductList', params: { category: category } });
@@ -226,15 +227,25 @@ export default {
 </script>
 
 <style>
+.toolbar-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 確保 toolbar 和其內容在屏幕中央顯示 */
+.text-center {
+  width: 100px;
+  display: flex;
+  justify-content: center;
+}
 
 .smaller-card {
   max-width: 200px;
   margin: 0 auto;
 }
 
-.text-center {
-  text-align: center;
-}
+
 
 .pagination {
   text-align: center;
@@ -292,7 +303,7 @@ export default {
 .card-actions {
   position: relative;
   /* 確保卡片有足夠的高度，否則圖示可能會超出卡片範圍 */
-//min-height: 48;
+  min-height: 48;
   /* 或者根據需要調整 */
 }
 
@@ -313,7 +324,7 @@ export default {
 }
 
 .category-bar {
-height: 70px;
+  height: 70px;
   background-color: #FEB5C5;
 }
 </style>

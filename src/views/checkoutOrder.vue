@@ -2,13 +2,7 @@
   <v-container>
     <!-- 顯示每個商品的內容，用 v-card 包起來 -->
     <v-row v-if="orderDetails">
-      <v-col
-          cols="12"
-          sm="6"
-          md="4"
-          v-for="item in orderDetails.productIDandQuantities"
-          :key="item.productID"
-      >
+      <v-col cols="12" sm="6" md="4" v-for="item in orderDetails.productIDandQuentities" :key="item.productID">
         <v-card>
           <v-card-title>{{ item.name }}</v-card-title>
           <v-card-text>
@@ -31,24 +25,11 @@
 
     <v-card outlined>
       <v-card-title>Order Address</v-card-title>
-      <v-select
-          :items="cityList"
-          item-text="name"
-          item-value="name"
-          label="選擇縣市"
-          v-model="selectedCity"
-      ></v-select>
+      <v-select :items="cityList" item-text="name" item-value="name" label="選擇縣市" v-model="selectedCity"></v-select>
 
-      <v-select
-          :items="districts"
-          label="選擇行政區"
-          v-model="selectedDistrict"
-      ></v-select>
-      <v-text-field
-          label="Address"
-          v-model="newAddress"
-      :placeholder="`${selectedCity}${selectedDistrict}`"
-      ></v-text-field>
+      <v-select :items="districts" label="選擇行政區" v-model="selectedDistrict"></v-select>
+      <v-text-field label="Address" v-model="newAddress"
+        :placeholder="`${selectedCity}${selectedDistrict}`"></v-text-field>
 
 
 
@@ -59,7 +40,7 @@
 </template>
 <script setup>
 
-import {ref, computed, onMounted, watch} from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
