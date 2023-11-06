@@ -219,9 +219,9 @@ export default {
     },
   }
 };
-</script>
+</script >
 
-<style>
+<style scoped>
 .smaller-card {
   max-width: 200px;
   margin: 0 auto;

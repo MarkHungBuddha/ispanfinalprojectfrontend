@@ -14,7 +14,9 @@
     <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
       <v-card-text style="padding: 0;">
         <v-text-field v-model="searchText" :loading="loading" density="compact" variant="solo" label="Search templates"
-          append-inner-icon="mdi-magnify" single-line hide-details @click:append-inner="onClick"></v-text-field>
+          append-inner-icon="mdi-magnify" single-line hide-details @click:append="onClick" @keyup.enter="onClick">
+          <!-- 點擊(click:append)放大鏡圖標時觸發搜索 --><!-- 按下 Enter 鍵時觸發搜索 -->
+        </v-text-field>
       </v-card-text>
     </v-card>
 
