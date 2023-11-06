@@ -26,7 +26,7 @@
                   <v-list-item-title>大頭照</v-list-item-title>
                   <v-list-item-subtitle>
                     <v-avatar size="100px">
-                      <img :src="imageFullPath" alt="大頭照">
+                      <v-img :src="`https://i.imgur.com/${imageFullPath}.png`" alt="Product Image"></v-img>
                     </v-avatar>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -86,8 +86,9 @@
             </v-list>
             <v-card-actions>
               <v-btn color="primary" text @click="editProfile">編輯資料</v-btn>
-            
-              <input type="file" id="fileInput" ref="fileInput" style="display: none" @change="uploadImage" accept="image/*">
+
+              <input type="file" id="fileInput" ref="fileInput" style="display: none" @change="uploadImage"
+                accept="image/*">
             </v-card-actions>
           </v-card-text>
           <v-card-text v-else>
@@ -173,12 +174,12 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         })
-        .then(response => {
-          this.user.memberimgpath = response.data.split('/')[4].split('.')[0]; // 假设返回的是完整URL，我们需要的是imageCode
-        })
-        .catch(error => {
-          console.error("Image upload failed: ", error);
-        });
+          .then(response => {
+            this.user.memberimgpath = response.data.split('/')[4].split('.')[0]; // 假设返回的是完整URL，我们需要的是imageCode
+          })
+          .catch(error => {
+            console.error("Image upload failed: ", error);
+          });
       }
     },
     editProfile() {

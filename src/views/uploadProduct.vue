@@ -7,44 +7,46 @@ import sidebar from "@/components/sidebar.vue";
 </script>
 <template>
   <v-app>
-    <v-container>
-      <sidebar></sidebar>
-      <v-row>
-        <v-col cols="12">
-          <v-text-field label="商品名稱" v-model="productName"></v-text-field>
-        </v-col>
+    <v-main>
+      <v-container>
+        <sidebar></sidebar>
+        <v-row>
+          <v-col cols="12">
+            <v-text-field label="商品名稱" v-model="productName"></v-text-field>
+          </v-col>
 
-        <v-col cols="6">
-          <v-text-field label="商品價格" v-model="productPrice" type="number"></v-text-field>
-        </v-col>
-
-
-        <v-col cols="6">
-          <v-text-field label="商品特價價格" v-model="productDiscountPrice" type="number"></v-text-field>
-        </v-col>
-
-        <v-col cols="6">
-          <v-select v-model="selectedCategory" :items="categories" label="商品分類"></v-select>
-        </v-col>
-
-        <v-col cols="6">
-          <v-select v-model="selectedNewOption" :items="getNewOptions(selectedCategory)" label="細項分類"></v-select>
-        </v-col>
-
-        <v-col cols="6">
-          <v-text-field label="商品數量" v-model="productQuantity" type="number"></v-text-field>
-        </v-col>
-
-        <v-col cols="12">
-          <v-textarea label="商品描述" v-model="productDescription"></v-textarea>
-        </v-col>
+          <v-col cols="6">
+            <v-text-field label="商品價格" v-model="productPrice" type="number"></v-text-field>
+          </v-col>
 
 
-        <v-btn color="primary" @click="uploadProduct">下一步</v-btn>
-      </v-row>
+          <v-col cols="6">
+            <v-text-field label="商品特價價格" v-model="productDiscountPrice" type="number"></v-text-field>
+          </v-col>
+
+          <v-col cols="6">
+            <v-select v-model="selectedCategory" :items="categories" label="商品分類"></v-select>
+          </v-col>
+
+          <v-col cols="6">
+            <v-select v-model="selectedNewOption" :items="getNewOptions(selectedCategory)" label="細項分類"></v-select>
+          </v-col>
+
+          <v-col cols="6">
+            <v-text-field label="商品數量" v-model="productQuantity" type="number"></v-text-field>
+          </v-col>
+
+          <v-col cols="12">
+            <v-textarea label="商品描述" v-model="productDescription"></v-textarea>
+          </v-col>
 
 
-    </v-container>
+          <v-btn color="primary" @click="uploadProduct">下一步</v-btn>
+        </v-row>
+
+
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 

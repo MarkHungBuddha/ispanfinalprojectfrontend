@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-main>
+      <sidebarBuyer></sidebarBuyer>
       <v-container>
         <!-- 上一頁按鈕 -->
         <v-btn icon @click="goBack">
@@ -83,12 +84,12 @@
 
           <!-- 顯示產品列表 -->
           <v-card v-for="product in orderDetails.products" :key="product.productid" class="mb-3"
-                  @click="navigateToProduct(product.productid)">
+            @click="navigateToProduct(product.productid)">
             <v-row>
               <!-- 產品圖片列 -->
               <v-col cols="4">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                       class="product-image"></v-img>
+                  class="product-image"></v-img>
               </v-col>
 
               <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
@@ -103,7 +104,8 @@
               <v-card-title>增加評論</v-card-title>
               <v-card-text>
                 <v-rating v-model="product.rating" dense color="amber" half-increments @click.stop></v-rating>
-                <v-text-field v-model="product.reviewcontent" label="評論內容" :rules="[rules.required]" @click.stop></v-text-field>
+                <v-text-field v-model="product.reviewcontent" label="評論內容" :rules="[rules.required]"
+                  @click.stop></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-btn color="primary" @click.stop="createProductReview(product)">提交評論</v-btn>
@@ -239,12 +241,12 @@ export default {
     // 检查订单状态的方法
     checkOrderStatus() {
       axios.get(`http://localhost:8080/customer/api/order/${this.orderid}/status`)
-          .then(response => {
-            this.canAddReview = response.data;
-          })
-          .catch(error => {
-            console.error('检查订单状态失败：', error);
-          });
+        .then(response => {
+          this.canAddReview = response.data;
+        })
+        .catch(error => {
+          console.error('检查订单状态失败：', error);
+        });
     },
 
     // 创建产品评价的方法
@@ -268,12 +270,12 @@ export default {
         };
 
         axios.post('http://localhost:8080/customer/api/reviews', productReviewDTO)
-            .then(response => {
-              // 处理成功提交评价的逻辑...
-            })
-            .catch(error => {
-              console.error('提交评价失败：', error);
-            });
+          .then(response => {
+            // 处理成功提交评价的逻辑...
+          })
+          .catch(error => {
+            console.error('提交评价失败：', error);
+          });
       }
     },
 

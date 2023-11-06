@@ -20,7 +20,7 @@ import productCategoryCard from "@/components/productCategoryCard.vue";
 import ProductSearchBar from "@/components/CategoryList.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import ProductImageUpload from "@/components/Image.vue";
-
+import sidebarBuyer from "@/components/sidebarBuyer.vue";
 // import 'vuetify/dist/vuetify.min.css';
 // 設定 Axios
 axios.defaults.withCredentials = true;
@@ -50,10 +50,10 @@ app.component('Home', Home);
 app.component('productPage', productPage);
 app.component('navbar', navbar);
 app.component('ProductSearch', ProductSearch)
-app.component('productCategortCard',productCategoryCard)
-app.component('ProductSearchBar',ProductSearchBar)
-app.component('ProductCard',ProductCard)
-app.component('ProductCard',ProductCard)
+app.component('productCategortCard', productCategoryCard)
+app.component('ProductSearchBar', ProductSearchBar)
+app.component('ProductCard', ProductCard)
+app.component('sidebarBuyer', sidebarBuyer);
 
 app.config.globalProperties.$axios = axios;
 

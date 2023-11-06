@@ -2,15 +2,20 @@
 
 import CategoryList from '@/components/CategoryList.vue';
 </script>
+
 <template>
-  <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
-  <CategoryList></CategoryList>
-  <router-view :is-logged-in="isLoggedIn"></router-view>
-  <div v-if="overlay" class="text-center">
-    <v-overlay class="align-center justify-center">
-      <v-progress-circular color="primary" indeterminate size="64"></v-progress-circular>
-    </v-overlay>
-  </div>
+  <v-app>
+    <v-main>
+      <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
+      <CategoryList></CategoryList>
+      <router-view :is-logged-in="isLoggedIn"></router-view>
+      <div v-if="overlay" class="text-center">
+        <v-overlay class="align-center justify-center">
+          <v-progress-circular color="primary" indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+      </div>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
