@@ -17,27 +17,27 @@ const routes = [
   {
     path: '/productPage/:productId',
     name: 'ProductPage',
-      component: () => import("@/views/productPage.vue"),
-      meta: { title: '商品頁面' }
+    component: () => import("@/views/productPage.vue"),
+    meta: { title: '商品頁面' }
   },
   {
     path: '/shoppingCart',
-      name: 'ShoppingCart',
-      component: () => import("@/views/shoppingCart.vue"),
-      meta: { title: '購物車' },
+    name: 'ShoppingCart',
+    component: () => import("@/views/shoppingCart.vue"),
+    meta: { title: '購物車' },
   },
   {
     path: '/wishList',
-      name: 'wishList',
-      component: () => import("@/views/wishList.vue"),
-      meta: { title: '願望清單' }
+    name: 'wishList',
+    component: () => import("@/views/wishList.vue"),
+    meta: { title: '願望清單' }
 
   },
   {
     path: '/login',
-      name: 'Login',
-      component: () => import("@/views/login.vue"),
-      meta: { title: '登入' }
+    name: 'Login',
+    component: () => import("@/views/login.vue"),
+    meta: { title: '登入' }
   },
   {
     path: '/register',
@@ -47,16 +47,16 @@ const routes = [
   },
   {
     path: '/uploadProduct',
-      name: 'uploadProduct',
-      component: () => import("@/views/uploadProduct.vue"),
-      meta: { title: '上傳商品' }
+    name: 'uploadProduct',
+    component: () => import("@/views/uploadProduct.vue"),
+    meta: { title: '上傳商品' }
   },
   {
-    path:'/checkoutOrder',
+    path: '/checkoutOrder',
 
-      name:'checkoutOrder',
-      component: () => import("@/views/checkoutOrder.vue"),
-      meta: { title: '結帳'}
+    name: 'checkoutOrder',
+    component: () => import("@/views/checkoutOrder.vue"),
+    meta: { title: '結帳' }
   },
   {
     path: '/productPageBack/:productId',
@@ -162,6 +162,13 @@ const routes = [
     component: () => import('@/views/unAnswerQuestion.vue'), // 使用箭頭函數來動態導入
     props: true,
     meta: { title: '未回答問題' },
+  },
+  {
+    path: '/member',
+    name: 'member',
+    component: () => import('@/views/member.vue'), // 會員資料
+    props: true,
+    meta: { title: '會員資料' },
   },
 
   // {

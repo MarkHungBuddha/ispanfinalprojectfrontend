@@ -292,7 +292,7 @@ export default {
 .card-actions {
   position: relative;
   /* 確保卡片有足夠的高度，否則圖示可能會超出卡片範圍 */
-//min-height: 48;
+min-height: 48;
   /* 或者根據需要調整 */
 }
 

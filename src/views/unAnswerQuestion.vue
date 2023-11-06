@@ -62,36 +62,22 @@ onMounted(async () => {
   <v-app>
     <v-main>
       <v-container>
-        <sidebar />
+        <sidebar></sidebar>
         <v-row>
-          <v-col
-              v-for="detail in unansweredQuestions"
-              :key="detail.productId"
-              cols="12" sm="6"
-          >
+          <v-col v-for="detail in unansweredQuestions" :key="detail.productId" cols="12" sm="6">
             <v-card class="mb-5 question-card">
               <v-card-title>
                 {{ detail.productName }}
               </v-card-title>
               <v-divider></v-divider>
-              <v-img
-                  :src="`https://i.imgur.com/${detail.productImagePath}.jpeg`"
-                  aspect-ratio="1.7"
-                  max-height="200px"
-                  max-width="100%"
-                  class="mb-3"
-              ></v-img>
+              <v-img :src="`https://i.imgur.com/${detail.productImagePath}.jpeg`" aspect-ratio="1.7" max-height="200px"
+                max-width="100%" class="mb-3"></v-img>
               <v-card-text>
                 <div>Question: {{ detail.question }}</div>
                 <div>Question Time: {{ new Date(detail.questiontime).toLocaleString() }}</div>
                 <div>User: {{ detail.memberUsername }}</div>
-                <v-img
-                    :src="detail.memberImgPath"
-                    aspect-ratio="1.7"
-                    max-height="100px"
-                    max-width="100px"
-                    class="mb-3"
-                ></v-img>
+                <v-img :src="detail.memberImgPath" aspect-ratio="1.7" max-height="100px" max-width="100px"
+                  class="mb-3"></v-img>
                 <!-- Only show answer fields if there is an answer -->
                 <template v-if="detail.answer">
                   <div>Answer: {{ detail.answer }}</div>
@@ -110,7 +96,8 @@ onMounted(async () => {
 <style>
 /* Add styles for the question card with a background color */
 .question-card {
-  background-color: #f5f5f5; /* Light grey background */
+  background-color: #f5f5f5;
+  /* Light grey background */
   border-radius: 4px;
 }
 

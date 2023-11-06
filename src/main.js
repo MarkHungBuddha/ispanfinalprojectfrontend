@@ -1,30 +1,32 @@
 import { createApp } from 'vue';
-import axios from 'axios';
+import axios from 'axios';  // 引入 Axios
 import './assets/main.css';
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
-import store from './store';
+import store from './store';  // 引入 Vuex store
 
-// 其他组件导入...
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
 import router from './router';
 import App from './App.vue';
-
-// 你的自定义组件导入...
 import sidebar from "@/components/sidebar.vue";
-// 其他自定义组件导入...
-import '@mdi/font/css/materialdesignicons.css';
-
-// 设置 Axios
+import Home from "@/views/Home.vue";
+import productPage from "@/views/productPage.vue";
+import navbar from "@/components/navbar.vue";
+import '@mdi/font/css/materialdesignicons.css'
+import ProductSearch from "@/components/CategoryList.vue";
+import productCategoryCard from "@/components/productCategoryCard.vue";
+import ProductSearchBar from "@/components/CategoryList.vue";
+import ProductCard from "@/components/ProductCard.vue";
+import ProductImageUpload from "@/components/Image.vue";
+import sidebarBuyer from "@/components/sidebarBuyer.vue";
+// import 'vuetify/dist/vuetify.min.css';
+// 設定 Axios
 axios.defaults.withCredentials = true;
 
-// 创建 Vue 应用
 const app = createApp(App);
 
-// 创建 Vuetify 实例，这里不需要单独导入 VListItemContent，
-// 因为它已经在 components 中包含了
 const vuetify = createVuetify({
     theme: {
         dark: false,
@@ -32,25 +34,27 @@ const vuetify = createVuetify({
     components,
     directives,
 });
-
-// 设置 Axios 响应拦截器
 axios.interceptors.response.use(
     response => {
         store.dispatch('updateApiCallStatus', true);
         return response;
     },
     error => {
-        store.dispatch('updateApiCallStatus', false);
+        store.dispatch('updateApiCallStatus', true);  // 也可以在此處設置
         return Promise.reject(error);
     }
 );
 
-// 注册你的 Vue 组件
 app.component('sidebar', sidebar);
-// 注册其他自定义组件...
+app.component('Home', Home);
+app.component('productPage', productPage);
+app.component('navbar', navbar);
+app.component('ProductSearch', ProductSearch)
+app.component('productCategortCard', productCategoryCard)
+app.component('ProductSearchBar', ProductSearchBar)
+app.component('ProductCard', ProductCard)
+app.component('sidebarBuyer', sidebarBuyer);
 
-// 添加 Axios 到 Vue 的全局属性
 app.config.globalProperties.$axios = axios;
 
-// 使用 Vuetify、router 和 store
-app.use(vuetify).use(router).use(store).mount('#app');
+app.use(vuetify).use(router).use(store).mount('#app');  // 加入 .use(store)

@@ -6,10 +6,10 @@
           <v-card-title class="headline blue lighten-2 white--text">編輯您的個人資料</v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
-              <!-- 头像显示 -->
-              <v-avatar size="120" class="mb-3">
-                <img :src="imageFullPath" alt="Profile image">
-              </v-avatar>
+          <!-- 头像显示 -->
+<v-avatar size="120" class="mb-3">
+  <img :src="imageFullPath" alt="Profile image" style="object-fit: contain; width: 100%; height: 100%;">
+</v-avatar>
 
               <!-- 头像上传 -->
               <v-file-input

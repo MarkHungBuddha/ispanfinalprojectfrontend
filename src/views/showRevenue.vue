@@ -1,47 +1,52 @@
 <template>
-    <v-container>
-      <sidebar></sidebar>
-      <!-- 收入Dashboard标题 -->
-        <v-row>
-            <v-col cols="12">
-                <h1 class="display-2">收入Dashboard</h1>
-            </v-col>
-        </v-row>
+    <v-app>
+        <v-main>
+            <v-container>
+                <sidebar></sidebar>
+                <!-- 收入Dashboard标题 -->
+                <v-row>
+                    <v-col cols="12">
+                        <h1 class="display-2">收入Dashboard</h1>
+                    </v-col>
+                </v-row>
 
-        <v-row align="center" justify="center">
-            <!-- 年份选择 -->
-            <v-col cols="12" md="4">
-                <v-select v-model="selectedYear" :items="years" label="选择年份" @change="fetchYearlyIncome"></v-select>
-            </v-col>
+                <v-row align="center" justify="center">
+                    <!-- 年份选择 -->
+                    <v-col cols="12" md="4">
+                        <v-select v-model="selectedYear" :items="years" label="选择年份" @change="fetchYearlyIncome"></v-select>
+                    </v-col>
 
-            <!-- 月份选择 -->
-            <v-col cols="12" md="4">
-                <v-select v-model="selectedMonth" :items="months" label="选择月份" @change="fetchMonthlyIncome"></v-select>
-            </v-col>
-        </v-row>
+                    <!-- 月份选择 -->
+                    <v-col cols="12" md="4">
+                        <v-select v-model="selectedMonth" :items="months" label="选择月份"
+                            @change="fetchMonthlyIncome"></v-select>
+                    </v-col>
+                </v-row>
 
-        <v-row>
-            <!-- 年收入展示卡片 -->
-            <v-col cols="12" md="6">
-                <v-card>
-                    <v-card-title>{{ selectedYear }}年收入</v-card-title>
-                    <v-card-text>
-                        <h3>{{ totalYearlyIncome | currency }}</h3>
-                    </v-card-text>
-                </v-card>
-            </v-col>
+                <v-row>
+                    <!-- 年收入展示卡片 -->
+                    <v-col cols="12" md="6">
+                        <v-card>
+                            <v-card-title>{{ selectedYear }}年收入</v-card-title>
+                            <v-card-text>
+                                <h3>{{ totalYearlyIncome | currency }}</h3>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
 
-            <!-- 月收入展示卡片 -->
-            <v-col cols="12" md="6">
-                <v-card>
-                    <v-card-title>{{ selectedYear }}年{{ selectedMonth }}收入</v-card-title>
-                    <v-card-text>
-                        <h3>{{ totalMonthlyIncome | currency }}</h3>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+                    <!-- 月收入展示卡片 -->
+                    <v-col cols="12" md="6">
+                        <v-card>
+                            <v-card-title>{{ selectedYear }}年{{ selectedMonth }}收入</v-card-title>
+                            <v-card-text>
+                                <h3>{{ totalMonthlyIncome | currency }}</h3>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-main>
+    </v-app>
 </template>
 
 <script>

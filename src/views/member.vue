@@ -11,6 +11,7 @@ import navbar from "@/components/navbar.vue";
   <v-app>
     <v-row justify="center">
       <v-col>
+
         <Profile/>
       </v-col>
     </v-row>

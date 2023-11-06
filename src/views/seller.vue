@@ -6,12 +6,12 @@ import navbar from "@/components/navbar.vue";
 <template>
   <v-app>
     <v-main>
+      <sidebar></sidebar>
       <v-container>
-        <sidebar></sidebar>
+
       </v-container>
     </v-main>
   </v-app>
 </template>
 
-<style>
-</style>
+<style></style>

@@ -1,10 +1,11 @@
 <template>
   <v-app>
     <v-main>
+      <sidebarBuyer></sidebarBuyer>
       <v-container>
-<!--        <barList></barList>-->
-<!--        <navbar></navbar>-->
-<!--        <sidebarBuyer></sidebarBuyer>-->
+        <!--        <barList></barList>-->
+        <!--        <navbar></navbar>-->
+        <!-- <sidebarBuyer></sidebarBuyer> -->
 
         <!-- 搜索訂單ID欄 -->
         <div class="selectbar">

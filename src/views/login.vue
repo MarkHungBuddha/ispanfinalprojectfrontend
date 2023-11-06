@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <navbar />
+   
       <v-row justify="center" align="center" class="fill-height">
         <v-col cols="12" sm="8" md="4">
           <v-card class="elevation-12">
@@ -130,13 +130,13 @@ export default {
 
       const response = await axios.post('http://localhost:8080/public/api/member/memberLogin', postData);
 
-      // 處理成功響應
       if (response.status === 200) {
-        // 登入成功，進行相應操作
-        console.log(response.data.message);
-        alert(response.data.message);
-        // Redirect to homepage or user dashboard
-        this.$router.push({ name: 'Home' }); // 'Home' 是路由名稱，根據你的路由設定調整
+        // 登录成功，更新 Vuex 状态
+        this.$store.dispatch('updateLoginStatus', true);
+        // 如果需要，还可以分发其他 action 更新用户信息或 memberId
+        this.$store.dispatch('updateMemberInfo', response.data.memberInfo);
+        // 重定向到首页或用户仪表盘
+        this.$router.push({ name: 'Home' });
       }
     } catch (error) {
       if (error.response) {

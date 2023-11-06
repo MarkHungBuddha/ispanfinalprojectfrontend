@@ -21,17 +21,9 @@
               </v-list-item>
 
               <!-- 大頭照顯示 -->
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>大頭照</v-list-item-title>
-                  <v-list-item-subtitle>
-                    <v-avatar size="100px">
-                      <img :src="imageFullPath" alt="大頭照">
-                    </v-avatar>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
+              <v-avatar size="120" class="mb-3">
+  <img :src="imageFullPath" alt="Profile image" style="object-fit: contain; width: 100%; height: 100%;">
+</v-avatar>
               <!-- ... 其他資料欄位 ... -->
 
               <v-list-item>

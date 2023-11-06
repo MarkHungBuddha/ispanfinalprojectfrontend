@@ -70,7 +70,7 @@ export default {
     FindRevenue() {
       this.$router.push('/showRevenue');
     },
-    Unanswer(){
+    Unanswer() {
       this.$router.push('/unanswer');
     }
   }

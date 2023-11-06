@@ -9,7 +9,7 @@
               我的帳戶
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-list-item>
+              <v-list-item to="/member">
                 <v-list-item-title>個人檔案</v-list-item-title>
               </v-list-item>
             </v-expansion-panel-text>

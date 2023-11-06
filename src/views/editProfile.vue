@@ -8,6 +8,7 @@ import Navbar from "@/components/navbar.vue"; // 确保路径正确，且首字�
   <v-app>
     <v-row justify="center">
       <v-col>
+     
         <EditP />
       </v-col>
     </v-row>
