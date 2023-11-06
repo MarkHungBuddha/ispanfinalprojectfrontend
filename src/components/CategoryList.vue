@@ -4,14 +4,10 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >行動通訊</v-btn>
+            <v-btn color="primary" v-bind="props">行動通訊</v-btn>
           </template>
           <v-list>
-            <v-list-item
-                v-for="(title, index) in items"
-                :key="index"
-                @click="handleCategoryClick(title)"
-            >
+            <v-list-item v-for="(title, index) in items" :key="index" @click="handleCategoryClick(title)">
               <v-list-item-title>{{ title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -22,7 +18,7 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >大型家電</v-btn>
+            <v-btn color="primary" v-bind="props">大型家電</v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(appliance, index) in appliances" :key="index" @click="handleCategoryClick(appliance)">
@@ -36,7 +32,7 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >電腦資訊</v-btn>
+            <v-btn color="primary" v-bind="props">電腦資訊</v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(info, index) in computerInfo" :key="index" @click="handleCategoryClick(info)">
@@ -50,11 +46,11 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >電腦周邊</v-btn>
+            <v-btn color="primary" v-bind="props">電腦周邊</v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
-                         @click="handleCategoryClick(computerPeripheral)">
+              @click="handleCategoryClick(computerPeripheral)">
               <v-list-item-title>{{ computerPeripheral }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -65,11 +61,11 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >小型家電</v-btn>
+            <v-btn color="primary" v-bind="props">小型家電</v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
-                         @click="handleCategoryClick(smallAppliance)">
+              @click="handleCategoryClick(smallAppliance)">
               <v-list-item-title>{{ smallAppliance }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -80,11 +76,11 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >視聽娛樂</v-btn>
+            <v-btn color="primary" v-bind="props">視聽娛樂</v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
-                         @click="handleCategoryClick(entertainment)">
+              @click="handleCategoryClick(entertainment)">
               <v-list-item-title>{{ entertainment }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -95,11 +91,11 @@
       <div class="text-center">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn color="primary" v-bind="props"  >辦公耗材</v-btn>
+            <v-btn color="primary" v-bind="props">辦公耗材</v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
-                         @click="handleCategoryClick(officeSupply)">
+              @click="handleCategoryClick(officeSupply)">
               <v-list-item-title>{{ officeSupply }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -174,45 +170,45 @@ export default {
       }
 
       axios
-          .get("http://localhost:8080/public/api/categoryname", {
-            params: {
-              categoryname: categoryName,
-              minPrice: this.minPrice,
-              maxPrice: this.maxPrice,
-              page: this.currentPage,
-              pageSize: 4,
-            },
-          })
-          .then((response) => {
-            if (response.data && response.data.content && response.data.content.length > 0) {
-              this.products = response.data.content;
-              this.products.forEach(product => {
-                product.inWishlist = localStorage.getItem(product.productid) === 'true';
-                if (product && product.productId) {
-                  this.fetchAverageReview(product.productId);
-                }
-                this.navigateToProducts(categoryName);
-              });
-              this.totalPages = response.data.totalPages;
+        .get("http://localhost:8080/public/api/categoryname", {
+          params: {
+            categoryname: categoryName,
+            minPrice: this.minPrice,
+            maxPrice: this.maxPrice,
+            page: this.currentPage,
+            pageSize: 4,
+          },
+        })
+        .then((response) => {
+          if (response.data && response.data.content && response.data.content.length > 0) {
+            this.products = response.data.content;
+            this.products.forEach(product => {
+              product.inWishlist = localStorage.getItem(product.productid) === 'true';
+              if (product && product.productId) {
+                this.fetchAverageReview(product.productId);
+              }
+              this.navigateToProducts(categoryName);
+            });
+            this.totalPages = response.data.totalPages;
 
-              // 循環調用fetchAverageReview為每個產品獲取平均評價
+            // 循環調用fetchAverageReview為每個產品獲取平均評價
 
-            } else {
-              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
-              this.products = [];
-              this.totalPages = 1;
-              // 可以在這裡添加一個用戶提示，告知沒有找到產品
-              // alert('沒有找到產品。');
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching products:", error);
-            // 處理錯誤情況，如API呼叫失敗等
+          } else {
+            // 如果返回的內容為空，則清空產品列表並設置總頁數為1
             this.products = [];
             this.totalPages = 1;
-            // 提示用戶檢查錯誤
-            // alert('檢索產品時發生錯誤。');
-          });
+            // 可以在這裡添加一個用戶提示，告知沒有找到產品
+            // alert('沒有找到產品。');
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          // 處理錯誤情況，如API呼叫失敗等
+          this.products = [];
+          this.totalPages = 1;
+          // 提示用戶檢查錯誤
+          // alert('檢索產品時發生錯誤。');
+        });
     },
     navigateToProducts(category) {
       this.$router.push({ name: 'ProductList', params: { category: category } });
@@ -226,7 +222,6 @@ export default {
 </script>
 
 <style>
-
 .smaller-card {
   max-width: 200px;
   margin: 0 auto;
@@ -242,15 +237,10 @@ export default {
 }
 
 .product-image {
-  width: 100%;
-  /* 使用百分比確保圖片寬度對應到卡片寬度 */
-  height: 200px;
-  /* 固定高度 */
+  height: 150px;
+  /* 固定图片高度 */
   object-fit: cover;
-  /* 覆蓋或包含圖片以適應給定的框架，可能的值還有 contain, cover, fill 等 */
-  margin-right: auto;
-  /* 移除 mr-2 並使用自動外邊距確保居中顯示 */
-  margin-left: auto;
+  /* 确保图片覆盖整个可用空间，可能会被裁剪 */
 }
 
 .v-card-title {
@@ -266,13 +256,26 @@ export default {
 }
 
 .product-name {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
+  display: -webkit-box;
+  /* 创建一个块级别的弹性盒对象 */
+  -webkit-box-orient: vertical;
+  /* 设置盒子的子元素布局方向为垂直 */
+  -webkit-line-clamp: 2;
+  /* 限制文本的行数为两行 */
+  overflow: hidden;
+  /* 隐藏超出容器的内容 */
+  text-overflow: ellipsis;
+  /* 用省略号表示文本溢出 */
+  height: 3em;
+  /* 根据行高设置容器高度，这里的3em是假设行高为1.5em */
+  line-height: 1.5em;
+  /* 设置行高 */
   white-space: normal;
-  line-height: 1.2;
-  text-align: center;
-  /* 確保文字居中對齊 */
+  /* 恢复默认的换行设置 */
+  margin: 0;
+  /* 移除外边距，根据实际情况可能需要调整 */
+  padding: 0 10px;
+  /* 添加水平内边距，防止文本紧贴容器边缘 */
 }
 
 .original-price {
@@ -292,7 +295,7 @@ export default {
 .card-actions {
   position: relative;
   /* 確保卡片有足夠的高度，否則圖示可能會超出卡片範圍 */
-//min-height: 48;
+  min-height: 48;
   /* 或者根據需要調整 */
 }
 
@@ -306,14 +309,24 @@ export default {
   /* 確保按鈕在卡片之上 */
 }
 
-.v-card {
-  margin-bottom: 24px;
-  /* 或者根據需要調整，以提供足夠的空間 */
-
+.category-bar {
+  height: 70px;
+  background-color: #FEB5C5;
 }
 
-.category-bar {
-height: 70px;
-  background-color: #FEB5C5;
+
+
+.product-card {
+  display: flex;
+  /* 使用 flex 布局 */
+  flex-direction: column;
+  /* 确保内容是垂直方向 */
+  justify-content: space-between;
+  /* 在项目之间保持空间 */
+  height: auto;
+  /* 卡片高度自动根据内容调整 */
+  margin: 0;
+  /* 移除卡片的外边距 */
+
 }
 </style>

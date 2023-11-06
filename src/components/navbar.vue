@@ -11,21 +11,12 @@
 
     <!-- 新的搜尋框組件 -->
 
-      <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
-        <v-card-text style="padding: 0;">
-          <v-text-field
-              v-model="searchText"
-              :loading="loading"
-              density="compact"
-              variant="solo"
-              label="Search templates"
-              append-inner-icon="mdi-magnify"
-              single-line
-              hide-details
-              @click:append-inner="onClick"
-          ></v-text-field>
-        </v-card-text>
-      </v-card>
+    <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
+      <v-card-text style="padding: 0;">
+        <v-text-field v-model="searchText" :loading="loading" density="compact" variant="solo" label="Search templates"
+          append-inner-icon="mdi-magnify" single-line hide-details @click:append-inner="onClick"></v-text-field>
+      </v-card-text>
+    </v-card>
 
 
 
@@ -78,42 +69,28 @@ export default {
     },
     redirectToShoppingCart() {
       axios.get('http://localhost:8080/customer/api/shoppingCart')
-          .then(() => {
-            this.$router.push('/shoppingCart');
-          });
+        .then(() => {
+          this.$router.push('/shoppingCart');
+        });
     },
     redirectToWishList() {
       axios.get('http://localhost:8080/customer/api/wishlist')
-          .then((response) => {
-            this.$store.commit('setWishList', response.data);
-            this.$router.push('/wishList');
-          });
+        .then((response) => {
+          this.$store.commit('setWishList', response.data);
+          this.$router.push('/wishList');
+        });
     },
     onClick() {
-      console.log('Search Text:', this.searchText); // 加入這行來輸出搜尋文本
-      const search = this.searchText;
-      this.loading = true;
-      // 執行搜尋
-      axios.get("http://localhost:8080/public/api/products", {
-        params: {
-          productname: search,
-        }
-      }).then((response) => {
-        this.loading = false;
-        // 導航到 searchResult.vue 並帶上搜尋字串
-        this.$router.push({ name: 'searchResult', query: { search: this.searchText } });
-      }).catch((error) => {
-        this.loading = false;
-        console.error("Error during search:", error);
-      });
+      this.$router.push({ name: 'ProductFuzzySearch', query: { search: this.searchText } });
+
     },
 
     logout() {
       axios.post('http://localhost:8080/customer/member/logout')
-          .then(() => {
-            this.$store.dispatch('updateLoginStatus', false);
-            this.$router.push('/');
-          });
+        .then(() => {
+          this.$store.dispatch('updateLoginStatus', false);
+          this.$router.push('/');
+        });
     }
   },
   watch: {
@@ -129,9 +106,11 @@ export default {
 
 <style>
 .icon-img {
-  width: 24px; /* Adjust as needed */
+  width: 24px;
+  /* Adjust as needed */
   height: 24px;
 }
+
 .custom-navbar {
   background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
 }
@@ -164,9 +143,10 @@ export default {
   background-color: #FF8E53;
   color: white;
 }
+
 .logo-img {
-  width: 40px; /* Adjust as needed */
+  width: 40px;
+  /* Adjust as needed */
   height: 80%;
 }
-
 </style>

@@ -4,7 +4,7 @@ import { createApp } from 'vue';
 import Slider from "@/components/slider.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 import navbar from "@/components/navbar.vue";
-import tabitems from '../components/tabitems.vue';
+import tabitems from '@/components/tabitems.vue';
 </script>
 
 <template>

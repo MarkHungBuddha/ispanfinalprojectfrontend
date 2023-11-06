@@ -48,6 +48,15 @@
                     </v-col>
                 </v-row>
 
+                <v-row>
+                    <v-col>
+                        <div class="raised-box">
+                            <h1 class="display-1">猜你喜歡</h1>
+                        </div>
+                    </v-col>
+                </v-row>
+
+
             </v-container>
         </v-main>
     </v-app>
@@ -70,7 +79,7 @@ export default {
             products: [],
             displayedProducts: [], // 存放API取得的產品資料
             categories: [ // 添加大分類的數據
-                '筆記型電腦', '主機板', '記憶體', '光碟機', '顯示卡', '硬碟_SSD',
+                '筆記型電腦', '光碟機', '顯示卡', '硬碟_SSD',
                 '桌上型電腦', '電供_線材', '軟體'
             ],
 

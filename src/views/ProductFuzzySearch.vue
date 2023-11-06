@@ -6,7 +6,7 @@
                 <sidebar></sidebar> -->
 
         <v-text-field v-model="search" label="模糊搜尋" append-icon="mdi-magnify" @click:append="fetchProductsWithSearch"
-                      @keyup.enter="fetchProductsWithSearch"></v-text-field>
+          @keyup.enter="fetchProductsWithSearch"></v-text-field>
 
 
 
@@ -18,7 +18,7 @@
             <v-card>
               <v-card-text class="d-flex flex-column align-center">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                       class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
+                  class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
                 <div class="product-name">{{ product.productname }}</div>
                 <div class="original-price">原價: {{ product.price }}</div>
                 <div class="special-price">特價: {{ product.specialprice }}</div>
@@ -80,7 +80,8 @@ export default {
     return {
       options: {
         productname: '', // 确保有一个默认值
-
+        products: [],
+        searchText: '',
         search: '', // 添加了搜尋的資料屬性
         selectedProductName: "",
         selectedCategoryImagepath: "",
@@ -135,9 +136,11 @@ export default {
 
   //願望清單 生命茅點
   created() {
-    this.products.forEach(product => {
-      product.inWishlist = localStorage.getItem(product.productid) === 'true';
-    });
+    // 從URL查詢參數或組件內部獲取搜尋詞
+    this.searchText = this.$route.query.search || this.search;
+    if (this.searchText) {
+      this.fetchProducts();
+    }
   },
 
 
@@ -163,7 +166,14 @@ export default {
 
     fetchProductsWithSearch() {
       this.currentPage = 1;
-      this.fetchProducts(this.search);
+      // 如果從navbar獲得了搜尋詞，則使用它來發起產品搜尋
+      if (this.searchText) {
+        this.fetchProducts();
+      } else {
+        // 否則，使用組件內的搜尋詞來發起產品搜尋
+        this.searchText = this.search;
+        this.fetchProducts();
+      }
     },
 
     fetchProducts() {
@@ -172,96 +182,71 @@ export default {
       this.loading = true;
       // 根據當前的 options 更新查詢參數
       const params = {
-        productname: this.search,
+        productname: this.searchText.trim(), // 這裡使用searchText而不是options.productname
         minPrice: this.minPrice || 0,
         maxPrice: this.maxPrice || 999999.99,
         page: this.currentPage,
         itemsPerPage: 5, // 或者其他你希望每页显示的数量
       };
 
-      axios
-          .get('http://localhost:8080/public/api/products', { params })
-          .then(response => {
-            console.log('请求完成，收到响应:', response);
+      axios.get('http://localhost:8080/public/api/products', { params })
 
-            if (response.data && response.data.content && response.data.content.length > 0) {
-              this.products = response.data.content;
-              this.totalPages = response.data.totalPages; // 确保更新总页数
+        .then(response => {
+          this.loading = false;
+          this.products = response.data.content;
+          this.totalPages = response.data.totalPages;
+        })
+        .catch(error => {
+          // 处理错误...
 
-              console.log('找到产品，不应该显示没有找到产品的消息');
+          this.loading = false;
 
-              this.products.forEach(product => {
-                product.inWishlist = localStorage.getItem(product.productId) === 'true';
-                if (product && product.productId) {
-                  this.fetchAverageReview(product.productId);
-                }
-              });
-
-            } else {
-
-              console.log('没有找到产品，将要显示没有找到产品的消息');
-
-              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
-              this.products = [];
-              this.totalPages = 1;
-              this.showSnackbar('沒有找到產品。', 'warning');
-
-              // 可以在這裡添加一個用戶提示，告知沒有找到產品
-              // alert('沒有找到產品。');
-            }
-          })
-          .catch(error => {
-            console.error('请求失败，错误信息:', error);
-            // 處理錯誤情況，如API呼叫失敗等
-            this.products = [];
-            this.totalPages = 1;
-            // 提示用戶檢查錯誤
-            // alert('檢索產品時發生錯誤。');
-            this.showSnackbar('檢索產品時發生錯誤。', 'error');
-
-          })
-
-
-          .finally(() => {
-            this.loading = false;
-            console.log('请求结束');
-
-          });
+          console.error('请求失败，错误信息:', error);
+          this.showSnackbar('檢索產品時發生錯誤。', 'error');
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     addProductToCart(productid) {
 
       axios
-          .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
-            withCredentials: true,
+        .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
+          withCredentials: true,
 
-            params: {
-              productId: productid,
-            }
-          }, {
-            headers: { 'Content-Type': 'application/json' }
-          })
-          .then(response => {
-            // 成功添加到購物車後的操作，比如通知用戶
-            this.snackbarText = '商品已成功加入購物車';
-            this.snackbarColor = 'success'; // 成功消息使用綠色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果需要，這裡還可以添加其他UI更新或邏輯處理
-          })
-          .catch(error => {
-            // 錯誤處理
-            console.error('Error adding product to cart:', error);
-            this.snackbarText = '無法添加商品到購物車';
-            this.snackbarColor = 'error'; // 錯誤消息使用紅色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果API響應了請求但出現錯誤
-            if (error.response) {
-              console.error('Error response data:', error.response.data);
-              this.snackbarText = `Error: ${error.response.data.message}`;
-            } else {
-              // 服务器没有响应
-              this.snackbarText = 'Error: Server did not respond';
-            }
-          });
+          params: {
+            productId: productid,
+          }
+        }, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => {
+          console.log(response);
+          if (response.data && Array.isArray(response.data.content)) {
+            this.products = response.data.content;
+            this.totalPages = response.data.totalPages;
+          } else {
+            // 如果没有产品，清空产品数组
+            this.products = [];
+            this.totalPages = 0;
+            this.showSnackbar('没有找到产品', 'info');
+          }
+        })
+        .catch(error => {
+          // 錯誤處理
+          console.error('Error adding product to cart:', error);
+          this.snackbarText = '無法添加商品到購物車';
+          this.snackbarColor = 'error'; // 錯誤消息使用紅色
+          this.snackbar = true; // 顯示Snackbar
+          // 如果API響應了請求但出現錯誤
+          if (error.response) {
+            console.error('Error response data:', error.response.data);
+            this.snackbarText = `Error: ${error.response.data.message}`;
+          } else {
+            // 服务器没有响应
+            this.snackbarText = 'Error: Server did not respond';
+          }
+        });
 
     },
     //添加跳轉頁面到productPage
@@ -275,18 +260,18 @@ export default {
     addProductToWishlist(productId) {
       // 發送POST請求到後端API
       axios
-          .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
-          .then(response => {
-            // 成功添加到願望清單後的操作
-            alert('成功添加到願望清單');
-            // 可以根據需要更新願望清單狀態或UI
-            this.updateWishlistStatus(productId, response.data.inWishlist); // 假设response中包含了inWishlist状态
-          })
-          .catch(error => {
-            // 處理錯誤
-            console.error('Error adding product to wishlist:', error);
-            alert('無法添加商品到願望清單。');
-          });
+        .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
+        .then(response => {
+          // 成功添加到願望清單後的操作
+          alert('成功添加到願望清單');
+          // 可以根據需要更新願望清單狀態或UI
+          this.updateWishlistStatus(productId, response.data.inWishlist); // 假设response中包含了inWishlist状态
+        })
+        .catch(error => {
+          // 處理錯誤
+          console.error('Error adding product to wishlist:', error);
+          alert('無法添加商品到願望清單。');
+        });
 
       const product = this.products.find(p => p.id === productId);
       if (product) {
