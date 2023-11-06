@@ -43,12 +43,8 @@ import navbar from "@/components/navbar.vue";
             <v-btn icon="$vuetify" small color="red" @click="decrement(item, index)" variant="text">
               <v-icon>mdi-minus</v-icon>
             </v-btn>
-            <v-text-field
-                type="number"
-                v-model="item.quantity"
-                class="quantity-input"
-                @input="onQuantityChange(item, index)"
-            ></v-text-field>
+            <v-text-field type="number" v-model="item.quantity" class="quantity-input"
+              @input="onQuantityChange(item, index)"></v-text-field>
 
 
             <v-btn icon="$vuetify" small color="green" @click="increment(item, index)" variant="text">
@@ -116,44 +112,44 @@ export default {
       // 呼叫changeQuantity更新數量
       this.changeQuantity(item.productid, quantity, index);
     },
-    removeFromCart(transactionId, index) {
+    removeFromCart(transactionid, index) {
       axios
-          .delete(`http://localhost:8080/customer/api/shoppingCart`, {
-            params: {
-              transactionId: transactionId
-            }
-          })
-          .then(response => {
-            this.itemList.splice(index, 1);
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        .delete(`http://localhost:8080/customer/api/shoppingCart`, {
+          params: {
+            transactionId: transactionid
+          }
+        })
+        .then(response => {
+          this.itemList.splice(index, 1);
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     changeQuantity(productid, quantity, index) {
       axios
-          .put(`http://localhost:8080/customer/api/change`, null, {
-            params: {
-              productid: productid,
-              quantity: quantity
-            }
-          })
-          .then(response => {
-            console.log(response.data);
-            // 如果庫存沒問題，更新數量
-            this.itemList[index].quantity = quantity;
-          })
-          .catch(error => {
-            if (error.response && error.response.status === 500) {
-              // 如果超出庫存，顯示錯誤並重設數量
-              this.showDialog = true;
-              this.dialogMessage = '超過庫存';
-              this.itemList[index].quantity = this.itemList[index].quantity - 1;
-            } else {
-              console.error(error);
-            }
-          });
+        .put(`http://localhost:8080/customer/api/change`, null, {
+          params: {
+            productid: productid,
+            quantity: quantity
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          // 如果庫存沒問題，更新數量
+          this.itemList[index].quantity = quantity;
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 500) {
+            // 如果超出庫存，顯示錯誤並重設數量
+            this.showDialog = true;
+            this.dialogMessage = '超過庫存';
+            this.itemList[index].quantity = this.itemList[index].quantity - 1;
+          } else {
+            console.error(error);
+          }
+        });
     },
     async checkoutItems() {
       this.isCheckingOut = true; // Show the overlay
@@ -184,19 +180,19 @@ export default {
   },
   created() {
     axios
-        .get('http://localhost:8080/customer/api/shoppingCart')
-        .then((response) => {
-          this.itemList = response.data.map(item => ({
-            id: item.transactionId,
-            productid: item.productId, // 確保這裡使用的是 'productid'
-            itemName: item.productname,
-            imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
-            price: item.price,
-            specialPrice: item.specialPrice,
-            quantity: item.quantity,
-            checked: false
-          }));
-        });
+      .get('http://localhost:8080/customer/api/shoppingCart')
+      .then((response) => {
+        this.itemList = response.data.map(item => ({
+          id: item.transactionId,
+          productid: item.productId, // 確保這裡使用的是 'productid'
+          itemName: item.productname,
+          imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
+          price: item.price,
+          specialPrice: item.specialPrice,
+          quantity: item.quantity,
+          checked: false
+        }));
+      });
   },
 }
 </script>
@@ -272,20 +268,25 @@ body {
 
 .item_body {
   margin-top: 20px;
-  height: 80px; /* Reduce height */
+  height: 80px;
+  /* Reduce height */
   align-items: center;
 }
 
 .item_detail img {
-  width: 60px; /* Reduce image width */
-  height: 60px; /* Reduce image height */
+  width: 60px;
+  /* Reduce image width */
+  height: 60px;
+  /* Reduce image height */
   border-radius: 3px;
   float: left;
 }
 
 .item_detail .name {
-  margin-left: 80px; /* Adjusted for reduced image width */
-  margin-top: 15px; /* Adjusted margin */
+  margin-left: 80px;
+  /* Adjusted for reduced image width */
+  margin-top: 15px;
+  /* Adjusted margin */
 }
 
 /* Added condensed card styles */
@@ -297,7 +298,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column; /* Stack the circular progress and message vertically */
+  flex-direction: column;
+  /* Stack the circular progress and message vertically */
 }
-
 </style>
