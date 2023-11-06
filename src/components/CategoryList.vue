@@ -1,27 +1,22 @@
 <template>
   <!-- 使用 v-toolbar 來布置水平導航菜單 -->
   <v-toolbar flat dense class="category-bar">
-
-
     <div class="text-center">
+
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">行動通訊</v-btn>
+          <v-btn v-bind="props" class="btn">行動通訊</v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="(title, index) in items" :key="index" @click="handleCategoryClick(title)">
+          <v-list-item v-for=" (title, index) in items" :key="index" @click="handleCategoryClick(title)">
             <v-list-item-title>{{ title }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
-    </div>
 
-
-
-    <div class="text-center">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">大型家電</v-btn>
+          <v-btn v-bind="props" class="btn">大型家電</v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(appliance, index) in appliances" :key="index" @click="handleCategoryClick(appliance)">
@@ -29,13 +24,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </div>
 
-
-    <div class="text-center">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">電腦資訊</v-btn>
+          <v-btn v-bind="props" class="btn">電腦資訊</v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(info, index) in computerInfo" :key="index" @click="handleCategoryClick(info)">
@@ -43,13 +35,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </div>
 
-
-    <div class="text-center">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">電腦周邊</v-btn>
+          <v-btn v-bind="props" class="btn">電腦周邊</v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
@@ -58,13 +47,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </div>
 
-
-    <div class="text-center">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">小型家電</v-btn>
+          <v-btn v-bind="props" class="btn">小型家電</v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
@@ -73,13 +59,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </div>
 
-
-    <div class="text-center">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">視聽娛樂</v-btn>
+          <v-btn v-bind="props" class="btn">視聽娛樂</v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
@@ -88,13 +71,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-    </div>
 
-
-    <div class="text-center">
       <v-menu open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">辦公耗材</v-btn>
+          <v-btn v-bind="props" class="btn">辦公耗材</v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
@@ -103,9 +83,8 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
     </div>
-
-
 
   </v-toolbar>
 </template>
@@ -125,13 +104,8 @@ export default {
 
       products: [],
       items: ['行動電源_手機配件', '相機配件', '行車導航', '手機', '相機_攝影', '穿戴裝置', '平板電腦'],
-
       appliances: ['洗衣機', '乾衣機', '冷氣', '冰箱'],
-      computerInfo: [
-        '筆記型電腦', '主機板', '記憶體', '光碟機',
-        '機殼', '散熱風扇', '顯示卡', '硬碟_SSD',
-        '桌上型電腦', '電供_線材', '軟體'
-      ],
+      computerInfo: ['筆記型電腦', '主機板', '記憶體', '光碟機', '機殼', '散熱風扇', '顯示卡', '硬碟_SSD', '桌上型電腦', '電供_線材', '軟體'],
       computerPeripherals: ['外接擴充', '鍵鼠週邊', '線材_接頭', '列印掃描', '電腦耳機_喇叭', '影像輸入裝置', '儲存裝置', '電源周邊', '網路裝置'],
       smallAppliances: ['耳機_喇叭', '生活家電', '廚房家電', '健康家電', '季節家電', '烹調家電', '家電配備'],
       entertainments: ['音樂_錄音', '電視配件', '電視遊樂器', '喇叭音響', '液晶電視', '投影機周邊', '視聽播放', '視聽配件'],
@@ -225,106 +199,69 @@ export default {
   }
 };
 </script>
-
-<style>
-.toolbar-content {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-/* 確保 toolbar 和其內容在屏幕中央顯示 */
-.text-center {
-  width: 100px;
-  display: flex;
-  justify-content: center;
-}
-
-.smaller-card {
-  max-width: 200px;
-  margin: 0 auto;
-}
-
-
-
-.pagination {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.product-image {
-  width: 100%;
-  /* 使用百分比確保圖片寬度對應到卡片寬度 */
-  height: 200px;
-  /* 固定高度 */
-  object-fit: cover;
-  /* 覆蓋或包含圖片以適應給定的框架，可能的值還有 contain, cover, fill 等 */
-  margin-right: auto;
-  /* 移除 mr-2 並使用自動外邊距確保居中顯示 */
-  margin-left: auto;
-}
-
-.v-card-title {
-  word-wrap: break-word;
-  /* 允許在單詞邊界自動換行 */
-  overflow-wrap: break-word;
-  /* 允許在任意字符之間自動換行 */
-  max-width: 100%;
-  white-space: normal;
-  /* 允許文字換行 */
-  line-height: 1.2;
-  /* 調整行高以適應多行文本 */
-}
-
-.product-name {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  white-space: normal;
-  line-height: 1.2;
-  text-align: center;
-  /* 確保文字居中對齊 */
-}
-
-.original-price {
-  text-decoration: line-through;
-  /* 加上刪除線 */
-}
-
-.special-price {
-  color: red;
-  /* 設定文字顏色為紅色 */
-}
-
-.no-background::before {
-  background: transparent !important;
-}
-
-.card-actions {
-  position: relative;
-  /* 確保卡片有足夠的高度，否則圖示可能會超出卡片範圍 */
-  min-height: 48;
-  /* 或者根據需要調整 */
-}
-
-.wishlist-btn {
-  position: absolute;
-  bottom: 16px;
-  /* 距離卡片底部的距離，根據需要調整 */
-  right: 16px;
-  /* 距離卡片右側的距離，根據需要調整 */
-  z-index: 2;
-  /* 確保按鈕在卡片之上 */
-}
-
-.v-card {
-  margin-bottom: 24px;
-  /* 或者根據需要調整，以提供足夠的空間 */
-
-}
-
+<style scoped>
+/****** 按鈕部分 ******/
 .category-bar {
-  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   background-color: #FEB5C5;
 }
+
+.text-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.btn {
+  margin: 1px;
+  min-width: 150px;
+  min-height: 65px;
+  font-size: 1.3rem;
+  color: #333333;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  background-color: #FAD0E4;
+  /* 淺藍色高亮 */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  /* 細微陰影 */
+}
+
+.btn:active {
+  background-color: rgb(243, 120, 225);
+  /* 深藍色按鈕激活狀態 */
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+  /* 更深的陰影 */
+}
+
+/****** 下拉選單部分 ********/
+/* 下拉菜單項目的底線 */
+.v-list-item {
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* 最後一個項目沒有底線 */
+.v-list-item:last-child {
+  border-bottom: none;
+}
+
+/* 懸停時改變底線顏色 */
+.v-list-item:hover {
+  border-bottom-color: #CE93D8;
+}
+
+/* 下拉菜單項目懸停時的背景顏色 */
+.v-list-item:hover {
+  background-color: #FAD0E4;
+}
 </style>
+
+
+
+
+
