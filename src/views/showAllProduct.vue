@@ -144,6 +144,7 @@ export default {
 
 .product_image {
   width: 100px;
+  height: 200px;
 }
 
 .id_style {
