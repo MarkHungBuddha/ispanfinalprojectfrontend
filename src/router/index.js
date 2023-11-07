@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ProductList from "@/views/ProductList.vue";
+import store from '../store';
 
 const routes = [
   {
@@ -186,6 +187,22 @@ const router = createRouter({
   routes
 });
 
+router.beforeEach((to, from, next) => {
+  // 如果用户已登录并且试图访问注册页面
+  if (to.path === '/register' && store.getters.isLoggedIn) {
+    next({ name: 'member' }); // 重定向到会员页面
+  } else {
+    next(); // 否则允许路由解析正常继续
+  }
+});
+router.beforeEach((to, from, next) => {
+  // 如果用户已登录并且试图访问注册页面
+  if (to.path === '/login' && store.getters.isLoggedIn) {
+    next({ name: 'member' }); // 重定向到会员页面
+  } else {
+    next(); // 否则允许路由解析正常继续
+  }
+});
 // 為了使用 meta 屬性中的 title，你可以設置一個全局的前置守衛
 router.beforeEach((to, from, next) => {
   // 檢查 meta.title 是否為函數，如果是，則以當前路由作為參數調用它
@@ -195,6 +212,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title || 'Default Title';
   }
   next();
+  
 });
 
 

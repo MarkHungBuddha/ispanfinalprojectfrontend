@@ -2,14 +2,16 @@ import {createStore} from 'vuex';
 
 export default createStore({
     state: {
-        isLoggedIn: false,
+        isLoggedIn: true,
         apiCallFinished: false,
         wishlist: [],
         memberId: null,
     },
     getters: {
+        isLoggedIn: state => state.isLoggedIn,
         memberId: state => state.memberId,
     },
+    
     mutations: {
         setLoginStatus(state, status) {
             state.isLoggedIn = status;

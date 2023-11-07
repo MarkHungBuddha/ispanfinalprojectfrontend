@@ -8,7 +8,7 @@
             <v-list two-line>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>用戶名稱</v-list-item-title>
+                  <v-list-item-title>會員帳號</v-list-item-title>
                   <v-list-item-subtitle>{{ user.username }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
