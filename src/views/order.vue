@@ -8,9 +8,9 @@
         <!-- <sidebarBuyer></sidebarBuyer> -->
 
         <!-- 搜索訂單ID欄 -->
-        <div class="selectbar">
+        <!-- <div class="selectbar">
           <v-text-field v-model="searchQuery" label="買家搜索訂單ID" @input="searchOrder"></v-text-field>
-        </div>
+        </div> -->
 
         <!-- 買家訂單頁面 -->
         <!-- 標籤選項卡 -->

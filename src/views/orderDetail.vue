@@ -8,9 +8,7 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
-
-
-        <!-- 添加class "order-card" 並設置max-width -->
+        <!-- 為訂單詳情卡片設置最大寬度並添加背景顏色 -->
         <div v-if="orderDetails" class="mx-auto order-card">
 
           <!-- 訂單標題，顯示訂單編號 -->
@@ -386,46 +384,73 @@ export default {
 </script>
 
 <style scoped>
-/* 新增的樣式 */
+/* 將整個應用的背景色設定為淡粉紅色 */
+.v-application {
+  background-color: rgb(247, 243, 238);
+}
+
+/* 訂單卡片樣式 */
 .order-card {
-  max-width: 1200px;
-  /* 您可以根據需要調整這個值 */
+  border: 3px solid rgb(241, 224, 206);
+  max-width: 1300px;
+  margin: 0 auto;
+  /* 中心對齊 */
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #fdfdfd;
 }
 
 /* 產品詳情樣式調整 */
 .product-details {
-  display: flexbox;
+  display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 /* 圖片樣式 */
 .product-image {
-  width: auto;
   max-width: 200px;
+  /* 限制最大寬度，保持圖片比例 */
   height: auto;
 }
 
-/* 訂單狀態文字顏色變化為紅色 */
+/* 訂單狀態文字顏色 */
 .status-color-cancelled {
   color: red;
+
 }
 
-/* 訂單狀態文字顏色變化為綠色 */
 .status-color-change {
   color: #4CAF50;
 }
 
+/* 文本框底邊距 */
 .v-text-field {
   margin-bottom: 10px;
 }
 
+/* 自定義側邊欄樣式 */
 .custom-sidebar {
-  /* 示例样式，根据需要调整 */
   margin-top: 50px;
-  /* 给顶部留出空间 */
+  /* 距頂部空間 */
   position: relative;
   z-index: 5;
-  /* 如果需要的话 */
+}
+
+/* 共用按鈕和對話框樣式 */
+.v-btn,
+.v-dialog,
+.v-card {
+  background-color: #fff;
+}
+
+/* 媒體查詢示例，根據需要調整 */
+@media (max-width: 600px) {
+  .order-card {
+    padding: 10px;
+    /* 對於小屏幕，減少內距 */
+  }
+
+  /* 其他需要調整的樣式 */
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer app>
     <!-- 添加買家頁面的標題 -->
-    <v-toolbar flat dense color="#f48fb1">
+    <v-toolbar flat dense color="rgb(248, 176, 200)">
       <v-toolbar-title class="text-h5">
         買家頁面
       </v-toolbar-title>
@@ -50,6 +50,7 @@ export default {
 /* 導航抽屜樣式 */
 .v-navigation-drawer {
   background-color: transparent;
+
   /* 透明背景 */
 }
 
@@ -79,7 +80,8 @@ export default {
 }
 
 .v-list-item:hover {
-  background-color: #F8BBD0;
+  background-color: #facfde;
+
   /* 非常淺的粉色背景懸停 */
 }
 
@@ -96,7 +98,8 @@ export default {
 
 /* 當擴展面板被打開時的樣式 */
 .v-expansion-panel--active {
-  background-color: #FCE4EC;
+  background-color: #fadfe7;
+
   /* 非常淺的粉色背景 */
 }
 </style>

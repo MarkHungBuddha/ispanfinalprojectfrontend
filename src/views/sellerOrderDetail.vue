@@ -1,8 +1,9 @@
 <template>
   <v-app>
     <v-main>
+      <sidebar></sidebar>
       <v-container>
-        <sidebar></sidebar>
+
 
         <!-- 上一頁按鈕 -->
         <v-btn icon @click="goBack">
@@ -142,6 +143,10 @@ export default {
 </script>
 
 <style scoped>
+.v-application {
+  background-color: #f8edf8;
+}
+
 /* 新增的樣式 */
 .order-card {
   max-width: 1200px;
