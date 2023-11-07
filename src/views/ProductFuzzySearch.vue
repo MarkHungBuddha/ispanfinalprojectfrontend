@@ -1,54 +1,49 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container>
-        <v-row>
-          <!-- 循環顯示產品 -->
-          <v-col v-for="product in products" :key="product.productid" cols="12" sm="6" md="4" lg="2">
-            <v-card>
-              <v-card-text class="d-flex flex-column align-center">
-                <!-- 商品圖片 -->
-                <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                  class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
-                <!-- 商品名稱 -->
-                <div class="product-name">{{ product.productName }}</div>
-                <div v-if="product.specialPrice && product.specialPrice < product.price"
-                  class="original-price line-through">原價: {{ product.price }}</div>
-                <div v-else class="original-price">原價: {{ product.price }}</div>
-                <div v-if="product.specialPrice && product.specialPrice < product.price" class="special-price">特價: {{
-                  product.specialPrice }}</div>
+  <v-container>
+    <!-- 循環顯示產品 -->
+    <v-row>
+      <v-col v-for="product in products" :key="product.productId" cols="12" sm="6" md="4" lg="2">
+        <v-card>
+          <v-card-text class="d-flex flex-column align-center">
+            <!-- 商品圖片 -->
+            <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image" class="product-image mr-2"
+              @click="navigateToProduct(product.productId)">
+            </v-img>
+            <!-- 商品名稱 -->
+            <div class="product-name">{{ product.productName }}</div>
+            <!-- 原價 -->
+            <div class="original-price" :class="{ 'line-through': product.specialPrice < product.price }">
+              原價: {{ product.price }}
+            </div>
+            <!-- 特價 -->
+            <div v-if="product.specialPrice && product.specialPrice < product.price" class="special-price">
+              特價: {{ product.specialPrice }}
+            </div>
+            <!-- 平均評價 -->
+            <v-card-actions>
+              <v-btn color="primary" @click="addProductToCart(product.productId)">加入購物車</v-btn>
 
-                <!-- 平均評價 -->
+              <v-btn icon @click="toggleWishlist(product)">
+                <v-icon :color="product.inWishlist ? 'pink' : 'grey'">mdi-heart</v-icon>
+              </v-btn>
+            </v-card-actions>
 
-
-
-                <div v-if="product.averageReview">
-                  平均評價: {{ product.averageReview.toFixed(2) }}
-                </div>
-                <!-- 加入購物車按鈕 -->
-                <v-btn @click="addProductToCart(product.productId)">
-                  加入購物車
-                </v-btn>
-                <!-- 願望清單按鈕 -->
-                <v-btn icon flat class="wishlist-btn" @click="toggleWishlist(product)">
-                  <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
-                </v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-        <!-- 分頁控件 -->
-        <v-pagination v-model="currentPage" :length="totalPages" class="my-4"></v-pagination>
-      </v-container>
-    </v-main>
-  </v-app>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 
 <script>
 import axios from 'axios'; // 在這裡導入 axios
+import ProductCard from '@/components/ProductCard.vue';
 
 export default {
+  components: {
+    ProductCard
+  },
   data() {
     return {
       options: {
@@ -228,53 +223,17 @@ export default {
     },
 
     // 加入購物車方法
-    addProductToCart(productid) {
-      console.log('Attempting to add product to cart with ID:', productid);
-      if (productid === undefined) {
-        console.error('Product ID is undefined.');
-        this.showSnackbar('商品ID未指定或不正確。', 'error');
-        return;
-      }
-
-      axios
-        .post(`http://localhost:8080/customer/api/shoppingCart?productId=${productid}`, null, {
-          withCredentials: true,
-          headers: { 'Content-Type': 'application/json' }
-        })
+    addProductToCart(productId) {
+      axios.post(`http://localhost:8080/customer/api/shoppingCart?productId=${productId}`)
         .then(response => {
-          console.log(response);
-          if (response.data && Array.isArray(response.data.content)) {
-            this.products = response.data.content;
-            this.totalPages = response.data.totalPages;
-          } else {
-            // 如果没有产品，清空产品数组
-            this.products = [];
-            this.totalPages = 0;
-            this.showSnackbar('没有找到产品', 'info');
-          }
+          this.showSnackbar('商品已成功加入购物车。', 'success');
         })
         .catch(error => {
-          // 錯誤處理
+          this.showSnackbar('无法添加商品到购物车。', 'error');
           console.error('Error adding product to cart:', error);
-          this.snackbarText = '無法添加商品到購物車';
-          this.snackbarColor = 'error'; // 錯誤消息使用紅色
-          this.snackbar = true; // 顯示Snackbar
-          // 如果API響應了請求但出現錯誤
-          if (error.response) {
-            console.error('Error response data:', error.response.data);
-            this.snackbarText = `Error: ${error.response.data.message}`;
-          } else {
-            // 服务器没有响应
-            this.snackbarText = 'Error: Server did not respond';
-          }
         });
 
     },
-    //添加跳轉頁面到productPage
-    navigateToProduct(productid) {
-      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
-    },
-
 
 
     //願望清單
@@ -289,7 +248,7 @@ export default {
       const newStatus = !product.inWishlist;
 
       // 发送 POST 请求到后端 API
-      axios.post(`/customer/api/wishlist/${productId}`, {}, {
+      axios.post(`http://localhost:8080/customer/api/wishlist/${productId}`, {}, {
         withCredentials: true // 這樣可以确保携带认证信息，例如cookies
       })
         .then(response => {
@@ -304,23 +263,29 @@ export default {
 
     },
 
+    // 切换愿望清单状态
+    toggleWishlist(product) {
+      axios.post(`http://localhost:8080/customer/api/wishlist/${product.productId}`)
+        .then(response => {
+          product.inWishlist = !product.inWishlist;
+          this.showSnackbar('愿望清单状态已更新。', 'success');
+        })
+        .catch(error => {
+          this.showSnackbar('无法更新愿望清单状态。', 'error');
+          console.error('Error toggling wishlist status:', error);
+        });
+    },
     // 更新愿望清单状态
     updateWishlistStatus(productId, status) {
       const productIndex = this.products.findIndex(p => p.productId === productId);
       if (productIndex !== -1) {
         this.$set(this.products[productIndex], 'inWishlist', status);
-        // ... 更新 Snackbar 和 localStorage
       }
     },
-
-    // 切换愿望清单状态
-    toggleWishlist(product) {
-      // 此函数应该只负责切换状态，并调用 addProductToWishlist
-      this.addProductToWishlist(product.productId);
-    }
-
-
-
+    //添加跳轉頁面到productPage
+    navigateToProduct(productId) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productId } });
+    },
 
   },
 }
