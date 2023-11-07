@@ -141,7 +141,7 @@ validatePassword() {
           console.error('Error fetching Google login URL:', error);
         });
     },
-  
+
     checkForGoogleCode() {
       // 从URL中提取code
       const urlParams = new URLSearchParams(window.location.search);
@@ -151,7 +151,7 @@ validatePassword() {
       }
     },
     sendVerificationCode() {
-      axios.post('http://localhost:8080/email/public/api/sendEmail', { recipient: this.email })
+      axios.post('http://localhost:8080/public/api/sendEmail', { recipient: this.email })
         .then(response => {
           this.emailFeedback = {
             type: 'success-message',
@@ -172,7 +172,7 @@ validatePassword() {
     },
     confirmVerificationCode() {
       // 确认验证码逻辑...
-      axios.post('http://localhost:8080/email/public/api/verifyCode', null, {
+      axios.post('http://localhost:8080/public/api/verifyCode', null, {
         params: {
           email: this.email,
           userInputCode: this.verificationCode
