@@ -1,9 +1,10 @@
 <template>
   <v-app>
     <v-main>
+      <sidebar></sidebar>
       <v-container>
-<!--        <navbar></navbar>-->
-        <sidebar></sidebar>
+        <!--        <navbar></navbar>-->
+
 
         <!-- 搜索訂單ID欄 -->
         <div class="selectbar">
@@ -68,7 +69,7 @@
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 // import barList from "@/components/barList.vue";
-import sidebar from '@/components/sidebar.vue';
+// import sidebar from '@/components/sidebar.vue';
 
 
 export default {
@@ -191,6 +192,12 @@ export default {
 </script>
 
 <style scoped>
+.v-application {
+  background-image: linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+
+  /* background-color: rgb(182, 250, 250); */
+}
+
 .product-image {
   width: auto;
   max-width: 150px;

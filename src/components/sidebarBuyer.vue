@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer app>
     <!-- 添加買家頁面的標題 -->
-    <v-toolbar flat dense color="rgb(248, 176, 200)">
+    <v-toolbar flat dense class="toolbar1">
       <v-toolbar-title class="text-h5">
         買家頁面
       </v-toolbar-title>
@@ -47,6 +47,12 @@ export default {
 
 
 <style scoped>
+.toolbar1 {
+  background-color: rgb(10, 43, 187);
+  color: white;
+
+}
+
 /* 導航抽屜樣式 */
 .v-navigation-drawer {
   background-color: transparent;
@@ -57,14 +63,14 @@ export default {
 /* 擴展面板標題樣式 */
 .v-expansion-panel-title {
   font-size: 1.2rem;
-  color: rgb(82, 5, 23);
+  color: rgb(0, 0, 0);
   /* 淺粉色文字 */
   cursor: pointer;
 }
 
 .v-expansion-panel-title:hover,
 .v-expansion-panel--active .v-expansion-panel-title {
-  color: rgb(82, 5, 23);
+  color: rgb(0, 0, 0);
 }
 
 /* 擴展面板內容樣式 */
@@ -75,14 +81,13 @@ export default {
 
 /* 清單項目樣式 */
 .v-list-item {
-  color: rgb(82, 5, 23);
+  color: rgb(0, 0, 0);
   font-size: 1rem;
 }
 
 .v-list-item:hover {
-  background-color: #facfde;
-
-  /* 非常淺的粉色背景懸停 */
+  background-color: rgb(199, 199, 224)
+    /* 非常淺的粉色背景懸停 */
 }
 
 /* 清單項目標題樣式 */
@@ -98,8 +103,8 @@ export default {
 
 /* 當擴展面板被打開時的樣式 */
 .v-expansion-panel--active {
-  background-color: #fadfe7;
-
-  /* 非常淺的粉色背景 */
+  /* background-color: rgb(248, 227, 206); */
+  background-color: rgb(223, 230, 255)
+    /* 非常淺的粉色背景 */
 }
 </style>

@@ -193,6 +193,12 @@ export default {
 </script>
 
 <style scoped>
+.v-application {
+  background-image: linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+
+  /* background-color: rgb(182, 250, 250); */
+}
+
 .product-image {
   width: auto;
   max-width: 150px;
@@ -202,6 +208,8 @@ export default {
 
 .light-gray-background {
   background-color: #fde1e8;
+  background-color: rgb(250, 250, 250, 0.5);
+
   /* 訂單背景色 */
 }
 
@@ -214,7 +222,8 @@ export default {
 }
 
 .tab--active {
-  background-color: #fcc5d0;
+  background-color: rgb(202, 160, 115);
+
   /* 指定選中標籤顏色 */
 }
 </style>

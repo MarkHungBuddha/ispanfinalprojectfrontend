@@ -202,31 +202,38 @@ export default {
 <style scoped>
 /****** 按鈕部分 ******/
 .category-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  background-color: #FEB5C5;
+  /* background-color: #b5effe; */
+  /* background-color: rgb(243, 202, 68); */
+  background: url('@/assets/background.jpg') no-repeat center center;
+  background-size: cover;
+
+
+  /* 或者你可以使用 contain 根据你的需要 */
+  height: 85px;
+  margin: 0 auto;
+
 }
 
+/* 按鈕置中 */
 .text-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
 }
 
+/* 按鈕 */
 .btn {
-  margin: 1px;
+  margin: 3px;
   min-width: 150px;
   min-height: 65px;
   font-size: 1.3rem;
-  color: #333333;
+  color: rgb(8, 8, 8);
   transition: background-color 0.2s, box-shadow 0.2s;
+  background-color: rgba(206, 148, 105, 0.3);
+  /* opacity: 0.5; */
 }
 
 .btn:hover {
   background-color: #FAD0E4;
+  background-color: rgb(255, 179, 156);
   /* 淺藍色高亮 */
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   /* 細微陰影 */
@@ -252,12 +259,12 @@ export default {
 
 /* 懸停時改變底線顏色 */
 .v-list-item:hover {
-  border-bottom-color: #CE93D8;
+  border-bottom-color: rgb(101, 65, 231);
 }
 
 /* 下拉菜單項目懸停時的背景顏色 */
 .v-list-item:hover {
-  background-color: #FAD0E4;
+  background-color: rgb(231, 199, 199)
 }
 </style>
 

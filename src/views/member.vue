@@ -20,6 +20,12 @@ import navbar from "@/components/navbar.vue";
 </template>
 
 <style scoped>
+.v-application {
+  background-image: linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+
+  /* background-color: rgb(182, 250, 250); */
+}
+
 .custom-slider {
   max-width: 80vw;
   margin: 0 auto;

@@ -3,29 +3,32 @@ import navbar from "@/components/navbar.vue";
 </script>
 <template>
   <v-app>
-    <v-container fluid>
+    <v-main>
+      <sidebarBuyer></sidebarBuyer>
+      <v-container fluid>
 
-      <v-row class="my-4">
-        <v-col cols="6" class="font-weight-bold">商品</v-col>
-        <v-col cols="6" class="text-right font-weight-bold">操作</v-col>
-      </v-row>
+        <v-row class="my-4">
+          <v-col cols="6" class="font-weight-bold">商品</v-col>
+          <v-col cols="6" class="text-right font-weight-bold">操作</v-col>
+        </v-row>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
-        <v-col cols="6" class="d-flex align-center">
-          <v-img :src="item.imgUrl + item.imgExtension" max-width="80" class="mr-3"></v-img>
-          <span class="font-weight-medium">{{ item.itemName }}</span>
-        </v-col>
-<!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
-        <v-col cols="6" class="text-right">
-          <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
-          <v-btn small color="error" @click="removeFromWishlist(item.productid, index)">刪除</v-btn>
-        </v-col>
-      </v-row>
+        <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
+          <v-col cols="6" class="d-flex align-center">
+            <v-img :src="item.imgUrl + item.imgExtension" max-width="80" class="mr-3"></v-img>
+            <span class="font-weight-medium">{{ item.itemName }}</span>
+          </v-col>
+          <!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
+          <v-col cols="6" class="text-right">
+            <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
+            <v-btn small color="error" @click="removeFromWishlist(item.productid, index)">刪除</v-btn>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-    </v-container>
+
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
@@ -40,7 +43,7 @@ export default {
         itemName: item.productname,
         imgUrl: `https://i.imgur.com/${item.productimage}`,
         imgExtension: item.imageExtension || '.png',  // 假設從store中也可以取得檔名後綴，如果沒有則預設為.png
-        productid:item.productid
+        productid: item.productid
       }))
 
     };
@@ -48,36 +51,36 @@ export default {
   methods: {
     addToCart(item) {
       axios
-          .post(`http://localhost:8080/customer/api/shoppingCart?productId=${item.productid}`)
-          .then(response => {
-            console.log(response.data); // 這裡可以顯示一些提示給使用者，如 "商品已加入購物車！"
-            // 商品成功加入購物車後，從願望清單中移除
-            this.removeFromWishlist(item.productid);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        .post(`http://localhost:8080/customer/api/shoppingCart?productId=${item.productid}`)
+        .then(response => {
+          console.log(response.data); // 這裡可以顯示一些提示給使用者，如 "商品已加入購物車！"
+          // 商品成功加入購物車後，從願望清單中移除
+          this.removeFromWishlist(item.productid);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
 
 
     removeFromWishlist(productId, index) {
       axios
-          .delete(`http://localhost:8080/customer/api/wishlist/${productId}`)
-          .then(response => {
-            this.itemList.splice(index, 1);
-            console.log(response.data); // you might want to display this to the user
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        .delete(`http://localhost:8080/customer/api/wishlist/${productId}`)
+        .then(response => {
+          this.itemList.splice(index, 1);
+          console.log(response.data); // you might want to display this to the user
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   },
   created() {
     if (!this.$store.state.wishlist.length) {
       axios.get('http://localhost:8080/customer/api/wishlist')
-          .then((response) => {
-            this.$store.commit('setWishList', response.data);
-          });
+        .then((response) => {
+          this.$store.commit('setWishList', response.data);
+        });
     }
   }
 }
@@ -126,6 +129,7 @@ body {
   margin-left: 100px;
   margin-top: 20px;
 }
+
 .item-row:hover {
   background-color: rgba(0, 0, 0, 0.05);
   transition: background-color 0.3s;
