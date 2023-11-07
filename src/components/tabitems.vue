@@ -3,7 +3,7 @@
         <v-main>
             <v-container>
 
-                <!-- 商品目录标题 -->
+                <!-- 商品目錄標題 -->
                 <v-row>
                     <v-col>
                         <div class="raised-box">
@@ -35,10 +35,12 @@
                                 lg="3">
                                 <v-card class="product-card">
                                     <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                                        class="product-image" @click="navigateToProduct(product.productid)"></v-img>
+                                        class="product-image" @click="navigateToProduct(product.productId)"></v-img>
                                     <div class="product-name">{{ product.productname }}</div>
                                     <div class="price-text">
-                                        <div class="original-price">原價: {{ product.price }}</div>
+                                        <div v-if="product.specialprice > 0" class="original-price line-through">原價: {{
+                                            product.price }}</div>
+                                        <div v-else class="original-price">原價: {{ product.price }}</div>
                                         <div v-if="product.specialprice > 0" class="special-price">特價: {{
                                             product.specialprice }}</div>
                                     </div>
@@ -53,6 +55,22 @@
                         <div class="raised-box">
                             <h1 class="display-1">猜你喜歡</h1>
                         </div>
+                    </v-col>
+                </v-row>
+
+                <v-row no-gutters>
+                    <v-col v-for="(product, index) in productsContainingA" :key="`a-${index}`" cols="12" sm="6" md="4"
+                        lg="3">
+                        <v-card class="product-card">
+                            <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
+                                class="product-image" @click="navigateToProduct(product.productId)"></v-img>
+                            <div class="product-name">{{ product.productName }}</div>
+                            <div class="price-text">
+                                <div class="original-price">原價: {{ product.price }}</div>
+                                <div v-if="product.specialPrice > 0" class="special-price">特價: {{ product.specialPrice }}
+                                </div>
+                            </div>
+                        </v-card>
                     </v-col>
                 </v-row>
 
@@ -100,6 +118,7 @@ export default {
             wishlistSnackbarColor: '',
 
             selectedProductDetails: null, // 用於存儲從後端獲取的產品詳情
+            productsContainingA: [], // 用於存儲包含關鍵字 "a" 的商品
 
         };
     },
@@ -159,12 +178,36 @@ export default {
             // 例如，添加商品到购物车的代码
         },
 
+        fetchProductsWithKeyword(keyword) {
+            const params = {
+                productname: keyword,
+                minPrice: this.minPrice,
+                maxPrice: this.maxPrice,
+                page: this.currentPage,
+            };
+            axios.get('http://localhost:8080/public/api/products', { params })
+                .then(response => {
+                    if (response.data && response.data.content) {
+                        this.productsContainingA = response.data.content;
+                    } else {
+                        this.productsContainingA = [];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching products with keyword:', error);
+                    this.productsContainingA = [];
+                });
+        },
+
 
     },
     // 当组件创建完成后立即获取数据
     mounted() {
 
         this.fetchCategoryProducts('筆記型電腦'); // 也可以在这里调用方法获取默认类别的数据
+        this.fetchProductsWithKeyword('a');        // 當組件掛載完成後執行
+
+
     },
     // ... 其他方法 ...
 };
@@ -178,34 +221,6 @@ export default {
     /* 圖片寬度與卡片相同 */
     object-fit: cover;
     /* 圖片覆蓋整個可用空間，可能會被裁剪 */
-}
-
-/* 其他元素如標題和副標題可能需要調整來適應固定大小的卡片 */
-.v-card-title {
-    white-space: normal;
-    /* 允許換行 */
-    line-height: 1.2;
-    /* 行高可以根據需要調整 */
-    margin: 0;
-    /* 移除可能的外邊距 */
-    padding: 0;
-    /* 移除可能的內邊距 */
-}
-
-.v-card-subtitle {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.v-card {
-    overflow: hidden;
-    /* 隱藏超出邊界的內容 */
-}
-
-.first-row {
-    margin-top: 20px;
-    /* 或者您想要的距離 */
 }
 
 .product-name {
@@ -234,18 +249,6 @@ export default {
 
 }
 
-/* 添加样式 */
-.mb-5 {
-    margin-bottom: 5rem;
-    /* 添加适当的下边距 */
-}
-
-/* 购物车图标样式 */
-.v-btn--icon {
-    margin-right: 1rem;
-    /* 图标间隔 */
-}
-
 .original-price {
     font-size: 16px;
     /* 設定原價的字體大小 */
@@ -261,14 +264,6 @@ export default {
 .price-text {
     text-align: center;
     /* 将文本居中对齐 */
-}
-
-.price-text {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* 使子元素垂直堆叠 */
 }
 
 .raised-box {
@@ -293,21 +288,37 @@ export default {
     /* 文本对齐方式为居中 */
 }
 
-.product-workspace {
-    /* 确保工作区内的卡片有合适的间隔和布局 */
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    /* 或者flex-start等，取决于您的具体需要 */
-    align-items: stretch;
-    /* 确保卡片在垂直方向上拉伸以填满可用空间 */
-    padding: 16px;
-    /* 根据需要添加适当的内边距 */
-}
-
 .category-section {
     border: 1px solid #ddd;
     /* 为整个分类列表添加边框 */
     /* 其他样式 */
+}
+
+.product-name {
+    display: -webkit-box;
+    /* 创建一个块级别的弹性盒对象 */
+    -webkit-box-orient: vertical;
+    /* 设置盒子的子元素布局方向为垂直 */
+    -webkit-line-clamp: 2;
+    /* 限制文本的行数为两行 */
+    overflow: hidden;
+    /* 隐藏超出容器的内容 */
+    text-overflow: ellipsis;
+    /* 用省略号表示文本溢出 */
+    height: 3em;
+    /* 根据行高设置容器高度，这里的3em是假设行高为1.5em */
+    line-height: 1.5em;
+    /* 设置行高 */
+    white-space: normal;
+    /* 恢复默认的换行设置 */
+    margin: 0;
+    /* 移除外边距，根据实际情况可能需要调整 */
+    padding: 0 10px;
+    /* 添加水平内边距，防止文本紧贴容器边缘 */
+}
+
+.line-through {
+    text-decoration: line-through;
+    /* 劃掉文字 */
 }
 </style>

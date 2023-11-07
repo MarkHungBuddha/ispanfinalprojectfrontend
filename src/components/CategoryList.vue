@@ -222,60 +222,33 @@ export default {
 </script >
 
 <style scoped>
-.smaller-card {
-  max-width: 200px;
-  margin: 0 auto;
-}
-
 .text-center {
   text-align: center;
 }
 
-.pagination {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.product-image {
-  height: 150px;
-  /* 固定图片高度 */
-  object-fit: cover;
-  /* 确保图片覆盖整个可用空间，可能会被裁剪 */
-}
-
-.v-card-title {
-  word-wrap: break-word;
-  /* 允許在單詞邊界自動換行 */
-  overflow-wrap: break-word;
-  /* 允許在任意字符之間自動換行 */
-  max-width: 100%;
-  white-space: normal;
-  /* 允許文字換行 */
-  line-height: 1.2;
-  /* 調整行高以適應多行文本 */
-}
-
 .product-name {
-  display: -webkit-box;
-  /* 创建一个块级别的弹性盒对象 */
-  -webkit-box-orient: vertical;
-  /* 设置盒子的子元素布局方向为垂直 */
-  -webkit-line-clamp: 2;
-  /* 限制文本的行数为两行 */
+  display: block;
+  /* 或者保持 'display: -webkit-box;' 如果您需要支持舊的 iOS 瀏覽器 */
   overflow: hidden;
-  /* 隐藏超出容器的内容 */
   text-overflow: ellipsis;
-  /* 用省略号表示文本溢出 */
   height: 3em;
-  /* 根据行高设置容器高度，这里的3em是假设行高为1.5em */
+  /* 兩倍於 'line-height' 以顯示兩行 */
   line-height: 1.5em;
-  /* 设置行高 */
-  white-space: normal;
-  /* 恢复默认的换行设置 */
+  max-height: 3em;
+  /* 與 'height' 相同以限制內容 */
+  white-space: nowrap;
+  /* 防止文本換行 */
   margin: 0;
-  /* 移除外边距，根据实际情况可能需要调整 */
   padding: 0 10px;
-  /* 添加水平内边距，防止文本紧贴容器边缘 */
+}
+
+/* 針對不支持 -webkit-line-clamp 的瀏覽器 */
+.product-name {
+  white-space: normal;
+  /* 允許換行 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .original-price {
@@ -288,45 +261,8 @@ export default {
   /* 設定文字顏色為紅色 */
 }
 
-.no-background::before {
-  background: transparent !important;
-}
-
-.card-actions {
-  position: relative;
-  /* 確保卡片有足夠的高度，否則圖示可能會超出卡片範圍 */
-  min-height: 48;
-  /* 或者根據需要調整 */
-}
-
-.wishlist-btn {
-  position: absolute;
-  bottom: 16px;
-  /* 距離卡片底部的距離，根據需要調整 */
-  right: 16px;
-  /* 距離卡片右側的距離，根據需要調整 */
-  z-index: 2;
-  /* 確保按鈕在卡片之上 */
-}
-
 .category-bar {
   height: 70px;
   background-color: #FEB5C5;
-}
-
-
-
-.product-card {
-  display: flex;
-  /* 使用 flex 布局 */
-  flex-direction: column;
-  /* 确保内容是垂直方向 */
-  justify-content: space-between;
-  /* 在项目之间保持空间 */
-  height: auto;
-  /* 卡片高度自动根据内容调整 */
-  margin: 0;
-  /* 移除卡片的外边距 */
-
 }
 </style>

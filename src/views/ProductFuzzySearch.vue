@@ -12,11 +12,16 @@
                   class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
                 <!-- 商品名稱 -->
                 <div class="product-name">{{ product.productName }}</div>
-                <!-- 原價 -->
-                <div class="original-price">原價: {{ product.price }}</div>
-                <!-- 特價 -->
-                <div class="special-price">特價: {{ product.specialPrice }}</div>
+                <div v-if="product.specialPrice && product.specialPrice < product.price"
+                  class="original-price line-through">原價: {{ product.price }}</div>
+                <div v-else class="original-price">原價: {{ product.price }}</div>
+                <div v-if="product.specialPrice && product.specialPrice < product.price" class="special-price">特價: {{
+                  product.specialPrice }}</div>
+
                 <!-- 平均評價 -->
+
+
+
                 <div v-if="product.averageReview">
                   平均評價: {{ product.averageReview.toFixed(2) }}
                 </div>
@@ -328,13 +333,6 @@ export default {
 </script>
 
 <style scoped>
-.v-row,
-.v-col {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-
 .product-name {
   display: -webkit-box;
   /* 创建一个块级别的弹性盒对象 */
@@ -357,4 +355,15 @@ export default {
   padding: 0 10px;
   /* 添加水平内边距，防止文本紧贴容器边缘 */
 }
-</style>
+
+.product-image {
+  max-height: 200px;
+  /* 根據需求設定最大高度 */
+  object-fit: contain;
+  /* 防止圖片變形 */
+}
+
+.line-through {
+  text-decoration: line-through;
+  /* 劃掉文字 */
+}</style>
