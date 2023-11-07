@@ -65,7 +65,7 @@ import navbar from "@/components/navbar.vue";
             <p v-else>${{ item.price * item.quantity }}</p>
           </v-col>
           <v-col cols="2" class="text-right">
-            <v-btn small color="error" @click="removeFromCart(item.productid, index)">刪除</v-btn>
+            <v-btn small color="error" @click="removeFromCart(item.transactionId, index)">刪除</v-btn>
           </v-col>
         </v-card>
       </v-row>
