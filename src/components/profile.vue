@@ -21,17 +21,9 @@
               </v-list-item>
 
               <!-- 大頭照顯示 -->
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>大頭照</v-list-item-title>
-                  <v-list-item-subtitle>
-                    <v-avatar size="100px">
-                      <v-img :src="`https://i.imgur.com/${imageFullPath}.png`" alt="Product Image"></v-img>
-                    </v-avatar>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
+              <v-avatar size="120" class="mb-3">
+                <img :src="imageFullPath" alt="Profile image" style="object-fit: contain; width: 100%; height: 100%;">
+              </v-avatar>
               <!-- ... 其他資料欄位 ... -->
 
               <v-list-item>
@@ -87,8 +79,7 @@
             <v-card-actions>
               <v-btn color="primary" text @click="editProfile">編輯資料</v-btn>
 
-              <input type="file" id="fileInput" ref="fileInput" style="display: none" @change="uploadImage"
-                accept="image/*">
+              <input type="file" id="fileInput" ref="fileInput" style="display: none" @change="uploadImage" accept="image/*">
             </v-card-actions>
           </v-card-text>
           <v-card-text v-else>
@@ -136,6 +127,7 @@ export default {
     }
   },
   methods: {
+
     async fetchUserProfile() {
       try {
         const response = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
@@ -144,7 +136,12 @@ export default {
           this.user.username = data.username;
           this.user.membertype = data.role;
           this.isLoggedIn = true;
-          this.fetchMemberData(data.userId);
+          // 确保使用正确的键来获取用户ID
+          if(data.memberId !== undefined) {
+            this.fetchMemberData(data.memberId);
+          } else {
+            console.error("用户ID未定义。");
+          }
         }
       } catch (error) {
         console.error("Failed to fetch user profile: ", error);
@@ -152,12 +149,12 @@ export default {
     },
     fetchMemberData(userId) {
       axios.get(`http://localhost:8080/public/api/member/${userId}`)
-        .then((response) => {
-          this.user = { ...this.user, ...response.data };
-        })
-        .catch((error) => {
-          console.error("Failed to fetch member data: ", error);
-        });
+          .then((response) => {
+            this.user = { ...this.user, ...response.data };
+          })
+          .catch((error) => {
+            console.error("Failed to fetch member data: ", error);
+          });
     },
     selectImage() {
       this.$refs.fileInput.click();
@@ -174,12 +171,12 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         })
-          .then(response => {
-            this.user.memberimgpath = response.data.split('/')[4].split('.')[0]; // 假设返回的是完整URL，我们需要的是imageCode
-          })
-          .catch(error => {
-            console.error("Image upload failed: ", error);
-          });
+            .then(response => {
+              this.user.memberimgpath = response.data.split('/')[4].split('.')[0]; // 假设返回的是完整URL，我们需要的是imageCode
+            })
+            .catch(error => {
+              console.error("Image upload failed: ", error);
+            });
       }
     },
     editProfile() {
