@@ -14,7 +14,9 @@
     <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
       <v-card-text style="padding: 0;">
         <v-text-field v-model="searchText" :loading="loading" density="compact" variant="solo" label="Search templates"
-          append-inner-icon="mdi-magnify" single-line hide-details @click:append-inner="onClick"></v-text-field>
+                      append-inner-icon="mdi-magnify" single-line hide-details @click:append="onClick" @keyup.enter="onClick">
+          <!-- 點擊(click:append)放大鏡圖標時觸發搜索 --><!-- 按下 Enter 鍵時觸發搜索 -->
+        </v-text-field>
       </v-card-text>
     </v-card>
 
@@ -69,42 +71,28 @@ export default {
     },
     redirectToShoppingCart() {
       axios.get('http://localhost:8080/customer/api/shoppingCart')
-        .then(() => {
-          this.$router.push('/shoppingCart');
-        });
+          .then(() => {
+            this.$router.push('/shoppingCart');
+          });
     },
     redirectToWishList() {
       axios.get('http://localhost:8080/customer/api/wishlist')
-        .then((response) => {
-          this.$store.commit('setWishList', response.data);
-          this.$router.push('/wishList');
-        });
+          .then((response) => {
+            this.$store.commit('setWishList', response.data);
+            this.$router.push('/wishList');
+          });
     },
     onClick() {
-      console.log('Search Text:', this.searchText); // 加入這行來輸出搜尋文本
-      const search = this.searchText;
-      this.loading = true;
-      // 執行搜尋
-      axios.get("http://localhost:8080/public/api/products", {
-        params: {
-          productname: search,
-        }
-      }).then((response) => {
-        this.loading = false;
-        // 導航到 searchResult.vue 並帶上搜尋字串
-        this.$router.push({ name: 'searchResult', query: { search: this.searchText } });
-      }).catch((error) => {
-        this.loading = false;
-        console.error("Error during search:", error);
-      });
+      this.$router.push({ name: 'ProductFuzzySearch', query: { search: this.searchText } });
+
     },
 
     logout() {
       axios.post('http://localhost:8080/customer/member/logout')
-        .then(() => {
-          this.$store.dispatch('updateLoginStatus', false);
-          this.$router.push('/');
-        });
+          .then(() => {
+            this.$store.dispatch('updateLoginStatus', false);
+            this.$router.push('/');
+          });
     }
   },
   watch: {

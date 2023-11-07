@@ -2,91 +2,67 @@
   <v-app>
     <v-main>
       <v-container>
-        <!-- <navbar></navbar>
-                <sidebar></sidebar> -->
-
-        <v-text-field v-model="search" label="模糊搜尋" append-icon="mdi-magnify" @click:append="fetchProductsWithSearch"
-                      @keyup.enter="fetchProductsWithSearch"></v-text-field>
-
-
-
-        <!-- 畫面呈現區 -->
         <v-row>
-
-          <v-col v-for="(product, index) in products" :key="index">
-
+          <!-- 循環顯示產品 -->
+          <v-col v-for="product in products" :key="product.productid">
             <v-card>
               <v-card-text class="d-flex flex-column align-center">
+                <!-- 商品圖片 -->
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
                        class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
-                <div class="product-name">{{ product.productname }}</div>
-                <div class="original-price">原價: {{ product.price }}</div>
-                <div class="special-price">特價: {{ product.specialprice }}</div>
+                <!-- 商品名稱 -->
+                <div class="product-name">{{ product.productName }}</div>
+                <div v-if="product.specialPrice && product.specialPrice < product.price"
+                     class="original-price line-through">原價: {{ product.price }}</div>
+                <div v-else class="original-price">原價: {{ product.price }}</div>
+                <div v-if="product.specialPrice && product.specialPrice < product.price" class="special-price">特價: {{
+                    product.specialPrice }}</div>
+
+                <!-- 平均評價 -->
+
+
 
                 <div v-if="product.averageReview">
                   平均評價: {{ product.averageReview.toFixed(2) }}
                 </div>
-
-
-                <v-btn color="success" @click="addProductToCart(product.productid)">加入購物車</v-btn>
-
-                <!-- 心形圖示按鈕 -->
+                <!-- 加入購物車按鈕 -->
+                <v-btn color="success" @click="addProductToCart(product.productid)">
+                  加入購物車
+                </v-btn>
+                <!-- 願望清單按鈕 -->
                 <v-btn icon flat class="wishlist-btn" @click="toggleWishlist(product)">
                   <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
                 </v-btn>
-                <!-- 願望清單的彈跳提示 -->
-                <v-snackbar v-model="wishlistSnackbar" :color="wishlistSnackbarColor" timeout="3000">
-                  {{ wishlistSnackbarText }}
-                  <v-btn color="white" text @click="wishlistSnackbar = false">關閉</v-btn>
-                </v-snackbar>
-
-
-
-
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
-
-
         <!-- 分頁控件 -->
         <v-pagination v-model="currentPage" :length="totalPages" class="my-4"></v-pagination>
-
-        <v-row>
-          <v-col cols="300" sm="4">
-            <v-switch v-model="priceFilter" label="啟用價格範圍過濾"></v-switch>
-          </v-col>
-          <v-col cols="12" sm="4">
-            <v-text-field v-model="minPrice" label="最小價格" type="number" :disabled="!priceFilter" min="0"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="4">
-            <v-text-field v-model="maxPrice" label="最大價格" type="number" :disabled="!priceFilter" min="0"></v-text-field>
-          </v-col>
-          <!-- <v-col cols="12" sm="4" class="d-flex align-end">
-                    <v-btn color="primary" @click="applyFilters">應用篩選</v-btn>
-                  </v-col> -->
-        </v-row>
-
       </v-container>
     </v-main>
   </v-app>
 </template>
 
+
 <script>
-import axios from 'axios';
+import axios from 'axios'; // 在這裡導入 axios
 
 export default {
   data() {
     return {
       options: {
         productname: '', // 确保有一个默认值
-
+        products: [],
+        searchText: '',
         search: '', // 添加了搜尋的資料屬性
         selectedProductName: "",
         selectedCategoryImagepath: "",
         selectedCategoryPrice: 0,
         selectedCategorySpecialPrice: 0,
         showPriceAndSpecialPrice: false,
+        wishlistStatus: {}, // 存储产品ID及其愿望清单状态
+
       },
 
       headers: [
@@ -126,23 +102,34 @@ export default {
 
   //頁碼處理
   watch: {
-    currentPage(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.fetchProducts(this.selectedCategoryName);
+    '$route.query.search': function (newVal) {
+      this.searchText = newVal || '';
+      this.currentPage = 1; // 重置为第一页
+      this.fetchProducts();
+    },
+    currentPage: function (newVal) {
+      if (newVal !== this.oldValue) {
+        this.fetchProducts();
       }
     }
   },
 
-  //願望清單 生命茅點
+  // 當前組件創建時的生命周期鉤子
   created() {
-    this.products.forEach(product => {
-      product.inWishlist = localStorage.getItem(product.productid) === 'true';
-    });
+    // 當組件被創建時，檢查 URL 查詢參數並執行搜索
+    this.searchText = this.$route.query.search || '';
+    if (this.searchText) {
+      this.fetchProducts();
+    }
   },
 
 
   mounted() {
-    this.fetchProducts();
+    console.log(this.products);
+    // 或者更詳細地檢查每個產品的ID
+    this.products.forEach((product, index) => {
+      console.log(`Product ${index} ID:`, product.productid);
+    });
   },
   methods: {
 
@@ -163,89 +150,108 @@ export default {
 
     fetchProductsWithSearch() {
       this.currentPage = 1;
-      this.fetchProducts(this.search);
+      // 如果從navbar獲得了搜尋詞，則使用它來發起產品搜尋
+      if (this.searchText) {
+        this.fetchProducts();
+      } else {
+        // 否則，使用組件內的搜尋詞來發起產品搜尋
+        this.searchText = this.search;
+        this.fetchProducts();
+      }
     },
-
+    // 從後端獲取產品數據
     fetchProducts() {
       console.log('开始 fetchProducts 方法');
 
       this.loading = true;
       // 根據當前的 options 更新查詢參數
       const params = {
-        productname: this.search,
+        productname: this.searchText.trim(), // 這裡使用searchText而不是options.productname
         minPrice: this.minPrice || 0,
         maxPrice: this.maxPrice || 999999.99,
         page: this.currentPage,
         itemsPerPage: 5, // 或者其他你希望每页显示的数量
       };
 
-      axios
-          .get('http://localhost:8080/public/api/products', { params })
+      axios.get('http://localhost:8080/public/api/products', { params })
+
           .then(response => {
-            console.log('请求完成，收到响应:', response);
-
-            if (response.data && response.data.content && response.data.content.length > 0) {
-              this.products = response.data.content;
-              this.totalPages = response.data.totalPages; // 确保更新总页数
-
-              console.log('找到产品，不应该显示没有找到产品的消息');
-
-              this.products.forEach(product => {
-                product.inWishlist = localStorage.getItem(product.productId) === 'true';
-                if (product && product.productId) {
-                  this.fetchAverageReview(product.productId);
+            // 确保响应中有数据并且包含产品内容
+            if (response.data && response.data.content) {
+              this.products = response.data.content.map(product => {
+                // 确保产品有 productid 属性
+                if (product && product.productid !== undefined) {
+                  // 安全地检查产品ID是否在 wishlistStatus 中
+                  product.inWishlist = !!this.wishlistStatus[product.productid];
+                } else {
+                  // 如果 product 或 product.productid 是 undefined，设置一个默认值
+                  product.inWishlist = false;
                 }
-              });
+                return product;
+              }).filter(p => p); // 使用 filter() 移除所有 null 值
+              // 更新分頁相關的狀態;
+
+              // 更新分页总数
+              this.totalPages = response.data.totalPages;
+              // 更新总产品数量
+              this.totalProducts = response.data.totalElements;
+
+              // 这里可以添加任何其他状态更新，例如：
+              // this.someOtherStatus = response.data.someOtherField;
 
             } else {
-
-              console.log('没有找到产品，将要显示没有找到产品的消息');
-
-              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
+              // 如果响应中没有内容或格式不正确，则设置默认值
               this.products = [];
-              this.totalPages = 1;
-              this.showSnackbar('沒有找到產品。', 'warning');
-
-              // 可以在這裡添加一個用戶提示，告知沒有找到產品
-              // alert('沒有找到產品。');
+              this.totalPages = 0;
+              this.totalProducts = 0;
+              // 可以在这里显示一个错误消息，告知用户数据加载失败
+              console.error('API 响应缺少内容或格式不正确');
             }
           })
+
+
+
+
+
+
           .catch(error => {
+            // 处理错误...
+
+            this.loading = false;
+
             console.error('请求失败，错误信息:', error);
-            // 處理錯誤情況，如API呼叫失敗等
-            this.products = [];
-            this.totalPages = 1;
-            // 提示用戶檢查錯誤
-            // alert('檢索產品時發生錯誤。');
             this.showSnackbar('檢索產品時發生錯誤。', 'error');
-
           })
-
-
           .finally(() => {
             this.loading = false;
-            console.log('请求结束');
-
           });
     },
+
+    // 加入購物車方法
     addProductToCart(productid) {
+      console.log('Attempting to add product to cart with ID:', productid);
+      if (productid === undefined) {
+        console.error('Product ID is undefined.');
+        this.showSnackbar('商品ID未指定或不正確。', 'error');
+        return;
+      }
 
       axios
-          .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
+          .post(`http://localhost:8080/customer/api/shoppingCart?productId=${productid}`, null, {
             withCredentials: true,
-
-            params: {
-              productId: productid,
-            }
-          }, {
             headers: { 'Content-Type': 'application/json' }
           })
           .then(response => {
-            // 成功添加到購物車後的操作，比如通知用戶
-            this.snackbarText = '商品已成功加入購物車';
-            this.snackbarColor = 'success'; // 成功消息使用綠色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果需要，這裡還可以添加其他UI更新或邏輯處理
+            console.log(response);
+            if (response.data && Array.isArray(response.data.content)) {
+              this.products = response.data.content;
+              this.totalPages = response.data.totalPages;
+            } else {
+              // 如果没有产品，清空产品数组
+              this.products = [];
+              this.totalPages = 0;
+              this.showSnackbar('没有找到产品', 'info');
+            }
           })
           .catch(error => {
             // 錯誤處理
@@ -273,47 +279,49 @@ export default {
 
     //願望清單
     addProductToWishlist(productId) {
-      // 發送POST請求到後端API
+      // 首先，找到相应的产品
+      const product = this.products.find(p => p.productId === productId);
+      if (!product) {
+        console.error('找不到產品：', productId);
+        return;
+      }
+      const newStatus = !product.inWishlist;
+
+      // 发送 POST 请求到后端 API
       axios
           .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
           .then(response => {
-            // 成功添加到願望清單後的操作
-            alert('成功添加到願望清單');
-            // 可以根據需要更新願望清單狀態或UI
-            this.updateWishlistStatus(productId, response.data.inWishlist); // 假设response中包含了inWishlist状态
+            product.inWishlist = newStatus;
+            this.snackbarText = newStatus ? '商品已加入愿望清单' : '商品已移除愿望清单';
+            this.snackbarColor = 'success';
+            this.snackbar = true;
           })
           .catch(error => {
-            // 處理錯誤
-            console.error('Error adding product to wishlist:', error);
-            alert('無法添加商品到願望清單。');
+            if (error.response && error.response.status === 400 && error.response.data === '商品已存在願望清單') {
+              this.snackbarText = '商品已存在于愿望清单中';
+              this.snackbarColor = 'info';
+            } else {
+              this.snackbarText = '添加到愿望清单时发生错误';
+              this.snackbarColor = 'error';
+            }
+            this.snackbar = true;
           });
 
-      const product = this.products.find(p => p.id === productId);
-      if (product) {
-        product.inWishlist = true; // 直接设置属性
-      }
     },
 
+    // 更新愿望清单状态
     updateWishlistStatus(productId, status) {
-      // 找到产品并更新其 inWishlist 状态
-      const productIndex = this.products.findIndex(p => p.id === productId);
+      const productIndex = this.products.findIndex(p => p.productId === productId);
       if (productIndex !== -1) {
         this.$set(this.products[productIndex], 'inWishlist', status);
+        // ... 更新 Snackbar 和 localStorage
       }
     },
 
+    // 切换愿望清单状态
     toggleWishlist(product) {
-      product.inWishlist = !product.inWishlist;
-      if (product.inWishlist) {
-        this.snackbarText = '已加入願望清單';
-        this.snackbarColor = 'success';
-        localStorage.setItem(product.productid, 'true');
-      } else {
-        this.snackbarText = '已從願望清單移除';
-        this.snackbarColor = 'error';
-        localStorage.removeItem(product.productid);
-      }
-      this.snackbar = true;
+      // 此函数应该只负责切换状态，并调用 addProductToWishlist
+      this.addProductToWishlist(product.productId);
     }
 
 
@@ -324,20 +332,38 @@ export default {
 
 </script>
 
-<style>
-.v-row,
-.v-col {
-  margin: 0 !important;
-  padding: 0 !important;
+<style scoped>
+.product-name {
+  display: -webkit-box;
+  /* 创建一个块级别的弹性盒对象 */
+  -webkit-box-orient: vertical;
+  /* 设置盒子的子元素布局方向为垂直 */
+  -webkit-line-clamp: 2;
+  /* 限制文本的行数为两行 */
+  overflow: hidden;
+  /* 隐藏超出容器的内容 */
+  text-overflow: ellipsis;
+  /* 用省略号表示文本溢出 */
+  height: 3em;
+  /* 根据行高设置容器高度，这里的3em是假设行高为1.5em */
+  line-height: 1.5em;
+  /* 设置行高 */
+  white-space: normal;
+  /* 恢复默认的换行设置 */
+  margin: 0;
+  /* 移除外边距，根据实际情况可能需要调整 */
+  padding: 0 10px;
+  /* 添加水平内边距，防止文本紧贴容器边缘 */
 }
 
-.product-card {
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-  width: 100%;
-  /* 卡片寬度設定為 100% */
-  height: auto;
-  /* 高度根據內容自動調整 */
+.product-image {
+  max-height: 200px;
+  /* 根據需求設定最大高度 */
+  object-fit: contain;
+  /* 防止圖片變形 */
 }
-</style>
+
+.line-through {
+  text-decoration: line-through;
+  /* 劃掉文字 */
+}</style>
