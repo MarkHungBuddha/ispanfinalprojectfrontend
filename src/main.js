@@ -21,6 +21,7 @@ import ProductSearchBar from "@/components/CategoryList.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import ProductImageUpload from "@/components/Image.vue";
 import sidebarBuyer from "@/components/sidebarBuyer.vue";
+
 // import 'vuetify/dist/vuetify.min.css';
 // 設定 Axios
 axios.defaults.withCredentials = true;

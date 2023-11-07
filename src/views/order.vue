@@ -194,10 +194,17 @@ export default {
 
 <style scoped>
 .v-application {
-  background-image: linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
-
-  /* background-color: rgb(182, 250, 250); */
+  background-image: url('@/assets/buy01.png'), linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
+
+
+
 
 .product-image {
   width: auto;
@@ -209,8 +216,7 @@ export default {
 .light-gray-background {
   background-color: #fde1e8;
   background-color: rgb(250, 250, 250, 0.5);
-
-  /* 訂單背景色 */
+  /* 訂單背景色 + 透明度 */
 }
 
 .selectbar {

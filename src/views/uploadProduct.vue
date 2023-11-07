@@ -179,3 +179,15 @@ export default {
 };
 
 </script>
+
+<style>
+.v-application {
+  background-image: url('@/assets/seller01.png'), linear-gradient(to bottom, #dfdd8d, #d0aaae);
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
+}
+</style>

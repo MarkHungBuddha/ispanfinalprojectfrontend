@@ -16,7 +16,7 @@
               我的帳戶
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-list-item to="/member">
+              <v-list-item @click="member">
                 <v-list-item-title>個人檔案</v-list-item-title>
               </v-list-item>
             </v-expansion-panel-text>
@@ -27,22 +27,31 @@
               購買清單
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <v-list-item to="/order">
+              <v-list-item @click="order">
                 <v-list-item-title>購買清單</v-list-item-title>
               </v-list-item>
             </v-expansion-panel-text>
           </v-expansion-panel>
-        </v-expansion-panels>
 
+
+        </v-expansion-panels>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
-
+  
 <script>
 export default {
-  // 如果有需要的話，這裡可以添加script部分。
-}
+  methods: {
+    member() {
+      this.$router.push('/member');
+    },
+    order() {
+      this.$router.push('/order');
+    },
+  }
+};
+
 </script>
 
 
@@ -68,10 +77,6 @@ export default {
   cursor: pointer;
 }
 
-.v-expansion-panel-title:hover,
-.v-expansion-panel--active .v-expansion-panel-title {
-  color: rgb(0, 0, 0);
-}
 
 /* 擴展面板內容樣式 */
 .v-expansion-panel-text {
@@ -106,5 +111,12 @@ export default {
   /* background-color: rgb(248, 227, 206); */
   background-color: rgb(223, 230, 255)
     /* 非常淺的粉色背景 */
+}
+
+.v-expansion-panels .v-expansion-panel--active {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* 添加陰影效果 */
+  border-left: 5px solid #C4CAE0;
+  /* 添加左邊框標識 */
 }
 </style>

@@ -204,7 +204,7 @@ export default {
 .category-bar {
   /* background-color: #b5effe; */
   /* background-color: rgb(243, 202, 68); */
-  background: url('@/assets/background.jpg') no-repeat center center;
+  background: url('@/assets/background2.jpg') no-repeat center center;
   background-size: cover;
 
 
@@ -224,10 +224,10 @@ export default {
   margin: 3px;
   min-width: 150px;
   min-height: 65px;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: rgb(8, 8, 8);
   transition: background-color 0.2s, box-shadow 0.2s;
-  background-color: rgba(206, 148, 105, 0.3);
+  background-color: rgba(206, 148, 105, 0.5);
   /* opacity: 0.5; */
 }
 

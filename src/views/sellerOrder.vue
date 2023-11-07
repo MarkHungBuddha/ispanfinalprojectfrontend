@@ -3,13 +3,11 @@
     <v-main>
       <sidebar></sidebar>
       <v-container>
-        <!--        <navbar></navbar>-->
-
 
         <!-- 搜索訂單ID欄 -->
-        <div class="selectbar">
+        <!-- <div class="selectbar">
           <v-text-field v-model="searchQuery" label="賣家搜索訂單ID" @input="searchOrder"></v-text-field>
-        </div>
+        </div> -->
 
         <!-- 賣家家訂單頁面 -->
         <!-- 標籤選項卡 -->
@@ -69,7 +67,7 @@
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 // import barList from "@/components/barList.vue";
-// import sidebar from '@/components/sidebar.vue';
+import sidebar from '@/components/sidebar.vue';
 
 
 export default {
@@ -87,6 +85,7 @@ export default {
       totalPages: 1, // 初始设置为1，将从API响应中更新
       pageSize: 10, // 每页的项目数，这应该与后端设置匹配
       isLoading: false, // 加载状态标志
+
     };
   },
   watch: {
@@ -193,10 +192,18 @@ export default {
 
 <style scoped>
 .v-application {
-  background-image: linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
-
-  /* background-color: rgb(182, 250, 250); */
+  background-image: url('@/assets/seller01.png'), linear-gradient(to bottom, #dfdd8d, #d0aaae);
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
+
+/* ::v-deep .v-navigation-drawer {
+  background-image: linear-gradient(to bottom, rgb(247, 188, 38), rgb(121, 25, 12));
+} */
 
 .product-image {
   width: auto;
@@ -206,20 +213,13 @@ export default {
 }
 
 .light-gray-background {
-  background-color: #f9e3d7;
-  /* 訂單背景色 */
+  background-color: rgba(249, 227, 215, 0.5);
+  /* 訂單背景色 + 透明度 */
 }
 
-.selectbar {
-  background-color: rgb(255, 255, 255);
-  /* color: #FE6B8B; */
-
-  margin-top: 30px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
 
 .tab--active {
-  background-color: #f8cdb5;
+  background-color: #d0aaae;
   /* 指定選中標籤顏色 */
 }
 </style>

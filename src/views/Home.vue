@@ -27,10 +27,12 @@ import navbar from "@/components/navbar.vue";
 
 .custom-slider {
   /* 將漸層方向改為從上到下 */
-  background-image: linear-gradient(to bottom, #e2d0b6, #cabae6);
-  color: white;
-  /* 將文字顏色設為白色以確保可讀性 */
-  margin: 0 auto;
-  /* 保持置中 */
+  background-image: url('@/assets/Home01.png'), linear-gradient(to bottom, #e2d0b6, #cabae6);
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
 </style>

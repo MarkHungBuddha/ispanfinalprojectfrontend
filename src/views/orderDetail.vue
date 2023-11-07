@@ -387,7 +387,18 @@ export default {
 /* 將整個應用的背景色設定為淡粉紅色 */
 .v-application {
   background-color: rgb(247, 243, 238);
+  /* 背景顏色 */
+  background-image: url('@/assets/buy01.png');
+  /* 背景圖片 */
+  background-repeat: no-repeat;
+  /* 背景不重複 */
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
+
 
 /* 訂單卡片樣式 */
 .order-card {

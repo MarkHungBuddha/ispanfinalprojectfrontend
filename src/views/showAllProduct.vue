@@ -13,7 +13,7 @@ import sidebar from "@/components/sidebar.vue";
           <div class="content">
             <h1>商品列表</h1>
             <v-card>
-              <v-card-text>
+              <v-card-text class="card1">
                 <div>
                   <v-text-field v-model="searchQuery" label="搜索商品" @input="searchProducts"></v-text-field>
                   <!-- <v-btn @click="searchProducts">搜索</v-btn> -->
@@ -21,7 +21,7 @@ import sidebar from "@/components/sidebar.vue";
               </v-card-text>
             </v-card>
 
-            <v-table>
+            <v-table class="table">
               <thead>
                 <tr>
                   <th>商品編號</th>
@@ -132,6 +132,16 @@ export default {
 </script>
 
 <style scoped>
+.v-application {
+  background-image: url('@/assets/seller01.png'), linear-gradient(to bottom, #dfdd8d, #d0aaae);
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
+}
+
 .product_image {
   width: 100px;
 }
@@ -184,5 +194,13 @@ export default {
   /* 填充剩余空间 */
   padding: 20px;
   /* 可根据需要进行调整 */
+}
+
+.card1 {
+  background-color: rgba(220, 211, 148, 0.5);
+}
+
+.table {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 </style>

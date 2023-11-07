@@ -21,9 +21,13 @@ import navbar from "@/components/navbar.vue";
 
 <style scoped>
 .v-application {
-  background-image: linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
-
-  /* background-color: rgb(182, 250, 250); */
+  background-image: url('@/assets/buy01.png'), linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
 
 .custom-slider {

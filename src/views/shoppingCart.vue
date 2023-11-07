@@ -28,9 +28,6 @@ import navbar from "@/components/navbar.vue";
           <v-col cols="2" class="text-right font-weight-bold">操作</v-col>
         </v-row>
 
-        <v-divider></v-divider>
-
-
         <v-row v-for="(item, index) in itemList" :key="item.id" class="py-2 item-row align-center">
           <v-card class="pa-2 mb-2 w-100 condensed-card">
             <v-col cols="1">
@@ -203,93 +200,25 @@ export default {
 
 <style scoped>
 body {
-  background-color: rgba(0, 0, 0, .2);
+  background-color: rgba(236, 239, 241, 0.3);
+  /* 輕微半透明的藍灰色背景 */
 }
 
-.item_header {
-  display: flex;
+.my-4 {
   width: 1000px;
   margin: 0 auto;
-  height: 30px;
-  background-color: #fff;
-  border-radius: 3px;
-  padding-left: 10px;
 }
 
-.item_header div {
-  width: 200px;
-  color: #888;
-  line-height: 30px;
-}
-
-.item_header .item_detail {
-  width: 50%;
-}
-
-.item_body {
-  margin-top: 20px;
-  height: 100px;
-  align-items: center;
-}
-
-.item_detail img {
-  width: 80px;
-  height: 80px;
-  border-radius: 3px;
-  /* margin-top: 10px; */
-  float: left;
-}
-
-.item_detail .name {
-  margin-left: 100px;
-  margin-top: 20px;
-}
-
-body {
-  background-color: rgba(0, 0, 0, .2);
-}
-
-.item_header {
-  display: flex;
+.item-row {
   width: 1000px;
   margin: 0 auto;
-  height: 30px;
-  background-color: #fff;
-  border-radius: 3px;
-  padding-left: 10px;
 }
 
-.item_header div {
-  width: 200px;
-  color: #888;
-  line-height: 30px;
-}
-
-.item_header .item_detail {
-  width: 50%;
-}
-
-.item_body {
-  margin-top: 20px;
-  height: 80px;
-  /* Reduce height */
-  align-items: center;
-}
-
-.item_detail img {
-  width: 60px;
-  /* Reduce image width */
-  height: 60px;
-  /* Reduce image height */
-  border-radius: 3px;
-  float: left;
-}
-
-.item_detail .name {
-  margin-left: 80px;
-  /* Adjusted for reduced image width */
-  margin-top: 15px;
-  /* Adjusted margin */
+.condensed-card {
+  border-radius: 10px;
+  /* 添加圓角 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  /* 添加陰影以提升層次感 */
 }
 
 /* Added condensed card styles */
@@ -297,11 +226,21 @@ body {
   padding: 8px !important;
 }
 
-.v-overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  /* Stack the circular progress and message vertically */
+/* 結帳按鈕樣式 */
+.checkout-btn {
+  margin-top: 20px;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  /* 增加字體大小 */
+  background-color: #4CAF50;
+  /* 使用鮮明的綠色 */
+  color: white;
+  /* 字體顏色為白色 */
+  border: none;
+  /* 去除邊框 */
+  border-radius: 5px;
+  /* 輕微圓角 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  /* 添加陰影 */
 }
 </style>

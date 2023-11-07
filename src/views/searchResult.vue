@@ -7,36 +7,15 @@
       <v-container>
         <v-row>
           <v-col cols="12" sm="8">
-            <v-range-slider
-                v-model="range"
-                :max="99999"
-                :min="0"
-                :step="1"
-                hide-details
-                class="align-center"
-                @change="applyFilters"
-            >
+            <v-range-slider v-model="range" :max="99999" :min="0" :step="1" hide-details class="align-center"
+              @change="applyFilters">
               <template v-slot:prepend>
-                <v-text-field
-                    v-model="range[0]"
-                    hide-details
-                    dense
-                    outlined
-                    type="number"
-                    class="mt-0 pt-0"
-                    style="width: 100px"
-                ></v-text-field>
+                <v-text-field v-model="range[0]" hide-details dense outlined type="number" class="mt-0 pt-0"
+                  style="width: 100px"></v-text-field>
               </template>
               <template v-slot:append>
-                <v-text-field
-                    v-model="range[1]"
-                    hide-details
-                    dense
-                    outlined
-                    type="number"
-                    class="mt-0 pt-0"
-                    style="width: 100px"
-                ></v-text-field>
+                <v-text-field v-model="range[1]" hide-details dense outlined type="number" class="mt-0 pt-0"
+                  style="width: 100px"></v-text-field>
               </template>
             </v-range-slider>
           </v-col>
@@ -45,20 +24,9 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col
-              v-for="(product, index) in products"
-              :key="index"
-              cols="12"
-              sm="6"
-              md="4"
-              lg="3"
-          >
-            <product-card
-                :product="product"
-                @navigate="navigateToProduct"
-                @add-to-cart="addProductToCart"
-                @toggle-wishlist="toggleWishlist"
-            ></product-card>
+          <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
+            <product-card :product="product" @navigate="navigateToProduct" @add-to-cart="addProductToCart"
+              @toggle-wishlist="toggleWishlist"></product-card>
           </v-col>
         </v-row>
       </v-container>
@@ -105,17 +73,17 @@ export default {
     },
     fetchWishlist() {
       axios.get("http://localhost:8080/customer/api/wishlist")
-          .then(response => {
-            // Assuming response.data is the array of WishlistDTO objects
-            this.wishlist = response.data;
-            // Update the products' inWishlist status
-            this.products.forEach(product => {
-              product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
-            });
-          })
-          .catch(error => {
-            console.error("Error fetching wishlist:", error);
+        .then(response => {
+          // Assuming response.data is the array of WishlistDTO objects
+          this.wishlist = response.data;
+          // Update the products' inWishlist status
+          this.products.forEach(product => {
+            product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
           });
+        })
+        .catch(error => {
+          console.error("Error fetching wishlist:", error);
+        });
     },
     fetchProducts(productname, minPrice = 0, maxPrice = 99999) {
       const page = this.currentPage || 1;
@@ -124,26 +92,26 @@ export default {
         this.selectedproductname = productname;
       }
       axios
-          .get("http://localhost:8080/public/api/products", {
-            params: {
-              productname: productname || null,
-              minPrice: minPrice,
-              maxPrice: maxPrice,
-              page: page
-            }
-          })
-          .then((response) => {
-            // 處理響應
-            this.products = response.data.content || [];
-            this.totalPages = response.data.totalPages || 1;
-            this.currentPage = response.data.pageable?.pageNumber + 1 || 1;
-          })
-          .catch((error) => {
-            console.error("Error fetching products:", error);
-            // 處理錯誤
-            this.products = [];
-            this.totalPages = 1;
-          });
+        .get("http://localhost:8080/public/api/products", {
+          params: {
+            productname: productname || null,
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+            page: page
+          }
+        })
+        .then((response) => {
+          // 處理響應
+          this.products = response.data.content || [];
+          this.totalPages = response.data.totalPages || 1;
+          this.currentPage = response.data.pageable?.pageNumber + 1 || 1;
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          // 處理錯誤
+          this.products = [];
+          this.totalPages = 1;
+        });
     },
 
     showLargeAppliances() {
@@ -158,7 +126,7 @@ export default {
         console.error('Product ID is undefined.');
         return;
       }
-      this.$router.push({name: 'ProductPage', params: {productId: productId}});
+      this.$router.push({ name: 'ProductPage', params: { productId: productId } });
     },
 
 
@@ -166,61 +134,61 @@ export default {
     addProductToCart(product) {
       console.log('Adding product to cart with ID:', product.productId); // Corrected to productId
       axios
-          .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
-            params: {
-              productId: product.productId,
-            }
-          }, {
-            headers: {'Content-Type': 'application/json'}
-          })
-          .then(response => {
-            console.log('Add to cart response:', response); // Add this
-            // 成功添加到購物車後的操作，比如通知用戶
-            this.snackbarText = '商品已成功加入購物車';
-            this.snackbarColor = 'success'; // 成功消息使用綠色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果需要，這裡還可以添加其他UI更新或邏輯處理
-          })
+        .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
+          params: {
+            productId: product.productId,
+          }
+        }, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => {
+          console.log('Add to cart response:', response); // Add this
+          // 成功添加到購物車後的操作，比如通知用戶
+          this.snackbarText = '商品已成功加入購物車';
+          this.snackbarColor = 'success'; // 成功消息使用綠色
+          this.snackbar = true; // 顯示Snackbar
+          // 如果需要，這裡還可以添加其他UI更新或邏輯處理
+        })
 
 
-          .catch(error => {
-            // 錯誤處理
-            console.error('Error adding product to cart:', error);
-            this.snackbarText = '無法添加商品到購物車';
-            this.snackbarColor = 'error'; // 錯誤消息使用紅色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果API響應了請求但出現錯誤
-            if (error.response) {
-              console.error('Error response data:', error.response.data);
-              this.snackbarText = `Error: ${error.response.data.message}`;
-            } else {
-              // 服务器没有响应
-              this.snackbarText = 'Error: Server did not respond';
-            }
-          });
+        .catch(error => {
+          // 錯誤處理
+          console.error('Error adding product to cart:', error);
+          this.snackbarText = '無法添加商品到購物車';
+          this.snackbarColor = 'error'; // 錯誤消息使用紅色
+          this.snackbar = true; // 顯示Snackbar
+          // 如果API響應了請求但出現錯誤
+          if (error.response) {
+            console.error('Error response data:', error.response.data);
+            this.snackbarText = `Error: ${error.response.data.message}`;
+          } else {
+            // 服务器没有响应
+            this.snackbarText = 'Error: Server did not respond';
+          }
+        });
     },
 
     //願望清單
     addProductToWishlist(productId) {
       // 发送 POST 请求到后端 API
       axios
-          .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
-          .then(response => {
-            // 检查响应状态码
-            if (response.status === 200) {
-              // 成功添加到愿望清单后的操作
-              alert('成功添加到愿望清单');
-              this.updateWishlistStatus(productId, true);
-            } else {
-              // 如果状态码不是200，不执行任何操作
-              console.error('Product was not added to wishlist. Status code:', response.status);
-            }
-          })
-          .catch(error => {
-            // 处理错误
-            console.error('Error adding product to wishlist:', error);
-            alert('无法添加商品到愿望清单。');
-          });
+        .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
+        .then(response => {
+          // 检查响应状态码
+          if (response.status === 200) {
+            // 成功添加到愿望清单后的操作
+            alert('成功添加到愿望清单');
+            this.updateWishlistStatus(productId, true);
+          } else {
+            // 如果状态码不是200，不执行任何操作
+            console.error('Product was not added to wishlist. Status code:', response.status);
+          }
+        })
+        .catch(error => {
+          // 处理错误
+          console.error('Error adding product to wishlist:', error);
+          alert('无法添加商品到愿望清单。');
+        });
     },
 
 
@@ -238,37 +206,37 @@ export default {
       if (product.inWishlist) {
         // Call the backend to remove the product from the wishlist
         axios.delete(`http://localhost:8080/customer/api/wishlist/${product.productid}`)
-            .then(response => {
-              // Assuming the API returns the removed product information
-              if (response.status === 200) {
-                this.snackbarText = '已從願望清單移除';
-                this.snackbarColor = 'success';
-                this.fetchWishlist(); // Refresh the wishlist from the backend
-              } else {
-                throw new Error('Failed to remove from wishlist');
-              }
-            })
-            .catch(error => {
-              console.error("Error removing product from wishlist:", error);
-              this.snackbarText = '無法從願望清單移除商品';
-              this.snackbarColor = 'error';
-              this.snackbar = true;
-            });
+          .then(response => {
+            // Assuming the API returns the removed product information
+            if (response.status === 200) {
+              this.snackbarText = '已從願望清單移除';
+              this.snackbarColor = 'success';
+              this.fetchWishlist(); // Refresh the wishlist from the backend
+            } else {
+              throw new Error('Failed to remove from wishlist');
+            }
+          })
+          .catch(error => {
+            console.error("Error removing product from wishlist:", error);
+            this.snackbarText = '無法從願望清單移除商品';
+            this.snackbarColor = 'error';
+            this.snackbar = true;
+          });
       } else {
         // Call the backend to add the product to the wishlist
         // You would need to have an endpoint for adding as well, similar to the delete
         axios.post(`http://localhost:8080/customer/api/wishlist/${product.productid}`)
-            .then(() => {
-              this.snackbarText = '已加入願望清單';
-              this.snackbarColor = 'success';
-              this.fetchWishlist(); // Refresh the wishlist from the backend
-            })
-            .catch(error => {
-              console.error("Error adding product to wishlist:", error);
-              this.snackbarText = '無法加入願望清單';
-              this.snackbarColor = 'error';
-              this.snackbar = true;
-            });
+          .then(() => {
+            this.snackbarText = '已加入願望清單';
+            this.snackbarColor = 'success';
+            this.fetchWishlist(); // Refresh the wishlist from the backend
+          })
+          .catch(error => {
+            console.error("Error adding product to wishlist:", error);
+            this.snackbarText = '無法加入願望清單';
+            this.snackbarColor = 'error';
+            this.snackbar = true;
+          });
       }
     },
 
@@ -281,22 +249,22 @@ export default {
     // 評價
     fetchAverageReview(productid) {
       axios
-          .get(`http://localhost:8080/public/api/reviews/product/${productid}/average`, {
-            params: {
-              // 其他需要傳遞的查詢參數
-              otherParam: 'value'
-            }
-          })
-          .then(response => {
-            const productIndex = this.products.findIndex(p => p.productid === productid);
-            if (productIndex !== -1) {
-              this.products[productIndex].averageReview = response.data.average;
-            }
-          })
-          .catch(error => {
-            console.error("Error fetching products:", error);
-            // 錯誤處理，比如設置默認值或顯示錯誤消息
-          });
+        .get(`http://localhost:8080/public/api/reviews/product/${productid}/average`, {
+          params: {
+            // 其他需要傳遞的查詢參數
+            otherParam: 'value'
+          }
+        })
+        .then(response => {
+          const productIndex = this.products.findIndex(p => p.productid === productid);
+          if (productIndex !== -1) {
+            this.products[productIndex].averageReview = response.data.average;
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching products:", error);
+          // 錯誤處理，比如設置默認值或顯示錯誤消息
+        });
 
     },
 
@@ -356,8 +324,10 @@ export default {
 
 
 .special-price {
-  font-size: 1.2em; /* 特價放大 */
-  color: red; /* 紅字顯示 */
+  font-size: 1.2em;
+  /* 特價放大 */
+  color: red;
+  /* 紅字顯示 */
 }
 
 .original-price {
@@ -365,15 +335,18 @@ export default {
 }
 
 .text-decoration-line-through {
-  text-decoration: line-through; /* 加上刪除線 */
+  text-decoration: line-through;
+  /* 加上刪除線 */
 }
 
 .red--text {
-  --v-theme-foreground: #ff5252; /* This is an example, adjust the color to fit your theme */
+  --v-theme-foreground: #ff5252;
+  /* This is an example, adjust the color to fit your theme */
 }
 
 .text--accent-4 {
-  color: var(--v-theme-foreground); /* Use the defined accent color */
+  color: var(--v-theme-foreground);
+  /* Use the defined accent color */
 }
 
 .no-background::before {
@@ -415,5 +388,4 @@ export default {
 .clickable-card {
   cursor: pointer;
 }
-
 </style>

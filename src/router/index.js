@@ -53,7 +53,6 @@ const routes = [
   },
   {
     path: '/checkoutOrder',
-
     name: 'checkoutOrder',
     component: () => import("@/views/checkoutOrder.vue"),
     meta: { title: '結帳' }
