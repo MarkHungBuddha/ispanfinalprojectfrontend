@@ -4,9 +4,10 @@
       <v-btn text @click="redirectTo('/')">
         <img src="https://i.imgur.com/tsjp9Vx.jpg" alt="Logo" class="logo-img">
       </v-btn>
-      <v-btn v-if="isLoggedIn" text @click="redirectTo('/seller')" icon>
-        <img src="https://i.imgur.com/IqO0TWs.png" alt="Seller" class="icon-img">
-      </v-btn>
+      <v-btn v-if="isLoggedIn" @click="redirectTo('/seller')" icon title="賣家中心">
+  <img src="https://i.imgur.com/MBHoqXu.png" alt="Seller" class="icon-img">
+</v-btn>
+
     </v-toolbar-title>
 
     <!-- 新的搜尋框組件 -->
@@ -14,7 +15,9 @@
     <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
       <v-card-text style="padding: 0;">
         <v-text-field v-model="searchText" :loading="loading" density="compact" variant="solo" label="Search templates"
-          append-inner-icon="mdi-magnify" single-line hide-details @click:append-inner="onClick"></v-text-field>
+                      append-inner-icon="mdi-magnify" single-line hide-details @click:append="onClick" @keyup.enter="onClick">
+          <!-- 點擊(click:append)放大鏡圖標時觸發搜索 --><!-- 按下 Enter 鍵時觸發搜索 -->
+        </v-text-field>
       </v-card-text>
     </v-card>
 
@@ -24,21 +27,24 @@
     <v-spacer></v-spacer>
 
     <!-- 購物車按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon>
-      <img src="https://i.imgur.com/kpCQMH5.png" alt="Shopping Cart" class="icon-img">
-    </v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon title="購物車">
+  <img src="https://i.imgur.com/YHFDBf9.png" alt="Shopping Cart" class="icon-img">
+</v-btn>
+
     <!-- 願望清單按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectToWishList" icon>
-      <img src="https://i.imgur.com/SDt6WzE.png" alt="Wish List" class="icon-img">
-    </v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectToWishList" icon title="願望清單">
+  <img src="https://i.imgur.com/35bjgaz.png" alt="Wish List" class="icon-img">
+</v-btn>
+
     <!-- 訂單按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectTo('/order')" icon>
-      <img src="https://i.imgur.com/lEcgsZg.png" alt="Order" class="icon-img">
-    </v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectTo('/order')" icon title="我的訂單">
+  <img src="https://i.imgur.com/H8nqWWB.png" alt="Order" class="icon-img">
+</v-btn>
+
     <!-- 會員中心按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" icon>
-      <img src="https://i.imgur.com/WYW1y2p.png" alt="Member" class="icon-img">
-    </v-btn>
+  <img src="https://i.imgur.com/F6mWj8r.png" alt="Member" class="icon-img" title="會員中心">
+</v-btn>
     <!-- 登出按鈕 -->
     <v-btn v-if="isLoggedIn" @click="logout" class="custom-btn">登出</v-btn>
     <!-- 登入按鈕 -->
@@ -69,42 +75,28 @@ export default {
     },
     redirectToShoppingCart() {
       axios.get('http://localhost:8080/customer/api/shoppingCart')
-        .then(() => {
-          this.$router.push('/shoppingCart');
-        });
+          .then(() => {
+            this.$router.push('/shoppingCart');
+          });
     },
     redirectToWishList() {
       axios.get('http://localhost:8080/customer/api/wishlist')
-        .then((response) => {
-          this.$store.commit('setWishList', response.data);
-          this.$router.push('/wishList');
-        });
+          .then((response) => {
+            this.$store.commit('setWishList', response.data);
+            this.$router.push('/wishList');
+          });
     },
     onClick() {
-      console.log('Search Text:', this.searchText); // 加入這行來輸出搜尋文本
-      const search = this.searchText;
-      this.loading = true;
-      // 執行搜尋
-      axios.get("http://localhost:8080/public/api/products", {
-        params: {
-          productname: search,
-        }
-      }).then((response) => {
-        this.loading = false;
-        // 導航到 searchResult.vue 並帶上搜尋字串
-        this.$router.push({ name: 'searchResult', query: { search: this.searchText } });
-      }).catch((error) => {
-        this.loading = false;
-        console.error("Error during search:", error);
-      });
+      this.$router.push({ name: 'ProductFuzzySearch', query: { search: this.searchText } });
+
     },
 
     logout() {
       axios.post('http://localhost:8080/customer/member/logout')
-        .then(() => {
-          this.$store.dispatch('updateLoginStatus', false);
-          this.$router.push('/');
-        });
+          .then(() => {
+            this.$store.dispatch('updateLoginStatus', false);
+            this.$router.push('/');
+          });
     }
   },
   watch: {
@@ -118,15 +110,17 @@ export default {
 };
 </script>
 
+
 <style>
 .icon-img {
-  width: 24px;
+  width: 40px;
   /* Adjust as needed */
-  height: 24px;
+  height: 40px;
 }
 
 .custom-navbar {
   background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+  margin: 0;
 }
 
 .logo {

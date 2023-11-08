@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ProductList from "@/views/ProductList.vue";
+import AnswerQuestion from "../views/AnswerForm.vue";
 import store from '../store';
 
 const routes = [
@@ -8,12 +9,6 @@ const routes = [
     name: 'Seller',
     component: () => import("@/views/seller.vue"),
     meta: { title: '賣家中心' }
-  },
-  {
-    path: '/phone',
-    name: 'Phone',
-    component: () => import("@/views/Phone.vue"),
-    meta: { title: '手機認證' }
   },
   {
     path: '/',
@@ -171,13 +166,26 @@ const routes = [
     meta: { title: '未回答問題' },
   },
   {
+    path: '/phone',
+    name: 'Phone',
+    component: () => import("@/views/Phone.vue"),
+    meta: { title: '手機認證' }
+  },
+
+  {
     path: '/member',
     name: 'member',
     component: () => import('@/views/member.vue'), // 會員資料
     props: true,
     meta: { title: '會員資料' },
   },
-
+  {
+    path: '/answer/:qandaId',
+    name: 'AnswerForm',
+    component: () =>import('@/views/AnswerForm.vue'),
+    props: true,
+    meta: { title: '回答問題' },
+  },
   // {
   //   path: '/public/api/google-callback',
   //   component: GoogleCallbackComponent, // 这应该是处理回调逻辑的Vue组件
@@ -191,6 +199,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+// 為了使用 meta 屬性中的 title，你可以設置一個全局的前置守衛
+router.beforeEach((to, from, next) => {
+  // 檢查 meta.title 是否為函數，如果是，則以當前路由作為參數調用它
+  if (typeof to.meta.title === 'function') {
+    document.title = to.meta.title(to) || 'Default Title';
+  } else {
+    document.title = to.meta.title || 'Default Title';
+  }
+  next();
 });
 
 router.beforeEach((to, from, next) => {
@@ -208,17 +227,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next(); // 否则允许路由解析正常继续
   }
-});
-// 為了使用 meta 屬性中的 title，你可以設置一個全局的前置守衛
-router.beforeEach((to, from, next) => {
-  // 檢查 meta.title 是否為函數，如果是，則以當前路由作為參數調用它
-  if (typeof to.meta.title === 'function') {
-    document.title = to.meta.title(to) || 'Default Title';
-  } else {
-    document.title = to.meta.title || 'Default Title';
-  }
-  next();
-  
 });
 
 

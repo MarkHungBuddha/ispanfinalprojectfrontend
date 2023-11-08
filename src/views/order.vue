@@ -16,7 +16,7 @@
         <!-- 標籤選項卡 -->
         <v-tabs v-model="tab" align-with-title :items="items" class="elevation-1 mt-5">
           <v-tab v-for="(item, index) in items" :key="item" :value="item" @click="handleTabClick(item)"
-            :class="{ 'tab--active': tab === item }">
+                 :class="{ 'tab--active': tab === item }">
             {{ item }}
           </v-tab>
         </v-tabs>
@@ -38,7 +38,7 @@
               <div v-for="product in order.products" :key="product.imagepath" class="d-flex align-center mb-2">
 
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                  class="product-image mr-2" style="width: 100px;"></v-img>
+                       class="product-image mr-2" style="width: 100px;"></v-img>
 
                 <div class="flex-grow-1">
                   <strong>{{ product.productName }}</strong>
@@ -118,42 +118,42 @@ export default {
       this.isLoading = true;
 
       axios
-        .get('http://localhost:8080/customer/api/findorders/Status', {
-          params: {
-            p: this.currentPage,
-            statusid: statusid,
-          },
-        })
-        .then((response) => {
-          this.orders = response.data.content;
-          this.totalPages = response.data.totalPages;
-          // 确保我们在前端显示从1开始的页码
+          .get('http://localhost:8080/customer/api/findorders/Status', {
+            params: {
+              p: this.currentPage,
+              statusid: statusid,
+            },
+          })
+          .then((response) => {
+            this.orders = response.data.content;
+            this.totalPages = response.data.totalPages;
+            // 确保我们在前端显示从1开始的页码
 
 
-          this.isLoading = false;
-        })
-        .catch((error) => {
-          console.error('無法檢索訂單：', error);
-          this.isLoading = false;
-        });
+            this.isLoading = false;
+          })
+          .catch((error) => {
+            console.error('無法檢索訂單：', error);
+            this.isLoading = false;
+          });
     },
     // 找所有訂單
     fetchAllOrders() {
       this.isLoading = true;
       axios
-        .get('http://localhost:8080/customer/api/findAllOrders', {
-          params: { p: this.currentPage },
-        })
-        .then((response) => {
-          this.orders = response.data.content;
-          this.totalPages = response.data.totalPages;
-          this.isLoading = false;
-          console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
-        })
-        .catch((error) => {
-          console.error('無法檢索所有訂單：', error);
-          this.isLoading = false;
-        });
+          .get('http://localhost:8080/customer/api/findAllOrders', {
+            params: { p: this.currentPage },
+          })
+          .then((response) => {
+            this.orders = response.data.content;
+            this.totalPages = response.data.totalPages;
+            this.isLoading = false;
+            console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
+          })
+          .catch((error) => {
+            console.error('無法檢索所有訂單：', error);
+            this.isLoading = false;
+          });
     },
 
 
@@ -193,6 +193,19 @@ export default {
 </script>
 
 <style scoped>
+.v-application {
+  background-image: url('@/assets/buy01.png'), linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
+}
+
+
+
+
 .product-image {
   width: auto;
   max-width: 150px;
@@ -202,7 +215,8 @@ export default {
 
 .light-gray-background {
   background-color: #fde1e8;
-  /* 訂單背景色 */
+  background-color: rgb(250, 250, 250, 0.5);
+  /* 訂單背景色 + 透明度 */
 }
 
 .selectbar {
@@ -214,7 +228,7 @@ export default {
 }
 
 .tab--active {
-  background-color: #fcc5d0;
-  /* 指定選中標籤顏色 */
+  background-color: rgba(96, 154, 231, 0.5);
+  /* 設置背景色和透明度 */
 }
 </style>

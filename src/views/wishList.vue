@@ -3,29 +3,32 @@ import navbar from "@/components/navbar.vue";
 </script>
 <template>
   <v-app>
-    <v-container fluid>
+    <v-main>
+      <sidebarBuyer></sidebarBuyer>
+      <v-container fluid>
 
-      <v-row class="my-4">
-        <v-col cols="6" class="font-weight-bold">商品</v-col>
-        <v-col cols="6" class="text-right font-weight-bold">操作</v-col>
-      </v-row>
+        <v-row class="my-4">
+          <v-col cols="6" class="font-weight-bold">商品</v-col>
+          <v-col cols="6" class="text-right font-weight-bold">操作</v-col>
+        </v-row>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
-        <v-col cols="6" class="d-flex align-center">
-          <v-img :src="item.imgUrl + item.imgExtension" max-width="80" class="mr-3"></v-img>
-          <span class="font-weight-medium">{{ item.itemName }}</span>
-        </v-col>
-<!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
-        <v-col cols="6" class="text-right">
-          <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
-          <v-btn small color="error" @click="removeFromWishlist(item.productid, index)">刪除</v-btn>
-        </v-col>
-      </v-row>
+        <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
+          <v-col cols="6" class="d-flex align-center">
+            <v-img :src="item.imgUrl + item.imgExtension" max-width="80" class="mr-3"></v-img>
+            <span class="font-weight-medium">{{ item.itemName }}</span>
+          </v-col>
+          <!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
+          <v-col cols="6" class="text-right">
+            <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
+            <v-btn small color="error" @click="removeFromWishlist(item.productid, index)">刪除</v-btn>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-    </v-container>
+
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
@@ -40,7 +43,7 @@ export default {
         itemName: item.productname,
         imgUrl: `https://i.imgur.com/${item.productimage}`,
         imgExtension: item.imageExtension || '.png',  // 假設從store中也可以取得檔名後綴，如果沒有則預設為.png
-        productid:item.productid
+        productid: item.productid
       }))
 
     };
@@ -84,8 +87,14 @@ export default {
 </script>
 
 <style scoped>
-body {
-  background-color: rgba(0, 0, 0, .2);
+.v-application {
+  background-image: url('@/assets/buy01.png'), linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
 
 .item_header {
@@ -126,6 +135,7 @@ body {
   margin-left: 100px;
   margin-top: 20px;
 }
+
 .item-row:hover {
   background-color: rgba(0, 0, 0, 0.05);
   transition: background-color 0.3s;

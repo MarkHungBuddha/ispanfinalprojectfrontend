@@ -92,7 +92,7 @@ import axios from "axios";
 import navbar from "@/components/navbar.vue";
 
 export default {
-  
+
   components: {
     navbar
   },

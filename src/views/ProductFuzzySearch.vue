@@ -1,92 +1,75 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container>
-        <!-- <navbar></navbar>
-                <sidebar></sidebar> -->
+  <v-container>
 
-        <v-text-field v-model="search" label="模糊搜尋" append-icon="mdi-magnify" @click:append="fetchProductsWithSearch"
-                      @keyup.enter="fetchProductsWithSearch"></v-text-field>
+    <!-- 範圍滑塊容器 -->
+    <v-row class="scope">
+      <v-col cols="12">
+        <v-range-slider v-model="priceRange" :max="maxPrice" :min="minPrice" :step="1" hide-details class="align-center">
+          <template v-slot:prepend>
+            <v-text-field v-model="priceRange[0]" hide-details single-line type="number" variant="outlined"
+                          density="compact" style="width: 90px"></v-text-field>
+          </template>
+          <template v-slot:append>
+            <v-text-field v-model="priceRange[1]" hide-details single-line type="number" variant="outlined"
+                          style="width: 90px" density="compact"></v-text-field>
+            <!-- 放大鏡圖示按鈕 -->
+            <v-btn @click="applyPriceFilter" icon>
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+          </template>
+        </v-range-slider>
+      </v-col>
+    </v-row>
 
-
-
-        <!-- 畫面呈現區 -->
-        <v-row>
-
-          <v-col v-for="(product, index) in products" :key="index">
-
-            <v-card>
-              <v-card-text class="d-flex flex-column align-center">
-                <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                       class="product-image mr-2" @click="navigateToProduct(product.productid)"></v-img>
-                <div class="product-name">{{ product.productname }}</div>
-                <div class="original-price">原價: {{ product.price }}</div>
-                <div class="special-price">特價: {{ product.specialprice }}</div>
-
-                <div v-if="product.averageReview">
-                  平均評價: {{ product.averageReview.toFixed(2) }}
-                </div>
-
-
-                <v-btn color="success" @click="addProductToCart(product.productid)">加入購物車</v-btn>
-
-                <!-- 心形圖示按鈕 -->
-                <v-btn icon flat class="wishlist-btn" @click="toggleWishlist(product)">
-                  <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
-                </v-btn>
-                <!-- 願望清單的彈跳提示 -->
-                <v-snackbar v-model="wishlistSnackbar" :color="wishlistSnackbarColor" timeout="3000">
-                  {{ wishlistSnackbarText }}
-                  <v-btn color="white" text @click="wishlistSnackbar = false">關閉</v-btn>
-                </v-snackbar>
-
-
-
-
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-
-
-        <!-- 分頁控件 -->
-        <v-pagination v-model="currentPage" :length="totalPages" class="my-4"></v-pagination>
-
-        <v-row>
-          <v-col cols="300" sm="4">
-            <v-switch v-model="priceFilter" label="啟用價格範圍過濾"></v-switch>
-          </v-col>
-          <v-col cols="12" sm="4">
-            <v-text-field v-model="minPrice" label="最小價格" type="number" :disabled="!priceFilter" min="0"></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="4">
-            <v-text-field v-model="maxPrice" label="最大價格" type="number" :disabled="!priceFilter" min="0"></v-text-field>
-          </v-col>
-          <!-- <v-col cols="12" sm="4" class="d-flex align-end">
-                    <v-btn color="primary" @click="applyFilters">應用篩選</v-btn>
-                  </v-col> -->
-        </v-row>
-
-      </v-container>
-    </v-main>
-  </v-app>
+    <!-- 循環顯示產品 -->
+    <v-row>
+      <v-col v-for="product in products" :key="product.productId" cols="12" sm="6" md="4" lg="3">
+        <v-card class="clickable-card" @click="navigateToProduct(product.productId)">
+          <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" class="product-image" aspect-ratio="1.7"></v-img>
+          <v-card-title>{{ product.productName }}</v-card-title>
+          <v-card-text>
+            <div class="original-price" :class="{ 'text-decoration-line-through': product.specialPrice < product.price }">
+              原價: {{ product.price | currency }}
+            </div>
+            <div v-if="product.specialPrice && product.specialPrice < product.price" class="special-price red--text">
+              特價: {{ product.specialPrice | currency }}
+            </div>
+          </v-card-text>
+          <v-card-actions class="action-buttons">
+            <v-btn color="success" @click.stop="addProductToCart(product.productId)">加入購物車</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn icon @click.stop="toggleWishlist(product)">
+              <v-icon :color="product.inWishlist ? 'pink' : 'grey'">mdi-heart</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
+
 <script>
-import axios from 'axios';
+import axios from 'axios'; // 在這裡導入 axios
 
 export default {
+
   data() {
     return {
       options: {
         productname: '', // 确保有一个默认值
-
+        products: [],
+        searchText: '',
         search: '', // 添加了搜尋的資料屬性
         selectedProductName: "",
         selectedCategoryImagepath: "",
         selectedCategoryPrice: 0,
         selectedCategorySpecialPrice: 0,
         showPriceAndSpecialPrice: false,
+        wishlistStatus: {}, // 存储产品ID及其愿望清单状态
+        priceRange: [], // 確保這裡的初始值是數組
+
+
       },
 
       headers: [
@@ -109,9 +92,6 @@ export default {
       totalPages: 1, // 初始化总页数为1
       showLargeAppliances: false, // 控制大型家電内容的显示状态
 
-      minPrice: 0,
-      maxPrice: 9999999,
-      priceFilter: false,
 
       // 願望清單彈跳
       snackbar: false, // 控制Snackbar顯示的變量
@@ -126,28 +106,77 @@ export default {
 
   //頁碼處理
   watch: {
-    currentPage(newVal, oldVal) {
+    '$route.query.search': function (newVal) {
+      this.searchText = newVal || '';
+      this.currentPage = 1; // 重置为第一页
+      this.fetchProducts();
+    },
+    currentPage: function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.fetchProducts(this.selectedCategoryName);
+        this.fetchProducts();
       }
-    }
+    },
+    // 添加 priceRange 的監聽器
+    priceRange: {
+      handler(newVal, oldVal) {
+        // 只有當價格範圍真的變化了才重新抓取產品
+        if (newVal[0] !== oldVal[0] || newVal[1] !== oldVal[1]) {
+          this.fetchProducts();
+        }
+      },
+      deep: true
+    },
   },
 
-  //願望清單 生命茅點
+  // 當前組件創建時的生命周期鉤子
   created() {
-    this.products.forEach(product => {
-      product.inWishlist = localStorage.getItem(product.productid) === 'true';
-    });
+    // 當組件被創建時，檢查 URL 查詢參數並執行搜索
+    this.searchText = this.$route.query.search || '';
+    // 确保 priceRange 已经定义
+    this.priceRange = this.priceRange || [0, 999999];
+
+    // 只有在 priceRange 有具体值时才调用 fetchProducts
+    if (this.searchText && this.priceRange.length > 1) {
+      this.fetchProducts();
+    }
   },
 
 
   mounted() {
-    this.fetchProducts();
+    console.log('Products on mounted:', this.products);
+    // 或者更詳細地檢查每個產品的ID
+    this.products.forEach((product, index) => {
+      console.log(`Product ${index} ID:`, product.productid);
+    });
   },
   methods: {
 
     applyFilters() {
       this.fetchProducts(this.selectedProductname);
+      this.fetchProducts();
+
+    },
+    applyPriceFilter() {
+      // 呼叫 fetchProducts 並傳遞當前的 priceRange 作為參數
+      this.fetchProducts(this.priceRange);
+    },
+
+    // 範圍搜尋
+    someMethod() {
+      if (this.priceRange && this.priceRange.length > 1) {
+        // 現在可以安全地訪問 this.priceRange[0] 和 this.priceRange[1]
+      }
+    },
+    fetchData() {
+      fetch('some-api')
+          .then(response => response.json())
+          .then(data => {
+            this.someData = data;
+
+            this.$nextTick(() => {
+              // 確保 Vue 更新了 DOM
+            });
+          });
     },
 
     showSnackbar(message, color) {
@@ -163,168 +192,261 @@ export default {
 
     fetchProductsWithSearch() {
       this.currentPage = 1;
-      this.fetchProducts(this.search);
+      // 如果從navbar獲得了搜尋詞，則使用它來發起產品搜尋
+      if (this.searchText) {
+        this.fetchProducts();
+      } else {
+        // 否則，使用組件內的搜尋詞來發起產品搜尋
+        this.searchText = this.search;
+        this.fetchProducts();
+      }
     },
-
+    // 從後端獲取產品數據
     fetchProducts() {
       console.log('开始 fetchProducts 方法');
+      // 检查 priceRange 是否已定义
+      if (!this.priceRange || this.priceRange.length < 2) {
+        console.error('priceRange 未定义或不完整');
+        this.loading = false;
+        // 这里可以设置默认值或者返回以阻止方法继续执行
+        // 例如：this.priceRange = [0, 9999999];
+        return;
+      }
 
       this.loading = true;
       // 根據當前的 options 更新查詢參數
       const params = {
-        productname: this.search,
-        minPrice: this.minPrice || 0,
-        maxPrice: this.maxPrice || 999999.99,
+        productname: this.searchText.trim(), // 這裡使用searchText而不是options.productname
+        minPrice: this.priceRange[0],
+        maxPrice: this.priceRange[1],
         page: this.currentPage,
         itemsPerPage: 5, // 或者其他你希望每页显示的数量
       };
 
-      axios
-          .get('http://localhost:8080/public/api/products', { params })
+      axios.get('http://localhost:8080/public/api/products', { params })
+
           .then(response => {
-            console.log('请求完成，收到响应:', response);
-
-            if (response.data && response.data.content && response.data.content.length > 0) {
-              this.products = response.data.content;
-              this.totalPages = response.data.totalPages; // 确保更新总页数
-
-              console.log('找到产品，不应该显示没有找到产品的消息');
-
-              this.products.forEach(product => {
-                product.inWishlist = localStorage.getItem(product.productId) === 'true';
-                if (product && product.productId) {
-                  this.fetchAverageReview(product.productId);
+            // 确保响应中有数据并且包含产品内容
+            if (response.data && response.data.content) {
+              this.products = response.data.content.map(product => {
+                // 确保产品有 productid 属性
+                if (product && product.productid !== undefined) {
+                  // 安全地检查产品ID是否在 wishlistStatus 中
+                  product.inWishlist = !!this.wishlistStatus[product.productid];
+                } else {
+                  // 如果 product 或 product.productid 是 undefined，设置一个默认值
+                  product.inWishlist = false;
                 }
-              });
+                return product;
+              }).filter(p => p); // 使用 filter() 移除所有 null 值
+              // 更新分頁相關的狀態;
+
+              // 更新分页总数
+              this.totalPages = response.data.totalPages;
+              // 更新总产品数量
+              this.totalProducts = response.data.totalElements;
+
+              // 这里可以添加任何其他状态更新，例如：
+              // this.someOtherStatus = response.data.someOtherField;
 
             } else {
-
-              console.log('没有找到产品，将要显示没有找到产品的消息');
-
-              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
+              // 如果响应中没有内容或格式不正确，则设置默认值
               this.products = [];
-              this.totalPages = 1;
-              this.showSnackbar('沒有找到產品。', 'warning');
-
-              // 可以在這裡添加一個用戶提示，告知沒有找到產品
-              // alert('沒有找到產品。');
+              this.totalPages = 0;
+              this.totalProducts = 0;
+              // 可以在这里显示一个错误消息，告知用户数据加载失败
+              console.error('API 响应缺少内容或格式不正确');
             }
           })
           .catch(error => {
+            // 处理错误...
+
+            this.loading = false;
+
             console.error('请求失败，错误信息:', error);
-            // 處理錯誤情況，如API呼叫失敗等
-            this.products = [];
-            this.totalPages = 1;
-            // 提示用戶檢查錯誤
-            // alert('檢索產品時發生錯誤。');
             this.showSnackbar('檢索產品時發生錯誤。', 'error');
-
           })
-
-
           .finally(() => {
             this.loading = false;
-            console.log('请求结束');
-
           });
     },
-    addProductToCart(productid) {
 
-      axios
-          .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
-            withCredentials: true,
-
-            params: {
-              productId: productid,
-            }
-          }, {
-            headers: { 'Content-Type': 'application/json' }
-          })
+    // 加入購物車方法
+    addProductToCart(productId) {
+      axios.post(`http://localhost:8080/customer/api/shoppingCart?productId=${productId}`)
           .then(response => {
-            // 成功添加到購物車後的操作，比如通知用戶
-            this.snackbarText = '商品已成功加入購物車';
-            this.snackbarColor = 'success'; // 成功消息使用綠色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果需要，這裡還可以添加其他UI更新或邏輯處理
+            this.showSnackbar('商品已成功加入购物车。', 'success');
           })
           .catch(error => {
-            // 錯誤處理
+            this.showSnackbar('无法添加商品到购物车。', 'error');
             console.error('Error adding product to cart:', error);
-            this.snackbarText = '無法添加商品到購物車';
-            this.snackbarColor = 'error'; // 錯誤消息使用紅色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果API響應了請求但出現錯誤
-            if (error.response) {
-              console.error('Error response data:', error.response.data);
-              this.snackbarText = `Error: ${error.response.data.message}`;
-            } else {
-              // 服务器没有响应
-              this.snackbarText = 'Error: Server did not respond';
-            }
           });
 
     },
-    //添加跳轉頁面到productPage
-    navigateToProduct(productid) {
-      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
-    },
-
 
 
     //願望清單
     addProductToWishlist(productId) {
-      // 發送POST請求到後端API
-      axios
-          .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
+      // 首先，找到相应的产品
+      const product = this.products.find(p => p.productId === productId);
+      if (!product) {
+        console.error('Product ID is undefined.');
+        this.showSnackbar('商品ID未指定或不正確。', 'error');
+        return;
+      }
+      const newStatus = !product.inWishlist;
+
+      // 发送 POST 请求到后端 API
+      axios.post(`http://localhost:8080/customer/api/wishlist/${productId}`, {}, {
+        withCredentials: true // 這樣可以确保携带认证信息，例如cookies
+      })
           .then(response => {
-            // 成功添加到願望清單後的操作
-            alert('成功添加到願望清單');
-            // 可以根據需要更新願望清單狀態或UI
-            this.updateWishlistStatus(productId, response.data.inWishlist); // 假设response中包含了inWishlist状态
+            // 更新產品在愿望清单的状态
+            this.updateWishlistStatus(productId, true);
+            this.showSnackbar('商品已加入愿望清单', 'success');
           })
           .catch(error => {
-            // 處理錯誤
-            console.error('Error adding product to wishlist:', error);
-            alert('無法添加商品到願望清單。');
+            console.error('添加到愿望清单时发生错误:', error);
+            this.showSnackbar('添加到愿望清单时发生错误', 'error');
           });
 
-      const product = this.products.find(p => p.id === productId);
-      if (product) {
-        product.inWishlist = true; // 直接设置属性
-      }
     },
 
+    // 切换愿望清单状态
+    toggleWishlist(product) {
+      axios.post(`http://localhost:8080/customer/api/wishlist/${product.productId}`)
+          .then(response => {
+            product.inWishlist = !product.inWishlist;
+            this.showSnackbar('愿望清单状态已更新。', 'success');
+          })
+          .catch(error => {
+            this.showSnackbar('无法更新愿望清单状态。', 'error');
+            console.error('Error toggling wishlist status:', error);
+          });
+    },
+    // 更新愿望清单状态
     updateWishlistStatus(productId, status) {
-      // 找到产品并更新其 inWishlist 状态
-      const productIndex = this.products.findIndex(p => p.id === productId);
+      const productIndex = this.products.findIndex(p => p.productId === productId);
       if (productIndex !== -1) {
         this.$set(this.products[productIndex], 'inWishlist', status);
       }
     },
-
-    toggleWishlist(product) {
-      product.inWishlist = !product.inWishlist;
-      if (product.inWishlist) {
-        this.snackbarText = '已加入願望清單';
-        this.snackbarColor = 'success';
-        localStorage.setItem(product.productid, 'true');
-      } else {
-        this.snackbarText = '已從願望清單移除';
-        this.snackbarColor = 'error';
-        localStorage.removeItem(product.productid);
-      }
-      this.snackbar = true;
-    }
-
-
-
+    //添加跳轉頁面到productPage
+    navigateToProduct(productId) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productId } });
+    },
 
   },
 }
 
 </script>
 
-<style>
+<style scoped>
+.scope {
+  max-width: 500px;
+}
+
+.product-image {
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+  /* 當鼠標懸停時輕微放大 */
+}
+
+.clickable-card {
+  cursor: pointer;
+}
+
+.product-name {
+  font-size: 1.2em;
+  color: #424242;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.special-price .red--text {
+  color: #ff5252;
+  font-weight: bold;
+  font-size: 1.0rem;
+  /* 特價的字體略大於原價 */
+  margin-top: 5px;
+  /* 頂部間距 */
+  margin-bottom: 5px;
+  /* 底部間距，提供一定的空間到按鈕 *
+}
+
+.original-price {
+  color: #757575;
+  /* 淺灰色，與背景形成對比 */
+  font-size: 0.8rem;
+  /* 較小的字體大小 */
+  margin-top: 5px;
+  /* 頂部間距 */
+  margin-bottom: 0;
+  /* 底部間距，可以根據需要調整 */
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+.v-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  /* 根據需求調整內邊距 */
+
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.wishlist-btn {
+  margin-left: auto;
+}
+
+.v-btn {
+  border-radius: 4px;
+}
+
+.v-btn.success {
+  background-color: #4CAF50;
+  /* 綠色按鈕 */
+  color: white;
+}
+
+.v-btn.success:hover {
+  background-color: #66BB6A;
+  /* 淺綠色 */
+}
+
+.v-icon {
+  transition: color 0.3s ease;
+}
+
+/* 星號評價圖標 */
+.v-icon.rating {
+  color: #FFD700;
+  /* 金色 */
+}
+
+/* 心形按鈕的動態樣式 */
+.mdi-heart {
+  transition: color 0.2s ease-in-out;
+}
+
+.mdi-heart:hover {
+  color: #F48FB1;
+  /* 淺紅色 */
+}
 .v-row,
 .v-col {
   margin: 0 !important;
@@ -339,5 +461,41 @@ export default {
   /* 卡片寬度設定為 100% */
   height: auto;
   /* 高度根據內容自動調整 */
+}
+
+/* 確保卡片本身都是相同高度 */
+.v-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+}
+
+/* 圖像、標題和內容區域應該填充父元素並允許動作欄固定在底部 */
+.v-card-title,
+.v-card-text {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+/* 商品名稱過長時使用... */
+.product-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  /* 限制在兩行 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em;
+  /* 調整行高，確保足夠空間顯示兩行 */
+  max-height: 2.4em;
+  /* 行高的兩倍，保證能顯示兩行 */
+  margin: 0;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  /* 如有需要，可以調小字體大小 */
+  padding: 5px 10px;
+  /* 增加上下的內邊距可以為文字提供更多空間 */
+
 }
 </style>

@@ -187,7 +187,7 @@ export default {
         .get('http://localhost:8080/customer/api/shoppingCart')
         .then((response) => {
           this.itemList = response.data.map(item => ({
-            id: item.transactionId,
+            transactionId: item.transactionId,
             productid: item.productId, // 確保這裡使用的是 'productid'
             itemName: item.productname,
             imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
@@ -299,5 +299,59 @@ body {
   align-items: center;
   flex-direction: column; /* Stack the circular progress and message vertically */
 }
+
+ #cont div {
+   float: left;
+   text-align: center;
+ }
+
+#title {
+  text-align: center;
+}
+body {
+  background-color: rgba(236, 239, 241, 0.3);
+  /* 輕微半透明的藍灰色背景 */
+}
+
+.my-4 {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.item-row {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.condensed-card {
+  border-radius: 10px;
+  /* 添加圓角 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  /* 添加陰影以提升層次感 */
+}
+
+/* Added condensed card styles */
+.condensed-card {
+  padding: 8px !important;
+}
+
+/* 結帳按鈕樣式 */
+.checkout-btn {
+  margin-top: 20px;
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  /* 增加字體大小 */
+  background-color: #4CAF50;
+  /* 使用鮮明的綠色 */
+  color: white;
+  /* 字體顏色為白色 */
+  border: none;
+  /* 去除邊框 */
+  border-radius: 5px;
+  /* 輕微圓角 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  /* 添加陰影 */
+}
+
 
 </style>

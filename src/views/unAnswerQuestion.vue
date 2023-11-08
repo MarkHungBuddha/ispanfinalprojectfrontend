@@ -3,9 +3,10 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import sidebar from "@/components/sidebar.vue";
 import { VApp, VMain, VContainer, VCard, VCardTitle, VCardText, VDivider, VImg } from 'vuetify/components';
+import { useRouter } from 'vue-router';
 
 const unansweredQuestions = ref([]);
-
+const router = useRouter();
 const fetchMemberInfo = async (memberId) => {
   try {
     const response = await axios.get(`http://localhost:8080/public/api/member/${memberId}`);
@@ -15,6 +16,20 @@ const fetchMemberInfo = async (memberId) => {
     return null;
   }
 };
+const navigateToAnswerForm = (questionDetail) => {
+  router.push({
+    name: 'AnswerForm',
+    params: { qandaId: questionDetail.qandaid }, // 注意這裡的改動
+    query: {
+      productName: questionDetail.productName,
+      productImagePath: questionDetail.productImagePath,
+      question: questionDetail.question,
+      memberUsername: questionDetail.memberUsername,
+      memberImgPath: questionDetail.memberImgPath
+    }
+  });
+};
+
 
 const fetchProductInfo = async (productId) => {
   try {
@@ -65,19 +80,19 @@ onMounted(async () => {
         <sidebar></sidebar>
         <v-row>
           <v-col v-for="detail in unansweredQuestions" :key="detail.productId" cols="12" sm="6">
-            <v-card class="mb-5 question-card">
+            <v-card @click="navigateToAnswerForm(detail)" class="mb-5 question-card">
               <v-card-title>
                 {{ detail.productName }}
               </v-card-title>
               <v-divider></v-divider>
               <v-img :src="`https://i.imgur.com/${detail.productImagePath}.jpeg`" aspect-ratio="1.7" max-height="200px"
-                max-width="100%" class="mb-3"></v-img>
+                     max-width="100%" class="mb-3"></v-img>
               <v-card-text>
                 <div>Question: {{ detail.question }}</div>
                 <div>Question Time: {{ new Date(detail.questiontime).toLocaleString() }}</div>
                 <div>User: {{ detail.memberUsername }}</div>
                 <v-img :src="detail.memberImgPath" aspect-ratio="1.7" max-height="100px" max-width="100px"
-                  class="mb-3"></v-img>
+                       class="mb-3"></v-img>
                 <!-- Only show answer fields if there is an answer -->
                 <template v-if="detail.answer">
                   <div>Answer: {{ detail.answer }}</div>

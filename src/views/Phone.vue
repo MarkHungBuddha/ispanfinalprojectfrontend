@@ -6,24 +6,24 @@
           <v-card-title>發送驗證碼</v-card-title>
           <v-card-text>
             <v-alert
-              v-if="message.content"
-              :type="message.type"
-              dismissible
-              @input="message.content = ''"
+                v-if="message.content"
+                :type="message.type"
+                dismissible
+                @input="message.content = ''"
             >
               {{ message.content }}
             </v-alert>
 
             <v-form @submit.prevent="sendVerificationCode">
               <v-text-field
-                v-model="phone"
-                label="手機號碼"
-                required
+                  v-model="phone"
+                  label="手機號碼"
+                  required
               ></v-text-field>
               <v-btn
-                :loading="loading"
-                type="submit"
-                color="primary"
+                  :loading="loading"
+                  type="submit"
+                  color="primary"
               >
                 發送驗證碼
               </v-btn>
@@ -31,14 +31,14 @@
 
             <v-form @submit.prevent="verifyVerificationCode">
               <v-text-field
-                v-model="verificationCode"
-                label="驗證碼"
-                required
+                  v-model="verificationCode"
+                  label="驗證碼"
+                  required
               ></v-text-field>
               <v-btn
-                :loading="loading"
-                type="submit"
-                color="primary"
+                  :loading="loading"
+                  type="submit"
+                  color="primary"
               >
                 確認驗證碼
               </v-btn>
@@ -77,49 +77,49 @@ export default {
       }
     },
     async sendVerificationCode() {
-  this.loading = true;
-  try {
-    // 请注意这里是将参数作为查询参数（query parameters）发送的
-    const response = await axios.post('http://localhost:8080/customer/api/sendPhoneVCode', null, {
-      params: {
-        mobile: this.phone,
-        userId: this.userId // 确保userId是从会话或者某个状态管理中正确获取的
+      this.loading = true;
+      try {
+        // 请注意这里是将参数作为查询参数（query parameters）发送的
+        const response = await axios.post('http://localhost:8080/customer/api/sendPhoneVCode', null, {
+          params: {
+            mobile: this.phone,
+            userId: this.userId // 确保userId是从会话或者某个状态管理中正确获取的
+          }
+        });
+        this.message.content = '驗證碼已成功發送';
+        this.message.type = 'success';
+      } catch (error) {
+        this.message.content = '發送驗證碼時出錯: ' + (error.response ? error.response.data : error.message);
+        this.message.type = 'error';
+      } finally {
+        this.loading = false;
       }
-    });
-    this.message.content = '驗證碼已成功發送';
-    this.message.type = 'success';
-  } catch (error) {
-    this.message.content = '發送驗證碼時出錯: ' + (error.response ? error.response.data : error.message);
-    this.message.type = 'error';
-  } finally {
-    this.loading = false;
-  }
-},
-async verifyVerificationCode() {
-  this.loading = true;
-  try {
-    // 發送驗證碼進行驗證
-    const response = await axios.post('http://localhost:8080/customer/api/PhoneVCode', null, {
-      params: {
-        mobile: this.phone,
-        verificationCode: this.verificationCode
+    },
+    async verifyVerificationCode() {
+      this.loading = true;
+      try {
+        // 發送驗證碼進行驗證
+        const response = await axios.post('http://localhost:8080/customer/api/PhoneVCode', null, {
+          params: {
+            mobile: this.phone,
+            verificationCode: this.verificationCode
+          }
+        });
+        this.message.content = '會員手機驗證成功! 請等待跳轉';
+        this.message.type = 'success';
+
+        // 顯示成功消息一段時間後再跳轉
+        setTimeout(() => {
+          this.$router.push('/');
+        }, 2000); // 這裡等待2秒，以便用戶能夠看到成功訊息
+
+      } catch (error) {
+        this.message.content = '確認驗證碼時出錯: ' + (error.response ? error.response.data : error.message);
+        this.message.type = 'error';
+      } finally {
+        this.loading = false;
       }
-    });
-    this.message.content = '會員手機驗證成功! 請等待跳轉';
-    this.message.type = 'success';
-
-    // 顯示成功消息一段時間後再跳轉
-    setTimeout(() => {
-      this.$router.push('/');
-    }, 2000); // 這裡等待2秒，以便用戶能夠看到成功訊息
-
-  } catch (error) {
-    this.message.content = '確認驗證碼時出錯: ' + (error.response ? error.response.data : error.message);
-    this.message.type = 'error';
-  } finally {
-    this.loading = false;
-  }
-},
+    },
     // ... 其他方法 ...
   },
   created() {
