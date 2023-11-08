@@ -1,5 +1,5 @@
 <script setup>
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 
 import Slider from "@/components/slider.vue";
 import tabitems from '@/components/tabitems.vue';
@@ -7,18 +7,15 @@ import tabitems from '@/components/tabitems.vue';
 
 <template>
   <v-app>
-    <v-container>
-      <v-main>
-        <v-row justify="center">
-          <v-col>
-            <slider class="custom-slider"/>
-            <tabitems></tabitems>
-          </v-col>
-        </v-row>
-      </v-main>
-    </v-container>
-  </v-app>
+    <v-main>
+      <slider class="custom-slider" />
+      <tabitems></tabitems>
+      <v-container>
 
+
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
