@@ -8,6 +8,7 @@ export default createStore({
         memberId: null,
     },
     getters: {
+        isLoggedIn: state => state.isLoggedIn,
         memberId: state => state.memberId,
     },
     mutations: {
