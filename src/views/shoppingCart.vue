@@ -187,7 +187,7 @@ export default {
         .get('http://localhost:8080/customer/api/shoppingCart')
         .then((response) => {
           this.itemList = response.data.map(item => ({
-            id: item.transactionId,
+            transactionId: item.transactionId,
             productid: item.productId, // 確保這裡使用的是 'productid'
             itemName: item.productname,
             imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,

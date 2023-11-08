@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ProductList from "@/views/ProductList.vue";
+import AnswerQuestion from "../views/AnswerForm.vue";
 
 const routes = [
   {
@@ -170,7 +171,13 @@ const routes = [
     props: true,
     meta: { title: '會員資料' },
   },
-
+  {
+    path: '/answer/:qandaId',
+    name: 'AnswerForm',
+    component: () =>import('@/views/AnswerForm.vue'),
+    props: true,
+    meta: { title: '回答問題' },
+  },
   // {
   //   path: '/public/api/google-callback',
   //   component: GoogleCallbackComponent, // 这应该是处理回调逻辑的Vue组件
