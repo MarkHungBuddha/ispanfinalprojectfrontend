@@ -10,6 +10,7 @@
     </v-toolbar-title>
 
     <!-- 新的搜尋框組件 -->
+    <v-spacer></v-spacer> <!-- 這將推動搜尋欄位往右 -->
 
     <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
       <v-card-text style="padding: 0;">

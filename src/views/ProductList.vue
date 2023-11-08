@@ -450,6 +450,7 @@ export default {
 .clickable-card {
   cursor: pointer;
 }
+
 </style>
 
 
