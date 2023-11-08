@@ -101,13 +101,13 @@
 
 <v-row align="center" class="phone-verification-row">
   <v-col cols="auto" class="shrink-on-mobile">
-    <v-btn v-if="membertypeid > 3" @click="$router.push('/phone')">
-      手機驗證
-    </v-btn>
-    <v-icon v-else color="green">mdi-check-circle</v-icon>
-  </v-col>
-  <v-col>
-    <span class="verified-text">電話號碼已認證</span>
+    <v-btn v-if="user.membertypeid == 3" @click="$router.push('/phone')">
+  進入手機認證頁
+</v-btn>
+<template v-else-if="user.membertypeid < 3">
+  <v-icon color="green">mdi-check-circle</v-icon>
+  <span class="verified-text">手機號碼已認證</span>
+</template>
   </v-col>
 </v-row>
               <!-- Email -->
@@ -121,10 +121,7 @@
 <v-row align="center" class="email-verification-row">
   <v-col cols="auto" class="shrink-on-mobile">
     <!-- 假设email也有一个状态标识，我们这里使用membertypeid来判断 -->
-    <v-icon color="green">mdi-check-circle</v-icon>
-  </v-col>
-  <v-col>
-    <span class="verified-text">Email已認證</span>
+    <v-icon color="green">mdi-check-circle</v-icon><span class="verified-text">Email已認證</span>
   </v-col>
 </v-row>
 
@@ -334,6 +331,20 @@ export default {
     },
   },
   methods: {
+    async fetchUserProfile() {
+      try {
+        const { data } = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
+        if (data.isLoggedIn) {
+          const { username, role, memberId } = data;
+          this.user.username = username;
+          this.user.membertype = role;
+          this.isLoggedIn = true;
+          this.fetchMemberData(memberId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user profile: ", error);
+      }
+    },
     genderChanged(newGender) {
       // 如果選擇的性別不是 "其他"，則清空自定義性別字段並更新用戶的性別
       if (newGender !== '其他') {

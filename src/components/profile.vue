@@ -132,8 +132,10 @@ export default {
     address() {
       const { country, city, region, street, postalcode } = this.user;
       return `${country}, ${city}, ${region}, ${street}, ${postalcode}`;
-    }
+    },
+  
   },
+  
   methods: {
     async fetchUserProfile() {
       try {
@@ -187,6 +189,7 @@ export default {
   created() {
     this.fetchUserProfile();
   },
+ 
 };
 </script>
 <style scoped>

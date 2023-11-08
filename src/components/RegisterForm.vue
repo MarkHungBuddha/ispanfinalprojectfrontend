@@ -224,6 +224,9 @@ validatePassword() {
       // 处理响应...
       if(response.data.okMsg) {
         alert(response.data.okMsg);
+        setTimeout(() => {
+          this.$router.push('/login');
+        }, 500);
         // 可以重定向到登录页面或其他操作
       } else if(response.data.errorMsg) {
         alert(response.data.errorMsg);
