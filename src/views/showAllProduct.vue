@@ -50,7 +50,7 @@ import sidebar from "@/components/sidebar.vue";
                   <td class="price_style">{{ product.specialPrice }}</td>
                   <td class="category_style">{{ product.categoryName }}</td>
                   <td class="category_style">{{ product.parentCategoryName }}</td>
-                  <td class="description_style">{{ product.description }}</td>
+                  <td class="description_style">{{ truncate(product.description, 50) }}</td>
                   <td class="quantity_style">{{ product.quantity }}</td>
                   <td class="edit_style">
                     <button @click="editPage(product.productId)">編輯商品</button>
@@ -60,7 +60,6 @@ import sidebar from "@/components/sidebar.vue";
                 </tr>
               </tbody>
             </v-table>
-            <!-- 分頁控件 -->
             <v-pagination v-model="currentPage" :length="totalPages" @input="handlePageChange"></v-pagination>
 
           </div>
@@ -79,8 +78,11 @@ export default {
       searchQuery: '',
       currentPage: 1, // 从1开始以匹配后端API
       totalPages: 1, // 初始设置为1，将从API响应中更新
-      pageSize: 3,
+      pageSize: 10,
     };
+  },
+  created() {
+    this.fetchProducts();
   },
   watch: {
     currentPage(newVal, oldVal) {
@@ -88,9 +90,6 @@ export default {
         this.fetchProducts(); // 当页码变化时获取新数据
       }
     }
-  },
-  created() {
-    this.fetchProducts();
   },
   methods: {
     productPage(productId) {
@@ -102,7 +101,6 @@ export default {
       this.$router.push({ name: 'editpage', params: { productId: productId } });
     },
     fetchProducts() {
-
       axios.get('http://localhost:8080/seller/api/products', {
         params: {
           p: this.currentPage,
@@ -111,11 +109,16 @@ export default {
         .then((response) => {
           this.products = response.data.content; // 使用products而不是orders
           this.totalPages = response.data.totalPages;
-          console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
         })
         .catch((error) => {
           console.error('无法检索产品：', error);
         });
+    },
+    truncate(text, length) {
+      if (text.length <= length) {
+        return text;
+      }
+      return text.substring(0, length) + '...';
     },
     deleteProduct(productId) {
       axios.put(`http://localhost:8080/seller/api/${productId}/remove`)
