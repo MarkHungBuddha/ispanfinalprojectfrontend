@@ -27,6 +27,8 @@
             </div>
           </v-col>
 
+
+
           <!-- 商品卡片的工作区 -->
           <v-col cols="12" md="10">
             <v-row no-gutters>
@@ -68,9 +70,15 @@
               <v-card-actions>
                 <v-btn color="success" @click="addToCart(product.productId)">加入購物車</v-btn>
                 <v-btn icon flat @click="toggleWishlist(product.productId)">
-                  <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
+                  <v-btn icon flat @click="toggleWishlist(product)">
+                    <v-icon :color="product.inWishlist ? 'pink' : 'black'">mdi-heart</v-icon>
+                  </v-btn>
                 </v-btn>
               </v-card-actions>
+              <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
+                {{ snackbarText }}
+                <v-btn color="white" text @click="snackbar = false">關閉</v-btn>
+              </v-snackbar>
             </v-card>
           </v-col>
         </v-row>
@@ -93,6 +101,7 @@ export default {
       selectedCategorySpecialPrice: 0,
       showPriceAndSpecialPrice: false,
 
+      wishlistStatus: {}, // 存储产品ID及其愿望清单状态
 
 
       products: [],
@@ -144,6 +153,64 @@ export default {
   },
 
   methods: {
+
+
+    // 加入購物車方法
+    addToCart(productId) {
+      axios.post(`http://localhost:8080/customer/api/shoppingCart?productId=${productId}`)
+        .then(response => {
+          this.showSnackbar('商品已成功加入购物车。', 'success');
+        })
+        .catch(error => {
+          this.showSnackbar('无法添加商品到购物车。', 'error');
+          console.error('Error adding product to cart:', error);
+        });
+    },
+    handleAddToCart(productId) {
+      // 在这里编写加入购物车的逻辑
+      // 通常是调用API接口将商品添加到用户的购物车中
+      axios.post('/api/path/to/cart', { productId: productId })
+        .then(response => {
+          // 处理成功响应，可能是通知用户商品已添加到购物车
+          alert('商品已添加到购物车');
+        })
+        .catch(error => {
+          // 处理错误响应，可能是通知用户操作失败
+          console.error('添加到购物车失败', error);
+          alert('无法添加商品到购物车，请稍后再试');
+        });
+    },
+    showSnackbar(message, color) {
+      this.snackbarText = message;
+      this.snackbarColor = color;
+      this.snackbar = true;
+    },
+    // 切换愿望清单状态
+    toggleWishlist(product) {
+      axios.post(`http://localhost:8080/customer/api/wishlist/${product.productId}`)
+        .then(response => {
+          product.inWishlist = !product.inWishlist;
+          this.showSnackbar('愿望清单状态已更新。', 'success');
+        })
+        .catch(error => {
+          this.showSnackbar('无法更新愿望清单状态。', 'error');
+          console.error('Error toggling wishlist status:', error);
+        });
+      this.$emit('toggle-wishlist', this.product);
+
+    },
+    // 更新愿望清单状态
+    updateWishlistStatus(productId, status) {
+      const productIndex = this.products.findIndex(p => p.productId === productId);
+      if (productIndex !== -1) {
+        this.$set(this.products[productIndex], 'inWishlist', status);
+      }
+    },
+    //添加跳轉頁面到productPage
+    navigateToProduct(productId) {
+      this.$router.push({ name: 'ProductPage', params: { productId: productId } });
+    },
+
     selectCategory(category) {
       // 在這裡實現選擇商品類別後的邏輯
       console.log(`Selected category: ${category}`);
@@ -212,13 +279,10 @@ export default {
   },
   // 当组件创建完成后立即获取数据
   mounted() {
-
     this.fetchCategoryProducts('筆記型電腦'); // 也可以在这里调用方法获取默认类别的数据
     this.fetchProductsWithKeyword('a');        // 當組件掛載完成後執行
-
-
   },
-  // ... 其他方法 ...
+
 };
 </script>
   
