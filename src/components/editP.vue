@@ -21,10 +21,10 @@
 
               <!-- 用户名 -->
               <v-text-field
-                  v-model="user.username"
-                  label="會員帳號"
-                  disabled
-              ></v-text-field>
+    v-model="user.username"
+    label="會員帳號"
+    readonly
+></v-text-field>
 
               <!-- 名字 -->
               <v-text-field
@@ -60,58 +60,73 @@
 
               <!-- 出生日期 -->
               <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :return-value.sync="user.birthdate"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      ref="birthdate"
-                      v-model="user.birthdate"
-                      label="出生日期"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                    v-model="user.birthdate"
-                    no-title
-                    @input="menu = false"
-                ></v-date-picker>
-              </v-menu>
+  ref="menu"
+  v-model="menu"
+  :close-on-content-click="false"
+  :return-value.sync="user.birthdate"
+  transition="scale-transition"
+  offset-y
+  min-width="auto"
+>
+  <template v-slot:activator="{ on, attrs }">
+    <v-text-field
+      ref="birthdate"
+      v-model="user.birthdate"
+      label="出生日期"
+      readonly
+      v-bind="attrs"
+      v-on="on"
+    ></v-text-field>
+  </template>
+  <v-date-picker
+    v-model="user.birthdate"
+    no-title
+    @input="menu = false"
+  ></v-date-picker>
+</v-menu>
 
 
-              <v-card>
+
+              
 
 
-              <!-- 電話 -->
-              <v-text-field
-                  v-model="user.phone"
-                  :rules="phoneRules"
-                  label="電話號碼"
-                  required
-                  disabled
-              ></v-text-field>
-              <v-btn v-if="membertypeid >= 3" @click="$router.push('/phone')">
-                手機驗證
-              </v-btn>
-              <!-- 使用 v-else 显示已验证的图标 -->
-              <v-icon v-else color="green">mdi-check-circle</v-icon>
-              電話號碼已認證
-              </v-card>
+             <!-- 電話 -->
+             <v-text-field
+  v-model="user.phone"
+  :rules="phoneRules"
+  label="電話號碼"
+  required
+  readonly
+></v-text-field>
+
+<v-row align="center" class="phone-verification-row">
+  <v-col cols="auto" class="shrink-on-mobile">
+    <v-btn v-if="membertypeid > 3" @click="$router.push('/phone')">
+      手機驗證
+    </v-btn>
+    <v-icon v-else color="green">mdi-check-circle</v-icon>
+  </v-col>
+  <v-col>
+    <span class="verified-text">電話號碼已認證</span>
+  </v-col>
+</v-row>
               <!-- Email -->
               <v-text-field
-                  v-model="user.email"
-                  label="Email"
-                  required
-                  disabled
-              ></v-text-field>
+  v-model="user.email"
+  label="Email"
+  required
+  readonly
+></v-text-field>
+
+<v-row align="center" class="email-verification-row">
+  <v-col cols="auto" class="shrink-on-mobile">
+    <!-- 假设email也有一个状态标识，我们这里使用membertypeid来判断 -->
+    <v-icon color="green">mdi-check-circle</v-icon>
+  </v-col>
+  <v-col>
+    <span class="verified-text">Email已認證</span>
+  </v-col>
+</v-row>
 
               <!-- 國家 -->
               <v-select
@@ -514,4 +529,29 @@ export default {
 <style scoped>
 @import "flatpickr/dist/flatpickr.css";
 
+.v-input .v-input__control .v-input__slot {
+  opacity: 1; /* 全不透明 */
+  color: #000000; /* 黑色文字 */
+}
+
+/* 或者如果你需要更具體的針對文本欄 */
+.v-text-field .v-text-field__slot {
+  opacity: 1; /* 全不透明 */
+  color: #000000; /* 黑色文字 */
+}
+.phone-verification-row {
+  margin-top: -30px; /* Adds a small space between the text field and this row */
+}
+.email-verification-row {
+  margin-top:-30px; /* Adds a small space between the text field and this row */
+}
+
+.shrink-on-mobile {
+  flex-basis: auto;
+}
+
+.verified-text {
+  color: green;
+  font-size: 0.8rem; /* Adjust the size to your preference */
+}
 </style>
