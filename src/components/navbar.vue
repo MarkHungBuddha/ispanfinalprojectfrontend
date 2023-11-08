@@ -4,13 +4,15 @@
       <v-btn text @click="redirectTo('/')">
         <img src="https://i.imgur.com/tsjp9Vx.jpg" alt="Logo" class="logo-img">
       </v-btn>
-      <v-btn v-if="isLoggedIn" text @click="redirectTo('/seller')" icon>
-        <img src="https://i.imgur.com/MBHoqXu.png" alt="Seller" class="icon-img">
-      </v-btn>
+      <v-btn v-if="isLoggedIn" @click="redirectTo('/seller')" icon title="賣家中心">
+  <img src="https://i.imgur.com/MBHoqXu.png" alt="Seller" class="icon-img">
+</v-btn>
+
     </v-toolbar-title>
 
+    <v-spacer></v-spacer>
+
     <!-- 新的搜尋框組件 -->
-    <v-spacer></v-spacer> <!-- 這將推動搜尋欄位往右 -->
 
     <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
       <v-card-text style="padding: 0;">
@@ -27,22 +29,24 @@
     <v-spacer></v-spacer>
 
     <!-- 購物車按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon>
-      <img src="https://i.imgur.com/YHFDBf9.png" alt="Shopping Cart" class="icon-img">
-    </v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon title="購物車">
+  <img src="https://i.imgur.com/YHFDBf9.png" alt="Shopping Cart" class="icon-img">
+</v-btn>
+
     <!-- 願望清單按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectToWishList" icon>
-      <img src="https://i.imgur.com/35bjgaz.png" alt="Wish List" class="icon-img">
-    </v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectToWishList" icon title="願望清單">
+  <img src="https://i.imgur.com/35bjgaz.png" alt="Wish List" class="icon-img">
+</v-btn>
+
     <!-- 訂單按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectTo('/order')" icon>
-      <img src="https://i.imgur.com/H8nqWWB.png" alt="Order" class="icon-img">
-    </v-btn>
+    <v-btn v-if="isLoggedIn" @click="redirectTo('/order')" icon title="我的訂單">
+  <img src="https://i.imgur.com/H8nqWWB.png" alt="Order" class="icon-img">
+</v-btn>
+
     <!-- 會員中心按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" icon>
-      <!-- <img src="https://i.imgur.com/WYW1y2p.png" alt="Member" class="icon-img"> -->
-      <img src="https://i.imgur.com/F6mWj8r.png" alt="Member" class="icon-img">
-    </v-btn>
+  <img src="https://i.imgur.com/F6mWj8r.png" alt="Member" class="icon-img" title="會員中心">
+</v-btn>
     <!-- 登出按鈕 -->
     <v-btn v-if="isLoggedIn" @click="logout" class="custom-btn">登出</v-btn>
     <!-- 登入按鈕 -->

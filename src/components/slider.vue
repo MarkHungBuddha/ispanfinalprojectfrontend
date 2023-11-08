@@ -1,7 +1,7 @@
 <template>
   <v-container fluid> <!-- 使容器滿版 -->
     <v-col cols="12"> <!-- 使用所有12個欄位 -->
-      <v-carousel cycle height="600" hide-delimiter-background show-arrows="hover">
+      <v-carousel cycle height="380" hide-delimiter-background show-arrows="hover">
         <v-carousel-item v-for="(slide, i) in slides" :key="i">
           <v-sheet height="100%" class="d-flex align-center justify-center">
             <!-- 圖片將覆蓋整個可用空間，可能會被裁剪以適應 -->
