@@ -27,7 +27,7 @@
                     <v-list-item class="my-2">
                       <v-list-item-content>
                         <v-list-item-title class="title">姓名</v-list-item-title>
-                        <v-list-item-subtitle class="subtitle">{{ user.firstname }} {{ user.lastname }}</v-list-item-subtitle>
+                        <v-list-item-subtitle class="subtitle">{{user.lastname}} {{  user.firstname  }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
 
