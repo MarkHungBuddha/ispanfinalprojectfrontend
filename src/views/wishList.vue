@@ -87,8 +87,14 @@ export default {
 </script>
 
 <style scoped>
-body {
-  background-color: rgba(0, 0, 0, .2);
+.v-application {
+  background-image: url('@/assets/buy01.png'), linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
 
 .item_header {

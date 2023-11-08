@@ -182,7 +182,16 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 如果 savedPosition 存在則返回 savedPosition，通常是用在 popstate 導航 (通過瀏覽器的 前進/後退 按鈕)
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      // 在進入新的頁面時，滾動到頂部
+      return { top: 0 };
+    }
+  },
 });
 
 // 為了使用 meta 屬性中的 title，你可以設置一個全局的前置守衛

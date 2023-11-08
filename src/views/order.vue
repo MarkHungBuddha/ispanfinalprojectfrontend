@@ -228,8 +228,7 @@ export default {
 }
 
 .tab--active {
-  background-color: rgb(202, 160, 115);
-
-  /* 指定選中標籤顏色 */
+  background-color: rgba(96, 154, 231, 0.5);
+  /* 設置背景色和透明度 */
 }
 </style>

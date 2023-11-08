@@ -42,8 +42,8 @@ import navbar from "@/components/navbar.vue";
 
         <!-- Buttons -->
         <v-col cols="4" md="3" class="d-flex flex-column align-end justify-start">
-          <v-btn color="pink" @click="addToWishlist" class="mb-2 self-end">Add to Wishlist</v-btn>
-          <v-btn color="green" @click="addToCart" class="self-end">Add to Cart</v-btn>
+          <v-btn color="pink" @click="addToWishlist" class="mb-2 self-end">加入願望清單</v-btn>
+          <v-btn color="green" @click="addToCart" class="self-end">加入購物車</v-btn>
         </v-col>
       </v-row>
       <!--      <v-dialog v-model="dialog" max-width="290">-->
@@ -135,7 +135,7 @@ import navbar from "@/components/navbar.vue";
           <v-card flat>
             <v-card-text>
               <v-text-field v-model="question" label="Ask a question" clearable></v-text-field>
-              <v-btn color="primary" @click="submitQuestion">Submit Question</v-btn>
+              <v-btn color="primary" @click="submitQuestion">提問</v-btn>
             </v-card-text>
           </v-card>
 

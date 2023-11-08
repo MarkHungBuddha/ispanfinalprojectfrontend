@@ -298,6 +298,12 @@ export default {
 </script>
 
 <style >
+.v-application {
+  /* 將漸層方向改為從上到下 */
+  background-image: linear-gradient(to bottom, #e2d0b6, #cabae6);
+
+}
+
 .range {
   max-width: 500px;
 }
@@ -338,6 +344,7 @@ export default {
   /* 允許文字換行 */
   line-height: 1.2;
   /* 調整行高以適應多行文本 */
+
 }
 
 .product-name {

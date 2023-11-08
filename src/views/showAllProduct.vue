@@ -60,6 +60,9 @@ import sidebar from "@/components/sidebar.vue";
                 </tr>
               </tbody>
             </v-table>
+            <!-- 分頁控件 -->
+            <v-pagination v-model="currentPage" :length="totalPages" @input="handlePageChange"></v-pagination>
+
           </div>
         </div>
       </v-container>
@@ -74,7 +77,17 @@ export default {
       products: [],          // 原始产品列表
       searchResults: [],     // 搜索结果
       searchQuery: '',
+      currentPage: 1, // 从1开始以匹配后端API
+      totalPages: 1, // 初始设置为1，将从API响应中更新
+      pageSize: 3,
     };
+  },
+  watch: {
+    currentPage(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.fetchProducts(); // 当页码变化时获取新数据
+      }
+    }
   },
   created() {
     this.fetchProducts();
@@ -89,13 +102,16 @@ export default {
       this.$router.push({ name: 'editpage', params: { productId: productId } });
     },
     fetchProducts() {
+
       axios.get('http://localhost:8080/seller/api/products', {
         params: {
-          p: 1,
+          p: this.currentPage,
         },
       })
         .then((response) => {
-          this.products = response.data.content;
+          this.products = response.data.content; // 使用products而不是orders
+          this.totalPages = response.data.totalPages;
+          console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
         })
         .catch((error) => {
           console.error('无法检索产品：', error);
@@ -113,19 +129,31 @@ export default {
         });
     },
     searchProducts() {
+      this.currentPage = 1; // 假设您希望每次搜索都返回第一页的结果
+
       axios.get('http://localhost:8080/seller/api/products/search', {
         params: {
-          p: 1,
+          p: this.currentPage,
           productname: this.searchQuery,
         },
       })
         .then((response) => {
           this.searchResults = response.data.content;
+          this.products = response.data.content; // 使用products而不是orders
+          this.totalPages = response.data.totalPages;
         })
         .catch((error) => {
           console.error('无法检索产品：', error);
         });
     },
+    handlePageChange(newPage) {
+      this.currentPage = newPage;
+      if (this.searchQuery) {
+        this.searchProducts();
+      } else {
+        this.fetchProducts();
+      }
+    }
   },
 };
 

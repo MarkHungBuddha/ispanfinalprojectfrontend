@@ -5,7 +5,7 @@
         <img src="https://i.imgur.com/tsjp9Vx.jpg" alt="Logo" class="logo-img">
       </v-btn>
       <v-btn v-if="isLoggedIn" text @click="redirectTo('/seller')" icon>
-        <img src="https://i.imgur.com/IqO0TWs.png" alt="Seller" class="icon-img">
+        <img src="https://i.imgur.com/MBHoqXu.png" alt="Seller" class="icon-img">
       </v-btn>
     </v-toolbar-title>
 
@@ -25,19 +25,20 @@
 
     <!-- 購物車按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon>
-      <img src="https://i.imgur.com/kpCQMH5.png" alt="Shopping Cart" class="icon-img">
+      <img src="https://i.imgur.com/YHFDBf9.png" alt="Shopping Cart" class="icon-img">
     </v-btn>
     <!-- 願望清單按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectToWishList" icon>
-      <img src="https://i.imgur.com/SDt6WzE.png" alt="Wish List" class="icon-img">
+      <img src="https://i.imgur.com/35bjgaz.png" alt="Wish List" class="icon-img">
     </v-btn>
     <!-- 訂單按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectTo('/order')" icon>
-      <img src="https://i.imgur.com/lEcgsZg.png" alt="Order" class="icon-img">
+      <img src="https://i.imgur.com/H8nqWWB.png" alt="Order" class="icon-img">
     </v-btn>
     <!-- 會員中心按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" icon>
-      <img src="https://i.imgur.com/WYW1y2p.png" alt="Member" class="icon-img">
+      <!-- <img src="https://i.imgur.com/WYW1y2p.png" alt="Member" class="icon-img"> -->
+      <img src="https://i.imgur.com/F6mWj8r.png" alt="Member" class="icon-img">
     </v-btn>
     <!-- 登出按鈕 -->
     <v-btn v-if="isLoggedIn" @click="logout" class="custom-btn">登出</v-btn>
@@ -120,9 +121,9 @@ export default {
 
 <style>
 .icon-img {
-  width: 24px;
+  width: 40px;
   /* Adjust as needed */
-  height: 24px;
+  height: 40px;
 }
 
 .custom-navbar {

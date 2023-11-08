@@ -26,13 +26,16 @@ import navbar from "@/components/navbar.vue";
 }
 
 .custom-slider {
-  /* 將漸層方向改為從上到下 */
-  background-image: url('@/assets/Home01.png'), linear-gradient(to bottom, #e2d0b6, #cabae6);
-  background-repeat: no-repeat, repeat;
-  background-position: right bottom;
-  /* 圖片位置在右下角 */
+  background-image: linear-gradient(to bottom, #e2d0b6, #cabae6);
   background-attachment: fixed;
-  /* 圖片固定在視窗中 */
-  background-size: 13%;
+  /* 使背景圖片固定於視口 */
+  background-position: center center;
+  /* 背景圖片始終置中 */
+  background-size: cover;
+  /* 背景圖片覆蓋整個元素區域 */
+  background-repeat: no-repeat;
+  /* 防止背景圖片重複 */
+  margin: 0 auto;
+  /* 置中容器 */
 }
 </style>

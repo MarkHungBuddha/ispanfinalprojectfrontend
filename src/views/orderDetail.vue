@@ -296,9 +296,15 @@ export default {
       return date.toISOString().substring(0, 19).replace('T', ' ');
     },
 
-    // 上一頁
+    // 上一頁並滾動到頂部
     goBack() {
-      this.$router.go(-1); // 或者 this.$router.back();
+      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/');
+      this.$nextTick(() => {
+        const element = document.getElementById('your-scrollable-element-id');
+        if (element) {
+          element.scrollTop = 0;
+        }
+      });
     },
 
     // 付款
