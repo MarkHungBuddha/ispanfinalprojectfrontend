@@ -30,6 +30,12 @@
               <v-list-item @click="order">
                 <v-list-item-title>購買清單</v-list-item-title>
               </v-list-item>
+              <v-list-item @click="CustomerQuestionList">
+                <v-list-item-title>問題清單</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="CustomerReviewList">
+                <v-list-item-title>評論清單</v-list-item-title>
+              </v-list-item>
             </v-expansion-panel-text>
           </v-expansion-panel>
 
@@ -48,6 +54,13 @@ export default {
     },
     order() {
       this.$router.push('/order');
+    },
+
+    CustomerQuestionList(){
+      this.$router.push('/customer/ALLQuestion');
+    },
+    CustomerReviewList(){
+      this.$router.push('/customer/AllReview');
     },
   }
 };

@@ -9,6 +9,7 @@ import CategoryList from '@/components/CategoryList.vue';
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
   <v-app>
     <v-main>
+
       <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
       <CategoryList></CategoryList>
       <router-view :is-logged-in="isLoggedIn"></router-view>

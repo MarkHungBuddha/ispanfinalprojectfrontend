@@ -33,6 +33,12 @@
                 <v-list-item @click="Unanswer">
                   <v-list-item-title>待回問題</v-list-item-title>
                 </v-list-item>
+                <v-list-item @click="SellerQuestionList">
+                  <v-list-item-title>問題列表</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="SellerReviewList">
+                  <v-list-item-title>評論列表</v-list-item-title>
+                </v-list-item>
                 <v-list-item @click="ManageOrders">
                   <v-list-item-title>訂單管理</v-list-item-title>
                 </v-list-item>
@@ -44,12 +50,12 @@
                 數據分析
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <v-list-item>
-                  <v-list-item-title>提問數量</v-list-item-title>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-title>評論數量</v-list-item-title>
-                </v-list-item>
+<!--                <v-list-item>-->
+<!--                  <v-list-item-title>提問數量</v-list-item-title>-->
+<!--                </v-list-item>-->
+<!--                <v-list-item>-->
+<!--                  <v-list-item-title>評論數量</v-list-item-title>-->
+<!--                </v-list-item>-->
                 <v-list-item @click="FindRevenue">
                   <v-list-item-title>營收分析</v-list-item-title>
                 </v-list-item>
@@ -64,7 +70,14 @@
 </template>
 
 <script>
+import QuestionList from "../views/QuestionList.vue";
+
 export default {
+  computed: {
+    QuestionList() {
+      return QuestionList
+    }
+  },
   props: ['customStyle'],
   methods: {
     UploadProduct() {
@@ -81,7 +94,14 @@ export default {
     },
     Unanswer() {
       this.$router.push('/unanswer');
-    }
+    },
+    SellerQuestionList(){
+      this.$router.push('/seller/ALLQuestion');
+    },
+    SellerReviewList(){
+      this.$router.push('/seller/AllReview');
+    },
+
   },
 
 };

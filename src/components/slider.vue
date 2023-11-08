@@ -1,16 +1,15 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="10">
-        <v-carousel cycle height="400" hide-delimiter-background show-arrows="hover">
-          <v-carousel-item v-for="(slide, i) in slides" :key="i">
-            <!-- 檢查索引，並根據索引為圖片綁定不同的點擊事件 -->
-            <v-img :src="slide" :alt="`Slide ${i + 1}`" height="100%" @click="handleSlideClick(i)" />
-          </v-carousel-item>
-        </v-carousel>
-      </v-col>
-
-    </v-row>
+  <v-container fluid> <!-- 使容器滿版 -->
+    <v-col cols="12"> <!-- 使用所有12個欄位 -->
+      <v-carousel cycle height="600" hide-delimiter-background show-arrows="hover">
+        <v-carousel-item v-for="(slide, i) in slides" :key="i">
+          <v-sheet height="100%" class="d-flex align-center justify-center">
+            <!-- 圖片將覆蓋整個可用空間，可能會被裁剪以適應 -->
+            <v-img :src="slide" :alt="`Slide ${i + 1}`" cover @click="handleSlideClick(i)" />
+          </v-sheet>
+        </v-carousel-item>
+      </v-carousel>
+    </v-col>
   </v-container>
 </template>
 
@@ -19,10 +18,10 @@ export default {
   data() {
     return {
       slides: [
-        'https://i.imgur.com/XtOqTyH.jpg',
-        'https://i.imgur.com/8lTeIQm.jpg',
+        'https://i.imgur.com/3r4DBjR.jpg',
+        'https://i.imgur.com/C1KYdmM.jpg',
         'https://i.imgur.com/Vqvbl7S.jpg',
-        'https://i.imgur.com/jyvVg9i.jpg',
+        'https://i.imgur.com/ZQiMpio.jpg',
         'https://i.imgur.com/RBfQ9Q6.jpg',
       ],
     }

@@ -186,6 +186,35 @@ const routes = [
     props: true,
     meta: { title: '回答問題' },
   },
+  {
+    path: '/seller/AllReview',
+    name: 'SellerAllReview',
+    component: () => import('@/views/sellerAllReviews.vue'), // 确保路径正确
+    props: true,
+    meta: {title: '全部評論'},
+  },
+  {
+    path: '/customer/AllReview',
+    name: 'CustomerAllReview',
+    component: () => import('@/views/AllReviews.vue'), // 确保路径正确
+    props: true,
+    meta: {title: '全部評論'},
+  },
+  {
+    path: '/seller/ALLQuestion',
+    name: 'SellerALLQuestion',
+    component: () => import('@/views/ProductQandA.vue'), // 确保路径正确
+    props: true,
+    meta: {title: '全部問題'},
+  },
+  {
+    path: '/customer/ALLQuestion',
+    name: 'CustomerALLQuestion',
+    component: () => import('@/views/QuestionList.vue'), // 确保路径正确
+    props: true,
+    meta: {title: '全部問題'},
+  },
+
   // {
   //   path: '/public/api/google-callback',
   //   component: GoogleCallbackComponent, // 这应该是处理回调逻辑的Vue组件
