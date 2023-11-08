@@ -86,6 +86,10 @@
                 ></v-date-picker>
               </v-menu>
 
+
+              <v-card>
+
+
               <!-- 電話 -->
               <v-text-field
                   v-model="user.phone"
@@ -94,11 +98,13 @@
                   required
                   disabled
               ></v-text-field>
-              <v-btn @click="$router.push('/phone')">
+              <v-btn v-if="membertypeid >= 3" @click="$router.push('/phone')">
                 手機驗證
               </v-btn>
-
-
+              <!-- 使用 v-else 显示已验证的图标 -->
+              <v-icon v-else color="green">mdi-check-circle</v-icon>
+              電話號碼已認證
+              </v-card>
               <!-- Email -->
               <v-text-field
                   v-model="user.email"
@@ -182,11 +188,12 @@ import 'flatpickr/dist/flatpickr.css';
 export default {
   data() {
     return {
+      membertypeid: null,  // 添加这一行
       nameRules: [
         v => /^[\u4e00-\u9fa5a-zA-Z]+$/g.test(v) || '名字與姓氏限定中文或英文',
       ],
       phoneRules: [
-        v => /^(09)\d{8}$/g.test(v) || '電話號碼規定使用09開頭的十碼數字',
+        v => /^(09)\d{8}$/g.test(v) || '',
       ],
       streetRules: [
         v => /^[\u4e00-\u9fa5a-zA-Z0-9]+$/g.test(v) || '街道規定只能中文英文與數字',

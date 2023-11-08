@@ -8,7 +8,7 @@
       <v-container>
 
 
-        <v-row>
+        <v-row style="max-width: 500px">
           <!-- 價格範圍滑塊和應用篩選按鈕在同一行 -->
           <v-col cols="12" sm="8">
             <v-range-slider
@@ -28,7 +28,7 @@
                     outlined
                     type="number"
                     class="mt-0 pt-0"
-                    style="width: 100px"
+                    style="width: 90px"
                 ></v-text-field>
               </template>
               <template v-slot:append>
@@ -39,13 +39,15 @@
                     outlined
                     type="number"
                     class="mt-0 pt-0"
-                    style="width: 100px"
+                    style="width: 90px"
                 ></v-text-field>
               </template>
             </v-range-slider>
           </v-col>
           <v-col cols="12" sm="4" class="d-flex align-end">
-            <v-btn color="primary" @click="applyFilters">應用篩選</v-btn>
+            <v-btn  @click="applyFilters" icon>
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
           </v-col>
         </v-row>
 
@@ -322,7 +324,17 @@ export default {
 };
 </script>
 
-<style>
+<style >
+.v-application {
+  /* 將漸層方向改為從上到下 */
+  background-image: linear-gradient(to bottom, #e2d0b6, #cabae6);
+
+}
+
+.range {
+  max-width: 500px;
+}
+
 .smaller-card {
   max-width: 200px;
   margin: 0 auto;
@@ -359,6 +371,7 @@ export default {
   /* 允許文字換行 */
   line-height: 1.2;
   /* 調整行高以適應多行文本 */
+
 }
 
 .product-name {
@@ -373,8 +386,10 @@ export default {
 
 
 .special-price {
-  font-size: 1.2em; /* 特價放大 */
-  color: red; /* 紅字顯示 */
+  font-size: 1.2em;
+  /* 特價放大 */
+  color: red;
+  /* 紅字顯示 */
 }
 
 .original-price {
@@ -382,15 +397,18 @@ export default {
 }
 
 .text-decoration-line-through {
-  text-decoration: line-through; /* 加上刪除線 */
+  text-decoration: line-through;
+  /* 加上刪除線 */
 }
 
 .red--text {
-  --v-theme-foreground: #ff5252; /* This is an example, adjust the color to fit your theme */
+  --v-theme-foreground: #ff5252;
+  /* This is an example, adjust the color to fit your theme */
 }
 
 .text--accent-4 {
-  color: var(--v-theme-foreground); /* Use the defined accent color */
+  color: var(--v-theme-foreground);
+  /* Use the defined accent color */
 }
 
 .no-background::before {
@@ -432,7 +450,6 @@ export default {
 .clickable-card {
   cursor: pointer;
 }
-
 </style>
 
 

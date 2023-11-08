@@ -41,12 +41,12 @@
 
           <!-- 顯示產品列表 -->
           <v-card v-for=" product in orderDetails.products" :key="product.productid" class="mb-3"
-            @click="navigateToProduct(product.productid)">
+                  @click="navigateToProduct(product.productid)">
             <v-row>
               <!-- 產品圖片列 -->
               <v-col cols="4">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                  class="product-image"></v-img>
+                       class="product-image"></v-img>
               </v-col>
 
               <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
@@ -101,12 +101,12 @@ export default {
       axios.get(`http://localhost:8080/seller/api/sellerfindOneOrder`, {
         params: { orderid: this.orderid }
       })
-        .then(response => {
-          this.orderDetails = response.data;
-        })
-        .catch(error => {
-          console.error('無法檢索訂單詳情：', error);
-        });
+          .then(response => {
+            this.orderDetails = response.data;
+          })
+          .catch(error => {
+            console.error('無法檢索訂單詳情：', error);
+          });
     },
     // 方法：格式化日期時間
     formatDate(datetime) {
@@ -124,14 +124,14 @@ export default {
     // 確認出貨
     shipOrder(orderId) {
       axios.put(`http://localhost:8080/seller/api/${orderId}/shipOrder`)
-        .then(response => {
-          this.orderDetails = response.data;
-          this.orderStatusClass = 'status-color-change'; // 應用綠色
+          .then(response => {
+            this.orderDetails = response.data;
+            this.orderStatusClass = 'status-color-change'; // 應用綠色
 
-        })
-        .catch(error => {
-          console.error('確認出貨失敗：', error);
-        });
+          })
+          .catch(error => {
+            console.error('確認出貨失敗：', error);
+          });
     },
     //訂單的商品可跳至商品頁面
     navigateToProduct(productid) {

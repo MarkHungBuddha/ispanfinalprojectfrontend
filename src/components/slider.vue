@@ -9,6 +9,7 @@
           </v-carousel-item>
         </v-carousel>
       </v-col>
+
     </v-row>
   </v-container>
 </template>
@@ -18,10 +19,10 @@ export default {
   data() {
     return {
       slides: [
-        'https://i.imgur.com/W4UDro2.jpg',
-        'https://i.imgur.com/4bQcwkh.jpg',
+        'https://i.imgur.com/XtOqTyH.jpg',
+        'https://i.imgur.com/8lTeIQm.jpg',
         'https://i.imgur.com/Vqvbl7S.jpg',
-        'https://i.imgur.com/1ZTYwQp.jpg',
+        'https://i.imgur.com/jyvVg9i.jpg',
         'https://i.imgur.com/RBfQ9Q6.jpg',
       ],
     }
@@ -33,7 +34,7 @@ export default {
         '/products/筆記型電腦',
         '/products/冰箱',
         '/products/顯示卡',
-        '/products/桌上型電腦',
+        '/products/網路裝置',
         '/products/耳機_喇叭',
         // ...其他路徑
       ];

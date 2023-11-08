@@ -4,6 +4,9 @@ import CategoryList from '@/components/CategoryList.vue';
 </script>
 
 <template>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
   <v-app>
     <v-main>
       <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
@@ -70,4 +73,19 @@ export default {
   }
 };
 </script>
+<style>
+html,
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+}
 
+/* 全局樣式 */
+
+
+/* 添加這部分來確保 #app 佔滿整個可用高度 */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+</style>

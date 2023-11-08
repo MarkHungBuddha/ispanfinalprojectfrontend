@@ -42,7 +42,7 @@
         </template>
         <v-list>
           <v-list-item v-for="(computerPeripheral, index) in computerPeripherals" :key="index"
-            @click="handleCategoryClick(computerPeripheral)">
+                       @click="handleCategoryClick(computerPeripheral)">
             <v-list-item-title>{{ computerPeripheral }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -54,7 +54,7 @@
         </template>
         <v-list>
           <v-list-item v-for="(smallAppliance, index) in smallAppliances" :key="index"
-            @click="handleCategoryClick(smallAppliance)">
+                       @click="handleCategoryClick(smallAppliance)">
             <v-list-item-title>{{ smallAppliance }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -66,7 +66,7 @@
         </template>
         <v-list>
           <v-list-item v-for="(entertainment, index) in entertainments" :key="index"
-            @click="handleCategoryClick(entertainment)">
+                       @click="handleCategoryClick(entertainment)">
             <v-list-item-title>{{ entertainment }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -78,7 +78,7 @@
         </template>
         <v-list>
           <v-list-item v-for="(officeSupply, index) in officeSupplies" :key="index"
-            @click="handleCategoryClick(officeSupply)">
+                       @click="handleCategoryClick(officeSupply)">
             <v-list-item-title>{{ officeSupply }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -149,45 +149,45 @@ export default {
       }
 
       axios
-        .get("http://localhost:8080/public/api/categoryname", {
-          params: {
-            categoryname: categoryName,
-            minPrice: this.minPrice,
-            maxPrice: this.maxPrice,
-            page: this.currentPage,
-            pageSize: 4,
-          },
-        })
-        .then((response) => {
-          if (response.data && response.data.content && response.data.content.length > 0) {
-            this.products = response.data.content;
-            this.products.forEach(product => {
-              product.inWishlist = localStorage.getItem(product.productid) === 'true';
-              if (product && product.productId) {
-                this.fetchAverageReview(product.productId);
-              }
-              this.navigateToProducts(categoryName);
-            });
-            this.totalPages = response.data.totalPages;
+          .get("http://localhost:8080/public/api/categoryname", {
+            params: {
+              categoryname: categoryName,
+              minPrice: this.minPrice,
+              maxPrice: this.maxPrice,
+              page: this.currentPage,
+              pageSize: 4,
+            },
+          })
+          .then((response) => {
+            if (response.data && response.data.content && response.data.content.length > 0) {
+              this.products = response.data.content;
+              this.products.forEach(product => {
+                product.inWishlist = localStorage.getItem(product.productid) === 'true';
+                if (product && product.productId) {
+                  this.fetchAverageReview(product.productId);
+                }
+                this.navigateToProducts(categoryName);
+              });
+              this.totalPages = response.data.totalPages;
 
-            // 循環調用fetchAverageReview為每個產品獲取平均評價
+              // 循環調用fetchAverageReview為每個產品獲取平均評價
 
-          } else {
-            // 如果返回的內容為空，則清空產品列表並設置總頁數為1
+            } else {
+              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
+              this.products = [];
+              this.totalPages = 1;
+              // 可以在這裡添加一個用戶提示，告知沒有找到產品
+              // alert('沒有找到產品。');
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching products:", error);
+            // 處理錯誤情況，如API呼叫失敗等
             this.products = [];
             this.totalPages = 1;
-            // 可以在這裡添加一個用戶提示，告知沒有找到產品
-            // alert('沒有找到產品。');
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching products:", error);
-          // 處理錯誤情況，如API呼叫失敗等
-          this.products = [];
-          this.totalPages = 1;
-          // 提示用戶檢查錯誤
-          // alert('檢索產品時發生錯誤。');
-        });
+            // 提示用戶檢查錯誤
+            // alert('檢索產品時發生錯誤。');
+          });
     },
     navigateToProducts(category) {
       this.$router.push({ name: 'ProductList', params: { category: category } });
@@ -202,31 +202,38 @@ export default {
 <style scoped>
 /****** 按鈕部分 ******/
 .category-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  background-color: #FEB5C5;
+  /* background-color: #b5effe; */
+  /* background-color: rgb(243, 202, 68); */
+  background: url('@/assets/background2.jpg') no-repeat center center;
+  background-size: cover;
+
+
+  /* 或者你可以使用 contain 根据你的需要 */
+  height: 85px;
+  margin: 0 auto;
+
 }
 
+/* 按鈕置中 */
 .text-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
 }
 
+/* 按鈕 */
 .btn {
-  margin: 1px;
+  margin: 3px;
   min-width: 150px;
   min-height: 65px;
-  font-size: 1.3rem;
-  color: #333333;
+  font-size: 1.4rem;
+  color: rgb(8, 8, 8);
   transition: background-color 0.2s, box-shadow 0.2s;
+  background-color: rgba(206, 148, 105, 0.5);
+  /* opacity: 0.5; */
 }
 
 .btn:hover {
   background-color: #FAD0E4;
+  background-color: rgb(255, 179, 156);
   /* 淺藍色高亮 */
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   /* 細微陰影 */
@@ -252,15 +259,14 @@ export default {
 
 /* 懸停時改變底線顏色 */
 .v-list-item:hover {
-  border-bottom-color: #CE93D8;
+  border-bottom-color: rgb(101, 65, 231);
 }
 
 /* 下拉菜單項目懸停時的背景顏色 */
 .v-list-item:hover {
-  background-color: #FAD0E4;
+  background-color: rgb(231, 199, 199)
 }
 </style>
-
 
 
 

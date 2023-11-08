@@ -1,20 +1,19 @@
 <template>
   <v-app>
     <v-main>
+      <sidebar></sidebar>
       <v-container>
-<!--        <navbar></navbar>-->
-        <sidebar></sidebar>
 
         <!-- 搜索訂單ID欄 -->
-        <div class="selectbar">
+        <!-- <div class="selectbar">
           <v-text-field v-model="searchQuery" label="賣家搜索訂單ID" @input="searchOrder"></v-text-field>
-        </div>
+        </div> -->
 
         <!-- 賣家家訂單頁面 -->
         <!-- 標籤選項卡 -->
         <v-tabs v-model="tab" align-with-title :items="items" class="elevation-1 mt-5">
           <v-tab v-for="(item, index) in items" :key="item" :value="item" @click="handleTabClick(item)"
-            :class="{ 'tab--active': tab === item }">
+                 :class="{ 'tab--active': tab === item }">
             {{ item }}
           </v-tab>
         </v-tabs>
@@ -36,7 +35,7 @@
               <div v-for="product in order.products" :key="product.imagepath" class="d-flex align-center mb-2">
 
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                  class="product-image mr-2" style="width: 100px;"></v-img>
+                       class="product-image mr-2" style="width: 100px;"></v-img>
 
                 <div class="flex-grow-1">
                   <strong>{{ product.productName }}</strong>
@@ -86,6 +85,7 @@ export default {
       totalPages: 1, // 初始设置为1，将从API响应中更新
       pageSize: 10, // 每页的项目数，这应该与后端设置匹配
       isLoading: false, // 加载状态标志
+
     };
   },
   watch: {
@@ -116,42 +116,42 @@ export default {
       this.isLoading = true;
 
       axios
-        .get('http://localhost:8080/seller/api/sellerfindorders/Status', {
-          params: {
-            p: this.currentPage,
-            statusid: statusid,
-          },
-        })
-        .then((response) => {
-          this.orders = response.data.content;
-          this.totalPages = response.data.totalPages;
-          // 确保我们在前端显示从1开始的页码
+          .get('http://localhost:8080/seller/api/sellerfindorders/Status', {
+            params: {
+              p: this.currentPage,
+              statusid: statusid,
+            },
+          })
+          .then((response) => {
+            this.orders = response.data.content;
+            this.totalPages = response.data.totalPages;
+            // 确保我们在前端显示从1开始的页码
 
 
-          this.isLoading = false;
-        })
-        .catch((error) => {
-          console.error('無法檢索訂單：', error);
-          this.isLoading = false;
-        });
+            this.isLoading = false;
+          })
+          .catch((error) => {
+            console.error('無法檢索訂單：', error);
+            this.isLoading = false;
+          });
     },
     // 找所有訂單
     fetchAllOrders() {
       this.isLoading = true;
       axios
-        .get('http://localhost:8080/seller/api/findSellerOrders', {
-          params: { p: this.currentPage },
-        })
-        .then((response) => {
-          this.orders = response.data.content;
-          this.totalPages = response.data.totalPages;
-          this.isLoading = false;
-          console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
-        })
-        .catch((error) => {
-          console.error('無法檢索所有訂單：', error);
-          this.isLoading = false;
-        });
+          .get('http://localhost:8080/seller/api/findSellerOrders', {
+            params: { p: this.currentPage },
+          })
+          .then((response) => {
+            this.orders = response.data.content;
+            this.totalPages = response.data.totalPages;
+            this.isLoading = false;
+            console.log(`总页数: ${this.totalPages}, 当前页数: ${this.currentPage}`);
+          })
+          .catch((error) => {
+            console.error('無法檢索所有訂單：', error);
+            this.isLoading = false;
+          });
     },
 
 
@@ -191,6 +191,20 @@ export default {
 </script>
 
 <style scoped>
+.v-application {
+  background-image: url('@/assets/seller01.png'), linear-gradient(to bottom, #dfdd8d, #d0aaae);
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
+}
+
+/* ::v-deep .v-navigation-drawer {
+  background-image: linear-gradient(to bottom, rgb(247, 188, 38), rgb(121, 25, 12));
+} */
+
 .product-image {
   width: auto;
   max-width: 150px;
@@ -199,20 +213,13 @@ export default {
 }
 
 .light-gray-background {
-  background-color: #f9e3d7;
-  /* 訂單背景色 */
+  background-color: rgba(249, 227, 215, 0.5);
+  /* 訂單背景色 + 透明度 */
 }
 
-.selectbar {
-  background-color: rgb(255, 255, 255);
-  /* color: #FE6B8B; */
-
-  margin-top: 30px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
 
 .tab--active {
-  background-color: #f8cdb5;
+  background-color: #d0aaae;
   /* 指定選中標籤顏色 */
 }
 </style>
