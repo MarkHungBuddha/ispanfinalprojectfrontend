@@ -10,6 +10,12 @@ const routes = [
     meta: { title: '賣家中心' }
   },
   {
+    path: '/phone',
+    name: 'Phone',
+    component: () => import("@/views/Phone.vue"),
+    meta: { title: '手機認證' }
+  },
+  {
     path: '/',
     name: 'Home',
     component: () => import("@/views/Home.vue"),

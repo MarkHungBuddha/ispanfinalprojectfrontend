@@ -92,6 +92,7 @@
   :rules="phoneRules"
   label="電話號碼"
   required
+  disabled
 ></v-text-field>
 
 
@@ -100,6 +101,7 @@
                   v-model="user.email"
                   label="Email"
                   required
+                  disabled
               ></v-text-field>
 
               <!-- 國家 -->
