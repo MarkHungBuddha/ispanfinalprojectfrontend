@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-main>
+      <sidebar-buyer/>
       <v-container>
         <div v-for="review in state.reviews" :key="review.orderid" class="mb-4">
           <v-card
@@ -27,6 +28,7 @@
 import { onMounted, reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import SidebarBuyer from "../components/sidebarBuyer.vue";
 
 
 const router = useRouter();
@@ -53,7 +55,7 @@ const fetchProductInfo = async (productId) => {
 
 const fetchReviewsAndProducts = async () => {
   try {
-    const reviewsResponse = await axios.get('http://localhost:8080/seller/api/reviews');
+    const reviewsResponse = await axios.get('http://localhost:8080/customer/api/reviews');
     state.reviews = reviewsResponse.data;
     for (const review of state.reviews) {
       await fetchProductInfo(review.productid); // 為每個評論獲取商品信息

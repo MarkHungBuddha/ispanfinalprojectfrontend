@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <sidebar></sidebar>
+      <sidebar-buyer/>
       <v-container>
         <div v-for="qa in state.askedQuestions" :key="qa.qandaid" class="mb-4">
           <v-card @click="goToProduct(qa.productId)">
@@ -25,6 +25,7 @@
 import { onMounted, reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import SidebarBuyer from "../components/sidebarBuyer.vue";
 
 const router = useRouter();
 const state = reactive({

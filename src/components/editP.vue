@@ -23,7 +23,7 @@
               <v-text-field
                   v-model="user.username"
                   label="會員帳號"
-                  disabled
+                  readonly
               ></v-text-field>
 
               <!-- 名字 -->
@@ -73,7 +73,6 @@
                       ref="birthdate"
                       v-model="user.birthdate"
                       label="出生日期"
-                      prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
                       v-on="on"
@@ -87,7 +86,8 @@
               </v-menu>
 
 
-              <v-card>
+
+
 
 
               <!-- 電話 -->
@@ -96,22 +96,34 @@
                   :rules="phoneRules"
                   label="電話號碼"
                   required
-                  disabled
+                  readonly
               ></v-text-field>
-              <v-btn v-if="membertypeid >= 3" @click="$router.push('/phone')">
-                手機驗證
-              </v-btn>
-              <!-- 使用 v-else 显示已验证的图标 -->
-              <v-icon v-else color="green">mdi-check-circle</v-icon>
-              電話號碼已認證
-              </v-card>
+
+              <v-row align="center" class="phone-verification-row">
+                <v-col cols="auto" class="shrink-on-mobile">
+                  <v-btn v-if="user.membertypeid == 3" @click="$router.push('/phone')">
+                    進入手機認證頁
+                  </v-btn>
+                  <template v-else-if="user.membertypeid < 3">
+                    <v-icon color="green">mdi-check-circle</v-icon>
+                    <span class="verified-text">手機號碼已認證</span>
+                  </template>
+                </v-col>
+              </v-row>
               <!-- Email -->
               <v-text-field
                   v-model="user.email"
                   label="Email"
                   required
-                  disabled
+                  readonly
               ></v-text-field>
+
+              <v-row align="center" class="email-verification-row">
+                <v-col cols="auto" class="shrink-on-mobile">
+                  <!-- 假设email也有一个状态标识，我们这里使用membertypeid来判断 -->
+                  <v-icon color="green">mdi-check-circle</v-icon><span class="verified-text">Email已認證</span>
+                </v-col>
+              </v-row>
 
               <!-- 國家 -->
               <v-select
@@ -319,6 +331,20 @@ export default {
     },
   },
   methods: {
+    async fetchUserProfile() {
+      try {
+        const { data } = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
+        if (data.isLoggedIn) {
+          const { username, role, memberId } = data;
+          this.user.username = username;
+          this.user.membertype = role;
+          this.isLoggedIn = true;
+          this.fetchMemberData(memberId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user profile: ", error);
+      }
+    },
     genderChanged(newGender) {
       // 如果選擇的性別不是 "其他"，則清空自定義性別字段並更新用戶的性別
       if (newGender !== '其他') {
@@ -514,4 +540,29 @@ export default {
 <style scoped>
 @import "flatpickr/dist/flatpickr.css";
 
+.v-input .v-input__control .v-input__slot {
+  opacity: 1; /* 全不透明 */
+  color: #000000; /* 黑色文字 */
+}
+
+/* 或者如果你需要更具體的針對文本欄 */
+.v-text-field .v-text-field__slot {
+  opacity: 1; /* 全不透明 */
+  color: #000000; /* 黑色文字 */
+}
+.phone-verification-row {
+  margin-top: -30px; /* Adds a small space between the text field and this row */
+}
+.email-verification-row {
+  margin-top:-30px; /* Adds a small space between the text field and this row */
+}
+
+.shrink-on-mobile {
+  flex-basis: auto;
+}
+
+.verified-text {
+  color: green;
+  font-size: 0.8rem; /* Adjust the size to your preference */
+}
 </style>

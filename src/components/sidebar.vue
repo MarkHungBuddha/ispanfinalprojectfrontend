@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import QuestionList from "../views/QuestionList.vue";
+import QuestionList from "../views/CustomerALLQuestion.vue";
 
 export default {
   computed: {
@@ -96,10 +96,10 @@ export default {
       this.$router.push('/unanswer');
     },
     SellerQuestionList(){
-      this.$router.push('/seller/ALLQuestion');
+      this.$router.push('/seller/SellerALLQuestion');
     },
     SellerReviewList(){
-      this.$router.push('/seller/AllReview');
+      this.$router.push('/seller/SellerAllReview');
     },
 
   },

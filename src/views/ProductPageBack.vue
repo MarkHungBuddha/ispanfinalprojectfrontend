@@ -39,11 +39,86 @@ import sidebar from "@/components/sidebar.vue";
             </p>
             <p v-else>價格: {{ productData.price }}</p>
             <p>數量: {{ productData.quantity }}</p>
-            <p>商品資料:{{ productData.description }}</p>
           </v-col>
-
-
         </v-row>
+        <v-card>
+          <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
+            <v-tab :value="1">商品描述</v-tab>
+            <v-tab :value="2">商品問與答</v-tab>
+            <v-tab :value="3">商品評論</v-tab>
+          </v-tabs>
+          <v-window v-model="tab">
+            <v-window-item :value="1">
+              <v-container fluid>
+                <v-row>
+                  <v-col cols="12">
+                    <v-card class="my-3 product-description-card">
+                      <v-card-text :style="{ 'white-space': 'pre-line' }">
+                        {{ productData.description }}
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-window-item>
+
+            <v-window-item :value="2">
+              <v-container style="max-width:600px">
+                <v-row v-for="qanda in productQandAs" :key="qanda.questiontime">
+                  <!-- 问答组合的外部v-card -->
+                  <v-card class="mb-4 pa-3 chat-screen full-width-card" color="#e8eaf6">
+                    <v-card class="mb-2 chat-card question-card">
+                      <v-list-item class="received-message">
+                        <v-list-item-content>
+                          <v-card-text class="pa-2 d-flex flex-column">
+                            <span class="text-subtitle-1">{{ qanda.question }}</span>
+                            <span class="text-caption font-italic align-self-start">{{ qanda.questiontime }}</span>
+                          </v-card-text>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-card>
+
+                    <!-- 如果存在答案，则显示卖家的回答 -->
+                    <v-card v-if="qanda.answer" class="chat-card answer-card">
+                      <v-list-item class="sent-message justify-end">
+                        <v-list-item-content>
+                          <v-card-text class="pa-2 d-flex flex-column">
+                            <span class="text-subtitle-1 chat-message">{{ qanda.answer }}</span>
+                            <span class="text-caption font-italic align-self-start">{{ qanda.answertime }}</span>
+                          </v-card-text>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-card>
+                  </v-card>
+                </v-row>
+              </v-container>
+            </v-window-item>
+
+
+            <v-window-item :value="3">
+              <v-container fluid>
+                <v-row>
+                  <v-col cols="12" v-for="review in productReviews" :key="review.orderdetailid">
+                    <v-card>
+                      <template v-slot:title>
+                        <v-rating v-model="review.rating" readonly></v-rating>
+                      </template>
+
+                      <template v-slot:subtitle>
+                        {{ review.reviewtime }}
+                      </template>
+
+                      <template v-slot:text>
+                        {{ review.reviewcontent }}
+                      </template>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-window-item>
+
+          </v-window>
+        </v-card>
 
       </v-container>
 

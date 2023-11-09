@@ -1,6 +1,7 @@
 <script setup>
 
 import CategoryList from '@/components/CategoryList.vue';
+import Swal from 'sweetalert2'
 </script>
 
 <template>
@@ -24,6 +25,7 @@ import CategoryList from '@/components/CategoryList.vue';
 
 <script>
 import axios from 'axios';
+import router from "./router";
 
 export default {
   data() {
@@ -73,6 +75,23 @@ export default {
     }
   }
 };
+
+axios.interceptors.response.use(response => {
+  return response;
+}, error => {
+  if (error.response.status === 401) {
+    // 當接收到 401 錯誤時
+    Swal.fire({
+      icon: 'error',
+      title: '權限不足',
+      text: '請登入會員或進行手機認證。',
+    }).then(() => {
+      router.push('/'); // 重定向到首頁
+    });
+  }
+  return Promise.reject(error);
+});
+
 </script>
 <style>
 html,

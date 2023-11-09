@@ -187,30 +187,30 @@ const routes = [
     meta: { title: '回答問題' },
   },
   {
-    path: '/seller/AllReview',
+    path: '/seller/SellerAllReview',
     name: 'SellerAllReview',
-    component: () => import('@/views/sellerAllReviews.vue'), // 确保路径正确
+    component: () => import('@/views/SellerAllReview.vue'), // 确保路径正确
     props: true,
     meta: {title: '全部評論'},
   },
   {
-    path: '/customer/AllReview',
+    path: '/customer/CustomerAllReview',
     name: 'CustomerAllReview',
-    component: () => import('@/views/AllReviews.vue'), // 确保路径正确
+    component: () => import('@/views/CustomerAllReview.vue'), // 确保路径正确
     props: true,
     meta: {title: '全部評論'},
   },
   {
-    path: '/customer/ALLQuestion',
-    name: 'SellerALLQuestion',
-    component: () => import('@/views/QuestionList.vue'), // 确保路径正确
+    path: '/customer/CustomerALLQuestion',
+    name: 'CustomerALLQuestion',
+    component: () => import('@/views/CustomerALLQuestion.vue'), // 确保路径正确
     props: true,
     meta: {title: '全部問題'},
   },
   {
-    path: '/seller/ALLQuestion',
-    name: 'CustomerALLQuestion',
-    component: () => import('@/views/ProductQandA.vue'), // 确保路径正确
+    path: '/seller/SellerALLQuestion',
+    name: 'SellerALLQuestion',
+    component: () => import('@/views/SellerALLQuestion.vue'), // 确保路径正确
     props: true,
     meta: {title: '全部問題'},
   },

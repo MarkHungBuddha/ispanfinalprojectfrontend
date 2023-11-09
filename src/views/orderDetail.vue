@@ -275,11 +275,13 @@ export default {
     },
     createProductReview(product) {
       console.log("Member ID is: ", this.memberId); // This will print the memberId to the console
+      console.log("orderDetailid ID is: ", product.orederDetailid); // This will print the memberId to the console
+
       const productReviewDTO = {
         productid: product.productid,
         memberid: this.memberId, // Assuming you will get the memberId from your Vuex store or props
-        orderid: this.orderid,
-        orderDetailid: product.orderDetailid,
+        orderid: parseInt(this.orderid, 10),
+        orderdetailid: product.orederDetailid,
         rating: product.rating,
         reviewcontent: product.reviewcontent,
         reviewtime: new Date().toISOString(),
@@ -289,7 +291,7 @@ export default {
           .then(response => {
             if (response.status === 200) {
               // If the response status is 200, navigate to /customer/AllReview
-              this.$router.push('/customer/AllReview');
+              this.$router.push('/customer/CustomerAllReview');
             }
           })
           .catch(error => {

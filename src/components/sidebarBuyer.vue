@@ -57,10 +57,10 @@ export default {
     },
 
     CustomerQuestionList(){
-      this.$router.push('/customer/ALLQuestion');
+      this.$router.push('/customer/CustomerALLQuestion');
     },
     CustomerReviewList(){
-      this.$router.push('/customer/AllReview');
+      this.$router.push('/customer/CustomerAllReview');
     },
   }
 };

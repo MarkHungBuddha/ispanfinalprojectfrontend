@@ -1,53 +1,34 @@
 <script setup>
 
+import Sidebar from "../components/sidebar.vue";
 </script>
 
 <template>
   <v-app>
     <v-main>
+        <sidebar></sidebar>
       <v-container>
-
 
         <v-row style="max-width: 500px">
           <!-- 價格範圍滑塊和應用篩選按鈕在同一行 -->
-          <v-col cols="12" sm="8">
-            <v-range-slider
-                v-model="range"
-                :max="99999"
-                :min="0"
-                :step="1"
-                hide-details
-                class="align-center"
-            >
+          <v-col>
+            <v-range-slider v-model="range" :max="99999" :min="0" :step="1" hide-details class="align-center">
               <!-- 使用 v-slot 來插入文本框 -->
               <template v-slot:prepend>
-                <v-text-field
-                    v-model="range[0]"
-                    hide-details
-                    dense
-                    outlined
-                    type="number"
-                    class="mt-0 pt-0"
-                    style="width: 90px"
-                ></v-text-field>
+                <span class="slider-prepend-text">價格搜索 </span>
+
+                <v-text-field v-model="range[0]" hide-details dense outlined type="number" class="mt-0 pt-0"
+                              style="width: 90px"></v-text-field>
               </template>
               <template v-slot:append>
-                <v-text-field
-                    v-model="range[1]"
-                    hide-details
-                    dense
-                    outlined
-                    type="number"
-                    class="mt-0 pt-0"
-                    style="width: 90px"
-                ></v-text-field>
+                <v-text-field v-model="range[1]" hide-details dense outlined type="number" class="mt-0 pt-0"
+                              style="width: 90px"></v-text-field>
+                <!-- 在這裡添加放大鏡圖示按鈕 -->
+                <v-btn @click="applyFilters" icon>
+                  <v-icon>mdi-magnify</v-icon>
+                </v-btn>
               </template>
             </v-range-slider>
-          </v-col>
-          <v-col cols="12" sm="4" class="d-flex align-end">
-            <v-btn  @click="applyFilters" icon>
-              <v-icon>mdi-magnify</v-icon>
-            </v-btn>
           </v-col>
         </v-row>
 
@@ -55,12 +36,8 @@
 
           <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
 
-            <product-card
-                :product="product"
-                @navigate="navigateToProduct"
-                @add-to-cart="addProductToCart"
-                @toggle-wishlist="toggleWishlist"
-            ></product-card>
+            <product-card :product="product" @navigate="navigateToProduct" @add-to-cart="addProductToCart"
+                          @toggle-wishlist="toggleWishlist"></product-card>
           </v-col>
         </v-row>
 
@@ -183,7 +160,7 @@ export default {
         console.error('Product ID is undefined.'); // 如果 productid 為 undefined，記錄錯誤
         return;
       }
-      this.$router.push({name: 'ProductPage', params: {productId: productid}});
+      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
     },
 
 
@@ -196,7 +173,7 @@ export default {
               productId: productid,
             }
           }, {
-            headers: {'Content-Type': 'application/json'}
+            headers: { 'Content-Type': 'application/json' }
           })
           .then(response => {
             // 成功添加到購物車後的操作，比如通知用戶
@@ -325,6 +302,13 @@ export default {
 </script>
 
 <style >
+.slider-prepend-text {
+  margin-right: 8px;
+  /* 添加適當的空間 */
+  font-size: 2rem;
+  /* 增加字體大小 */
+}
+
 .v-application {
   /* 將漸層方向改為從上到下 */
   background-image: linear-gradient(to bottom, #e2d0b6, #cabae6);
@@ -381,6 +365,7 @@ export default {
   white-space: normal;
   line-height: 1.2;
   text-align: center;
+  font-size: 1em !important;
   /* 確保文字居中對齊 */
 }
 
