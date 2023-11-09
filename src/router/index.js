@@ -201,16 +201,16 @@ const routes = [
     meta: {title: '全部評論'},
   },
   {
-    path: '/seller/ALLQuestion',
+    path: '/customer/ALLQuestion',
     name: 'SellerALLQuestion',
-    component: () => import('@/views/ProductQandA.vue'), // 确保路径正确
+    component: () => import('@/views/QuestionList.vue'), // 确保路径正确
     props: true,
     meta: {title: '全部問題'},
   },
   {
-    path: '/customer/ALLQuestion',
+    path: '/seller/ALLQuestion',
     name: 'CustomerALLQuestion',
-    component: () => import('@/views/QuestionList.vue'), // 确保路径正确
+    component: () => import('@/views/ProductQandA.vue'), // 确保路径正确
     props: true,
     meta: {title: '全部問題'},
   },

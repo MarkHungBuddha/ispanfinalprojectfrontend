@@ -136,6 +136,7 @@ export default {
             this.$store.dispatch('updateLoginStatus', true);
             // 如果需要，还可以分发其他 action 更新用户信息或 memberId
             this.$store.dispatch('updateMemberInfo', response.data.memberInfo);
+            this.$store.dispatch('updateMemberId', response.data.userId);
             // 重定向到首页或用户仪表盘
             this.$router.push({ name: 'Home' });
           }

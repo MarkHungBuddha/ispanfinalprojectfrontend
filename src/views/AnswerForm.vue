@@ -38,11 +38,11 @@ const memberImgPath = route.query.memberImgPath;
 const submitAnswer = async () => {
   try {
     const qandaId = route.params.qandaId;
-    const requestBody = {
-      answer: answer.value, // 將回答包裝成一個對象
-    };
-    await axios.put(`http://localhost:8080/seller/api/product/qanda/answer/${qandaId}`, requestBody);
-    // 重定向回未回答問題頁面
+    const answerText = answer.value; // 获取答案的文本
+    const params = new URLSearchParams({ answer: answerText }).toString(); // 创建查询字符串
+
+    await axios.put(`http://localhost:8080/seller/api/product/qanda/answer/${qandaId}?${params}`);
+    // 重定向回未回答问题页面
     router.push('/unanswer');
   } catch (error) {
     console.error('Error submitting answer:', error);

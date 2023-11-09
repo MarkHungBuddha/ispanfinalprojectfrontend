@@ -7,6 +7,16 @@
         <v-btn icon @click="goBack">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
+        <v-dialog v-model="dialog" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">提交失敗</v-card-title>
+            <v-card-text>您的評論提交失敗，請稍後再試。</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="dialog = false">好的</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
         <!-- 為訂單詳情卡片設置最大寬度並添加背景顏色 -->
         <div v-if="orderDetails" class="mx-auto order-card">
@@ -151,6 +161,7 @@ export default {
       selectedDistrict: '', // 使用者選擇的區域
       canAddReview: false,
       reviewedProducts: {},
+      dialog: false, // Add this new property
       rules: {
         required: value => !!value || 'Required.', // This is a simple required rule
         // ... you can add other rules as needed
@@ -263,28 +274,30 @@ export default {
           });
     },
     createProductReview(product) {
-      // 使用计算属性中的 memberId
-
-
-      // 注意：这里也改为使用计算属性的 memberId
+      console.log("Member ID is: ", this.memberId); // This will print the memberId to the console
       const productReviewDTO = {
         productid: product.productid,
-        memberid: null,
+        memberid: this.memberId, // Assuming you will get the memberId from your Vuex store or props
         orderid: this.orderid,
         orderDetailid: product.orderDetailid,
         rating: product.rating,
         reviewcontent: product.reviewcontent,
-        reviewtime: new Date().toISOString(), // 获取当前时间并转换为 ISO 8601 字符串
+        reviewtime: new Date().toISOString(),
       };
 
       axios.post('http://localhost:8080/customer/api/reviews', productReviewDTO)
           .then(response => {
-            // 处理成功提交评价的逻辑...
+            if (response.status === 200) {
+              // If the response status is 200, navigate to /customer/AllReview
+              this.$router.push('/customer/AllReview');
+            }
           })
           .catch(error => {
             console.error('提交评价失败：', error);
+            this.dialog = true; // If there's an error, show the dialog
           });
     },
+
 
     // 方法：獲取訂單詳情
     fetchOrderDetails() {
