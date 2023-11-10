@@ -84,7 +84,17 @@ axios.interceptors.response.use(response => {
     Swal.fire({
       icon: 'error',
       title: '權限不足',
-      text: '請登入會員或進行手機認證。',
+      text: '請登入會員。',
+    }).then(() => {
+      router.push('/'); // 重定向到首頁
+    });
+  }
+  if (error.response.status === 403) {
+    // 當接收到 401 錯誤時
+    Swal.fire({
+      icon: 'error',
+      title: '權限不足',
+      text: '請進行手機認證。',
     }).then(() => {
       router.push('/'); // 重定向到首頁
     });

@@ -89,7 +89,7 @@ export default {
       this.fetchProducts(this.selectedCategoryName, minPrice, maxPrice);
     },
     fetchWishlist() {
-      axios.get("http://localhost:8080/customer/api/wishlist")
+      axios.get("http://localhost:8080/public/api/wishlist")
           .then(response => {
             // Assuming response.data is the array of WishlistDTO objects
             this.wishlist = response.data;

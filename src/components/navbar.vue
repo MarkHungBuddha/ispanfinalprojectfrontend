@@ -4,9 +4,10 @@
       <v-btn text @click="redirectTo('/')">
         <img src="https://i.imgur.com/tsjp9Vx.jpg" alt="Logo" class="logo-img">
       </v-btn>
-      <v-btn v-if="isLoggedIn" text @click="redirectTo('/seller')" icon>
+      <v-btn v-if="isLoggedIn && userType < 3" text @click="redirectTo('/seller')" icon>
         <img src="https://i.imgur.com/MBHoqXu.png" alt="Seller" class="icon-img">
       </v-btn>
+
     </v-toolbar-title>
 
     <!-- 新的搜尋框組件 -->
@@ -58,7 +59,8 @@ export default {
   data() {
     return {
       searchText: '',
-      loading: false
+      loading: false,
+      userType: null,  // 添加用於存儲用戶類型的變數
     };
   },
   computed: {
@@ -77,7 +79,7 @@ export default {
           });
     },
     redirectToWishList() {
-      axios.get('http://localhost:8080/customer/api/wishlist')
+      axios.get('http://localhost:8080/public/api/wishlist')
           .then((response) => {
             this.$store.commit('setWishList', response.data);
             this.$router.push('/wishList');
@@ -94,7 +96,18 @@ export default {
             this.$store.dispatch('updateLoginStatus', false);
             this.$router.push('/');
           });
-    }
+    },
+    getuserType() {
+      axios.get("http://localhost:8080/customer/api/userType")
+          .then(response => {
+            this.userType = response.data; // 將用戶類型存儲到 userType 變數
+          })
+          .catch(error => {
+            console.error("Error fetching user type:", error);
+          });
+    },
+
+
   },
   watch: {
     isLoggedIn(newVal, oldVal) {
@@ -103,8 +116,12 @@ export default {
   },
   created() {
     console.log("isLoggedIn in child:", this.isLoggedIn);
-  }
+  },
+  mounted() {
+    this.getuserType(); // 在組件掛載後調用 getuserType 方法
+  },
 };
+
 </script>
 
 

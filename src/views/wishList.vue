@@ -77,7 +77,7 @@ export default {
   },
   created() {
     if (!this.$store.state.wishlist.length) {
-      axios.get('http://localhost:8080/customer/api/wishlist')
+      axios.get('http://localhost:8080/public/api/wishlist')
           .then((response) => {
             this.$store.commit('setWishList', response.data);
           });
