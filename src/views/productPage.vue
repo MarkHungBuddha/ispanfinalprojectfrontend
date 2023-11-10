@@ -42,8 +42,8 @@ import navbar from "@/components/navbar.vue";
 
         <!-- Buttons -->
         <v-col cols="4" md="3" class="d-flex flex-column align-end justify-start">
-          <v-btn color="pink" @click="addToWishlist" class="mb-2 self-end">Add to Wishlist</v-btn>
-          <v-btn color="green" @click="addToCart" class="self-end">Add to Cart</v-btn>
+          <v-btn color="pink" @click="addToWishlist" class="mb-2 self-end">加入願望清單</v-btn>
+          <v-btn color="green" @click="addToCart" class="self-end">加入購物車</v-btn>
         </v-col>
       </v-row>
       <!--      <v-dialog v-model="dialog" max-width="290">-->
@@ -148,7 +148,7 @@ import navbar from "@/components/navbar.vue";
 
 <script>
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 export default {
   data() {
     return {
@@ -255,6 +255,12 @@ export default {
       try {
         const response = await axios.post(`http://localhost:8080/customer/api/wishlist/${this.productData.productId}`);
         if (response.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "商品已加入願望清單",
+            showConfirmButton: false,
+            timer: 1000
+          })
           this.dialogMessage = "商品已加入願望清單";
           this.dialogIcon = "mdi-check-circle";
           this.dialogIconColor = "success";
@@ -264,6 +270,12 @@ export default {
         }
       } catch (error) {
         this.showErrorDialog(error.message || "Error adding to wishlist");
+        Swal.fire({
+          icon: "warning",
+          title: "商品已經加入願望清單",
+          showConfirmButton: false,
+          timer: 1000
+        })
       }
     },
     async addToCart() {
@@ -272,15 +284,27 @@ export default {
         const addToCartUrl = `http://localhost:8080/customer/api/shoppingCart?productId=${this.productId}`;
         const response = await axios.post(addToCartUrl);
         if (response.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "商品已加入購物車",
+            showConfirmButton: false,
+            timer: 1000
+          })
+
           this.dialogMessage = "商品已加入購物車";
           this.dialogIcon = "mdi-check-circle";
           this.dialogIconColor = "success";
           this.dialog = true;
+
         } else {
           this.showErrorDialog("Failed to add to cart");
         }
       } catch (error) {
-        this.showErrorDialog(error.message || "Error adding to cart");
+        Swal.fire({
+          icon: 'error',
+          title: '商品加入購物車失敗',
+          text: error.message || "Error adding to cart",
+        });
       }
     },
 

@@ -1,5 +1,6 @@
 <script setup>
 import navbar from "@/components/navbar.vue";
+import Swal from 'sweetalert2';
 </script>
 <style>
 .py-2 div {
@@ -121,7 +122,7 @@ body {
       <v-progress-circular indeterminate color="pink-lighten-2"></v-progress-circular>
       <span>結帳中，請稍後....</span>
     </v-overlay>
-    <v-dialog v-model="showDialog" persistent>
+    <!-- <v-dialog v-model="showDialog" persistent>
       <v-card>
         <v-card-title class="headline">提示</v-card-title>
         <v-card-text>{{ dialogMessage }}</v-card-text>
@@ -130,7 +131,7 @@ body {
           <v-btn color="green darken-1" text @click="showDialog = false">確定</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
     <v-container fluid>
       <v-row class="my-4">
         <v-col cols="1"></v-col>
@@ -158,7 +159,7 @@ body {
               <v-icon>mdi-minus</v-icon>
             </v-btn>
             <v-text-field type="number" v-model="item.quantity" class="quantity-input"
-                          @input="onQuantityChange(item, index)"></v-text-field>
+              @input="onQuantityChange(item, index)"></v-text-field>
 
 
             <v-btn icon="$vuetify" small color="green" @click="increment(item, index)" variant="text">
@@ -205,67 +206,94 @@ export default {
       let newQuantity = item.quantity + 1;
       this.changeQuantity(item.productid, newQuantity, index);
     },
+    // 數量為 1 時直接刪除
     decrement(item, index) {
       if (item.quantity > 1) {
         let newQuantity = item.quantity - 1;
         this.changeQuantity(item.productid, newQuantity, index);
       } else {
-        // 數量為 1 時直接刪除
-        this.removeFromCart(item.productid, index);
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+          },
+          buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+          title: "刪除購物車商品",
+
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: '<i class="mdi mdi-check-bold"></i> 確定刪除',
+          cancelButtonText: '<i class="mdi mdi-close-thick"></i> 取消',
+          reverseButtons: true,
+          confirmButtonAriaLabel: '確定刪除',
+          cancelButtonAriaLabel: '取消',
+
+        }).then((result) => {
+          if (result.isConfirmed) {
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: "購物車商品刪除成功",
+              icon: "success"
+            });
+            this.removeFromCart(item.transactionId, index);
+          }
+        });
       }
     },
+
     onQuantityChange(item, index) {
       // 使用者直接修改數量欄位時，會調用這個方法
       const quantity = parseInt(item.quantity); // 確保數量是整數
       if (quantity < 1) {
-        // 如果數量小於1，則重設為1並返回
-        this.$set(this.itemList, index, {
-          ...item,
-          quantity: 1
-        });
-        return;
+        this.removeFromCart(item.productid, index);
       }
       // 呼叫changeQuantity更新數量
       this.changeQuantity(item.productid, quantity, index);
     },
     removeFromCart(transactionId, index) {
       axios
-          .delete(`http://localhost:8080/customer/api/shoppingCart`, {
-            params: {
-              transactionId: transactionId
-            }
-          })
-          .then(response => {
-            this.itemList.splice(index, 1);
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        .delete(`http://localhost:8080/customer/api/shoppingCart`, {
+          params: {
+            transactionId: transactionId
+          }
+        })
+        .then(response => {
+          this.itemList.splice(index, 1);
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     changeQuantity(productid, quantity, index) {
       axios
-          .put(`http://localhost:8080/customer/api/change`, null, {
-            params: {
-              productid: productid,
-              quantity: quantity
-            }
-          })
-          .then(response => {
-            console.log(response.data);
-            // 如果庫存沒問題，更新數量
-            this.itemList[index].quantity = quantity;
-          })
-          .catch(error => {
-            if (error.response && error.response.status === 500) {
-              // 如果超出庫存，顯示錯誤並重設數量
-              this.showDialog = true;
-              this.dialogMessage = '超過庫存';
-              this.itemList[index].quantity = this.itemList[index].quantity - 1;
-            } else {
-              console.error(error);
-            }
-          });
+        .put(`http://localhost:8080/customer/api/change`, null, {
+          params: {
+            productid: productid,
+            quantity: quantity
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          // 如果庫存沒問題，更新數量
+          this.itemList[index].quantity = quantity;
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 500) {
+            // 如果超出庫存，顯示錯誤並重設數量
+            Swal.fire({
+              icon: "warning",
+              title: "超出庫存",
+              showConfirmButton: false,
+              timer: 1000
+            })
+            // this.itemList[index].quantity = this.itemList[index].quantity - 1;
+          } else {
+            console.error(error);
+          }
+        });
     },
     async checkoutItems() {
       this.isCheckingOut = true; // Show the overlay
@@ -296,19 +324,21 @@ export default {
   },
   created() {
     axios
-        .get('http://localhost:8080/customer/api/shoppingCart')
-        .then((response) => {
-          this.itemList = response.data.map(item => ({
-            transactionId: item.transactionId,
-            productid: item.productId, // 確保這裡使用的是 'productid'
-            itemName: item.productname,
-            imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
-            price: item.price,
-            specialPrice: item.specialPrice,
-            quantity: item.quantity,
-            checked: false
-          }));
-        });
+      .get('http://localhost:8080/customer/api/shoppingCart')
+      .then((response) => {
+        this.itemList = response.data.map(item => ({
+          transactionId: item.transactionId,
+
+          productid: item.productId, // 確保這裡使用的是 'productid'
+          itemName: item.productname,
+          imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
+          price: item.price,
+          specialPrice: item.specialPrice,
+          quantity: item.quantity,
+          checked: false
+        }));
+        console.log(transactionId)
+      });
   }
 }
 </script>
