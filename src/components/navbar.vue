@@ -15,7 +15,7 @@
     <v-card class="d-flex align-center justify-center" color="grey-lighten-3" style="width: 40%; padding: 0;">
       <v-card-text style="padding: 0;">
         <v-text-field v-model="searchText" :loading="loading" density="compact" variant="solo" label="Search templates"
-                      append-inner-icon="mdi-magnify" single-line hide-details @click:append="onClick" @keyup.enter="onClick">
+          append-inner-icon="mdi-magnify" single-line hide-details @click:append="onClick" @keyup.enter="onClick">
           <!-- 點擊(click:append)放大鏡圖標時觸發搜索 --><!-- 按下 Enter 鍵時觸發搜索 -->
         </v-text-field>
       </v-card-text>
@@ -74,16 +74,16 @@ export default {
     },
     redirectToShoppingCart() {
       axios.get('http://localhost:8080/customer/api/shoppingCart')
-          .then(() => {
-            this.$router.push('/shoppingCart');
-          });
+        .then(() => {
+          this.$router.push('/shoppingCart');
+        });
     },
     redirectToWishList() {
       axios.get('http://localhost:8080/public/api/wishlist')
-          .then((response) => {
-            this.$store.commit('setWishList', response.data);
-            this.$router.push('/wishList');
-          });
+        .then((response) => {
+          this.$store.commit('setWishList', response.data);
+          this.$router.push('/wishList');
+        });
     },
     onClick() {
       this.$router.push({ name: 'ProductFuzzySearch', query: { search: this.searchText } });
@@ -91,20 +91,20 @@ export default {
     },
 
     logout() {
-      axios.post('http://localhost:8080/customer/member/logout')
-          .then(() => {
-            this.$store.dispatch('updateLoginStatus', false);
-            this.$router.push('/');
-          });
+      axios.post('http://localhost:8080/public/member/logout')
+        .then(() => {
+          this.$store.dispatch('updateLoginStatus', false);
+          this.$router.push('/');
+        });
     },
     getuserType() {
-      axios.get("http://localhost:8080/customer/api/userType")
-          .then(response => {
-            this.userType = response.data; // 將用戶類型存儲到 userType 變數
-          })
-          .catch(error => {
-            console.error("Error fetching user type:", error);
-          });
+      axios.get("http://localhost:8080/public/api/userType")
+        .then(response => {
+          this.userType = response.data; // 將用戶類型存儲到 userType 變數
+        })
+        .catch(error => {
+          console.error("Error fetching user type:", error);
+        });
     },
 
 
