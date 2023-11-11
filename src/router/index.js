@@ -182,7 +182,7 @@ const routes = [
   {
     path: '/answer/:qandaId',
     name: 'AnswerForm',
-    component: () =>import('@/views/AnswerForm.vue'),
+    component: () => import('@/views/AnswerForm.vue'),
     props: true,
     meta: { title: '回答問題' },
   },
@@ -191,28 +191,34 @@ const routes = [
     name: 'SellerAllReview',
     component: () => import('@/views/SellerAllReview.vue'), // 确保路径正确
     props: true,
-    meta: {title: '全部評論'},
+    meta: { title: '全部評論' },
   },
   {
     path: '/customer/CustomerAllReview',
     name: 'CustomerAllReview',
     component: () => import('@/views/CustomerAllReview.vue'), // 确保路径正确
     props: true,
-    meta: {title: '全部評論'},
+    meta: { title: '全部評論' },
   },
   {
     path: '/customer/CustomerALLQuestion',
     name: 'CustomerALLQuestion',
     component: () => import('@/views/CustomerALLQuestion.vue'), // 确保路径正确
     props: true,
-    meta: {title: '全部問題'},
+    meta: { title: '全部問題' },
   },
   {
     path: '/seller/SellerALLQuestion',
     name: 'SellerALLQuestion',
     component: () => import('@/views/SellerALLQuestion.vue'), // 确保路径正确
     props: true,
-    meta: {title: '全部問題'},
+    meta: { title: '全部問題' },
+  },
+  {
+    path: '/PrivacyPolicy',
+    name: 'PrivacyPolicy',
+    component: () => import("@/views/PrivacyPolicy.vue"),
+    meta: { title: '隱私政策' },
   },
 
   // {

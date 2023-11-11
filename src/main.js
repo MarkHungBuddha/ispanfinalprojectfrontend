@@ -21,6 +21,7 @@ import ProductSearchBar from "@/components/CategoryList.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import ProductImageUpload from "@/components/Image.vue";
 import sidebarBuyer from "@/components/sidebarBuyer.vue";
+import Footer from "@/components/footer.vue";
 
 // import 'vuetify/dist/vuetify.min.css';
 // 設定 Axios
@@ -57,6 +58,7 @@ app.component('productCategortCard', productCategoryCard)
 app.component('ProductSearchBar', ProductSearchBar)
 app.component('ProductCard', ProductCard)
 app.component('sidebarBuyer', sidebarBuyer);
+app.component('Footer ', Footer);
 
 app.config.globalProperties.$axios = axios;
 

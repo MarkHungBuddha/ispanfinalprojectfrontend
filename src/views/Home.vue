@@ -3,6 +3,8 @@ import { createApp } from 'vue';
 
 import Slider from "@/components/slider.vue";
 import tabitems from '@/components/tabitems.vue';
+import Footer from '@/components/footer.vue';
+
 </script>
 
 <template>
@@ -10,8 +12,8 @@ import tabitems from '@/components/tabitems.vue';
     <v-main>
       <slider class="custom-slider" />
       <tabitems></tabitems>
+      <Footer></Footer>
       <v-container>
-
 
       </v-container>
     </v-main>
