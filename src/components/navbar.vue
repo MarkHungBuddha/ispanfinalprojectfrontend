@@ -125,7 +125,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .icon-img {
   width: 40px;
   /* Adjust as needed */
