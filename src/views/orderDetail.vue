@@ -51,10 +51,10 @@
             <!-- 縣市區 -->
             <div v-else>
               <v-select v-model="selectedCity" :items="Object.keys(taiwanLocations)" label="選擇縣市"
-                        @update:modelValue="updateDistricts"></v-select>
+                @update:modelValue="updateDistricts"></v-select>
 
               <v-select v-model="selectedDistrict" :items="selectedCity ? taiwanLocations[selectedCity] : []"
-                        label="選擇區域"></v-select>
+                label="選擇區域"></v-select>
 
               <v-text-field v-model="newAddress" label="詳細地址"></v-text-field>
 
@@ -73,13 +73,12 @@
           </div>
 
           <!-- 取消訂單 按鈕，當訂單狀態為 '待付款' 或 '待出貨' 時顯示 -->
-          <div class="d-flex justify-end"
-               v-if="orderDetails.statusname === '待付款' || orderDetails.statusname === '待出貨'">
-            <v-btn color="red" @click="confirmCancelOrder(orderDetails.orderid)">取消訂單</v-btn>
+          <div class="d-flex justify-end" v-if="orderDetails.statusname === '待付款' || orderDetails.statusname === '待出貨'">
+            <v-btn color="red" @click="performCancelOrder(orderDetails.orderid)">取消訂單</v-btn>
           </div>
 
           <!-- 確認取消訂單的對話框 -->
-          <v-dialog v-model="showDialog" persistent max-width="300px">
+          <!-- <v-dialog v-model="showDialog" persistent max-width="300px">
             <v-card>
               <v-card-title class="headline">確認操作</v-card-title>
               <v-card-text>您確定要取消這筆訂單嗎？</v-card-text>
@@ -89,7 +88,7 @@
                 <v-btn color="red darken-1" text @click="performCancelOrder">取消訂單</v-btn>
               </v-card-actions>
             </v-card>
-          </v-dialog>
+          </v-dialog> -->
 
           <!-- 顯示產品列表 -->
           <v-card v-for="product in orderDetails.products" :key="product.productid" class="mb-3">
@@ -97,11 +96,11 @@
               <!-- 產品圖片列 -->
               <v-col cols="4">
                 <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image"
-                       class="product-image"></v-img>
+                  class="product-image"></v-img>
               </v-col>
 
               <!-- 產品信息列，使用 "text-right" class 來對齊文本到右側 -->
-              <v-col cols="8" class="text-right product-details" >
+              <v-col cols="8" class="text-right product-details">
                 <v-card-title>{{ product.productName }}</v-card-title>
                 <v-card-subtitle @click="navigateToProduct(product.productid)">
                   數量：{{ product.quantity }}，單價：{{ product.unitprice }}，商品id：{{ product.productid }}
@@ -111,9 +110,8 @@
             <v-card v-if="canAddReview && !reviewedProducts[product.orderDetailId]" class="mt-3">
               <v-card-title>增加評論</v-card-title>
               <v-card-text>
-                <v-rating v-model="product.rating" dense color="amber"  ></v-rating>
-                <v-text-field v-model="product.reviewcontent" label="評論內容" :rules="[rules.required]"
-                              ></v-text-field>
+                <v-rating v-model="product.rating" dense color="amber"></v-rating>
+                <v-text-field v-model="product.reviewcontent" label="評論內容" :rules="[rules.required]"></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-btn color="primary" @click="createProductReview(product)">提交評論</v-btn>
@@ -136,8 +134,8 @@
 <script>
 import axios from 'axios';
 import sidebarBuyer from '@/components/sidebarBuyer.vue';
-import {mapGetters} from 'vuex';
-
+import { mapGetters } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
   components: {
@@ -252,26 +250,26 @@ export default {
     // 检查订单状态的方法
     checkOrderStatus() {
       axios.get(`http://localhost:8080/customer/api/order/${this.orderid}/status`)
-          .then(response => {
-            this.canAddReview = response.data;
-          })
-          .catch(error => {
-            console.error('检查订单状态失败：', error);
-          });
+        .then(response => {
+          this.canAddReview = response.data;
+        })
+        .catch(error => {
+          console.error('检查订单状态失败：', error);
+        });
     },
     checkIfReviewed(orderDetailId) {
       axios.get('http://localhost:8080/customer/api/review/checkreviewed', {
         params: { orderDetailid: orderDetailid }
       })
-          .then(response => {
-            this.$set(this.reviewedProducts, orderDetailId, response.data);
-            this.$nextTick(() => {
-              // 可以在这里进行依赖于 DOM 更新后的操作
-            });
-          })
-          .catch(error => {
-            console.error('檢查評論失敗：', error);
+        .then(response => {
+          this.$set(this.reviewedProducts, orderDetailId, response.data);
+          this.$nextTick(() => {
+            // 可以在这里进行依赖于 DOM 更新后的操作
           });
+        })
+        .catch(error => {
+          console.error('檢查評論失敗：', error);
+        });
     },
     createProductReview(product) {
       console.log("Member ID is: ", this.memberId); // This will print the memberId to the console
@@ -288,34 +286,34 @@ export default {
       };
 
       axios.post('http://localhost:8080/customer/api/reviews', productReviewDTO)
-          .then(response => {
-            if (response.status === 200) {
-              // If the response status is 200, navigate to /customer/AllReview
-              this.$router.push('/customer/CustomerAllReview');
-            }
-          })
-          .catch(error => {
-            console.error('提交评价失败：', error);
-            this.dialog = true; // If there's an error, show the dialog
-          });
+        .then(response => {
+          if (response.status === 200) {
+            // If the response status is 200, navigate to /customer/AllReview
+            this.$router.push('/customer/CustomerAllReview');
+          }
+        })
+        .catch(error => {
+          console.error('提交评价失败：', error);
+          this.dialog = true; // If there's an error, show the dialog
+        });
     },
 
 
     // 方法：獲取訂單詳情
     fetchOrderDetails() {
       axios.get(`http://localhost:8080/customer/api/findOneOrder`, {
-        params: {orderid: this.orderid}
+        params: { orderid: this.orderid }
       })
-          .then(response => {
-            this.orderDetails = response.data;
-            // 確保為訂單中的每個產品調用 checkIfReviewed 方法
-            this.orderDetails.products.forEach(product => {
-              this.checkIfReviewed(product.orderDetailid);
-            });
-          })
-          .catch(error => {
-            console.error('無法檢索訂單詳情：', error);
+        .then(response => {
+          this.orderDetails = response.data;
+          // 確保為訂單中的每個產品調用 checkIfReviewed 方法
+          this.orderDetails.products.forEach(product => {
+            this.checkIfReviewed(product.orderDetailid);
           });
+        })
+        .catch(error => {
+          console.error('無法檢索訂單詳情：', error);
+        });
     },
 
     // 方法：格式化日期時間
@@ -333,47 +331,65 @@ export default {
     // 付款
     payForOrder(orderId) {
       axios.put(`http://localhost:8080/customer/api/${orderId}/payOrder`)
-          .then(response => {
-            // 處理響應，更新訂單詳情
-            this.orderDetails = response.data;
-            this.orderStatusClass = 'status-color-change'; // 應用綠色
-          })
-          .catch(error => {
-            console.error('付款失敗：', error);
-          });
+        .then(response => {
+          // 處理響應，更新訂單詳情
+          this.orderDetails = response.data;
+          this.orderStatusClass = 'status-color-change'; // 應用綠色
+        })
+        .catch(error => {
+          console.error('付款失敗：', error);
+        });
     },
 
     // 確認收貨
     completeOrder(orderId) {
       axios.put(`http://localhost:8080/customer/api/${orderId}/completeOrder`)
-          .then(response => {
-            this.orderDetails = response.data;
-            this.orderStatusClass = 'status-color-change'; // 應用綠色
+        .then(response => {
+          this.orderDetails = response.data;
+          this.orderStatusClass = 'status-color-change'; // 應用綠色
 
-          })
-          .catch(error => {
-            console.error('確認收貨失敗：', error);
-          });
+        })
+        .catch(error => {
+          console.error('確認收貨失敗：', error);
+        });
     },
 
     // 打開確認取消對話框
-    confirmCancelOrder() {
-      this.showDialog = true;
-    },
+    // confirmCancelOrder() {
+    //   this.showDialog = true;
+    // },
 
     // 取消訂單
     performCancelOrder() {
       // 用戶確認取消後執行的操作
       this.showDialog = false; // 閉合對話框
       axios.put(`http://localhost:8080/customer/api/${this.orderDetails.orderid}/cancelOrder`)
-          .then(response => {
-            // 處理成功取消訂單的邏輯...
-            this.orderDetails = response.data;
-            this.orderStatusClass = 'status-color-cancelled'; // 應用紅色
-          })
-          .catch(error => {
-            console.error('取消訂單失敗：', error);
+        .then(response => {
+          // 取消訂單提示窗
+          Swal.fire({
+            title: "你確定要取消訂單嗎?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "確定",
+            cancelButtonText: "返回"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // 處理成功取消訂單的邏輯...
+              this.orderDetails = response.data;
+              this.orderStatusClass = 'status-color-cancelled'; // 應用紅色
+              Swal.fire({
+                title: "取消訂單成功",
+                icon: "success"
+              });
+            }
           });
+
+        })
+        .catch(error => {
+          console.error('取消訂單失敗：', error);
+        });
     },
 
     //地址重新選擇時，清空'區'
@@ -395,17 +411,17 @@ export default {
       axios.put(`http://localhost:8080/customer/api/order/${this.orderDetails.orderid}`, {
         orderaddress: fullAddress
       })
-          .then(response => {
-            this.orderDetails = response.data;
-            this.editingAddress = false; // 關編輯
-          })
-          .catch(error => {
-            console.error('修改地址失敗：', error);
-          });
+        .then(response => {
+          this.orderDetails = response.data;
+          this.editingAddress = false; // 關編輯
+        })
+        .catch(error => {
+          console.error('修改地址失敗：', error);
+        });
     },
     //訂單的商品可跳至商品頁面
     navigateToProduct(productid) {
-      this.$router.push({name: 'ProductPage', params: {productId: productid}});
+      this.$router.push({ name: 'ProductPage', params: { productId: productid } });
     },
 
   }

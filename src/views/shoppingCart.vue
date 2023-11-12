@@ -137,7 +137,7 @@ body {
         <v-col cols="1"></v-col>
         <v-col cols="5" class="mb-2">商品</v-col>
         <v-col cols="2">數量</v-col>
-        <v-col cols="2">價格</v-col>
+        <v-col cols="2">金額</v-col>
         <v-col cols="2" class="text-center">操作</v-col>
       </v-row>
 
@@ -153,15 +153,12 @@ body {
             <v-img :src="item.imgUrl" width="100" height="100" contain></v-img>
             <span class="font-weight-medium name">{{ item.itemName }}</span>
           </v-col>
-
           <v-col cols="2" class="d-flex align-center item_detail">
             <v-btn icon="$vuetify" small color="red" @click="decrement(item, index)" variant="text">
               <v-icon>mdi-minus</v-icon>
             </v-btn>
             <v-text-field type="number" v-model="item.quantity" class="quantity-input"
               @input="onQuantityChange(item, index)"></v-text-field>
-
-
             <v-btn icon="$vuetify" small color="green" @click="increment(item, index)" variant="text">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -169,15 +166,17 @@ body {
 
 
           <v-col cols="2" class="font-weight-bold item_detail" style="margin-top:20px">
-            <p v-if="item.specialPrice && item.specialPrice !== 0">
+            <p v-if="item.specialprice && item.specialprice !== 0">
               <del>${{ item.price * item.quantity }}</del>
-              <span style="color: red; font-size: 1.5em;">${{ item.specialPrice * item.quantity }}</span>
+              <span style="color: red; font-size: 1.5em;">${{ item.specialprice * item.quantity }}</span>
             </p>
             <p v-else>${{ item.price * item.quantity }}</p>
           </v-col>
+
           <v-col cols="2" class="text-center item_detail" style="margin-top:20px">
             <v-btn small color="error" @click="removeFromCart(item.transactionId, index)">刪除</v-btn>
           </v-col>
+
         </v-card>
         <v-col><v-btn @click="checkoutItems" class="checkout-btn">Checkout</v-btn></v-col>
       </v-row>
@@ -212,35 +211,31 @@ export default {
         let newQuantity = item.quantity - 1;
         this.changeQuantity(item.productid, newQuantity, index);
       } else {
-        const swalWithBootstrapButtons = Swal.mixin({
-          customClass: {
-            confirmButton: "btn btn-success",
-            cancelButton: "btn btn-danger"
-          },
-          buttonsStyling: false
-        });
-        swalWithBootstrapButtons.fire({
-          title: "刪除購物車商品",
-
+        // 刪除提示窗
+        Swal.fire({
+          title: "你確定要刪除購物車商品嗎?",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonText: '<i class="mdi mdi-check-bold"></i> 確定刪除',
-          cancelButtonText: '<i class="mdi mdi-close-thick"></i> 取消',
-          reverseButtons: true,
-          confirmButtonAriaLabel: '確定刪除',
-          cancelButtonAriaLabel: '取消',
-
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "確定",
+          cancelButtonText: "返回"
         }).then((result) => {
           if (result.isConfirmed) {
-            swalWithBootstrapButtons.fire({
-              title: "Deleted!",
-              text: "購物車商品刪除成功",
+            //刪除邏輯
+            this.removeFromCart(item.transactionId, index);
+
+            Swal.fire({
+              title: "刪除購物車商品成功",
               icon: "success"
             });
-            this.removeFromCart(item.transactionId, index);
           }
         });
+
       }
+
+
+
     },
 
     onQuantityChange(item, index) {
@@ -326,18 +321,23 @@ export default {
     axios
       .get('http://localhost:8080/customer/api/shoppingCart')
       .then((response) => {
-        this.itemList = response.data.map(item => ({
-          transactionId: item.transactionId,
-
-          productid: item.productId, // 確保這裡使用的是 'productid'
-          itemName: item.productname,
-          imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
-          price: item.price,
-          specialPrice: item.specialPrice,
-          quantity: item.quantity,
-          checked: false
-        }));
-        console.log(transactionId)
+        this.itemList = response.data.map(item => {
+          console.log(item.transactionId); // 打印每個項目的 transactionId，用於調試
+          return {
+            transactionId: item.transactionId,
+            productid: item.productId,
+            itemName: item.productname,
+            imgUrl: `https://i.imgur.com/${item.imagepath}.jpeg`,
+            price: item.price,
+            specialprice: item.specialprice, // 確保這裡使用的是 'specialprice'
+            quantity: item.quantity,
+            checked: false
+            // ...添加其他需要的屬性
+          };
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching shopping cart data:", error);
       });
   }
 }

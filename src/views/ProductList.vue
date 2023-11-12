@@ -1,12 +1,12 @@
 <script setup>
-
+import Swal from 'sweetalert2';
 import Sidebar from "../components/sidebar.vue";
 </script>
 
 <template>
   <v-app>
     <v-main>
-        <sidebar></sidebar>
+      <sidebar></sidebar>
       <v-container>
 
         <v-row style="max-width: 500px">
@@ -18,11 +18,11 @@ import Sidebar from "../components/sidebar.vue";
                 <span class="slider-prepend-text">價格搜索 </span>
 
                 <v-text-field v-model="range[0]" hide-details dense outlined type="number" class="mt-0 pt-0"
-                              style="width: 90px"></v-text-field>
+                  style="width: 90px"></v-text-field>
               </template>
               <template v-slot:append>
                 <v-text-field v-model="range[1]" hide-details dense outlined type="number" class="mt-0 pt-0"
-                              style="width: 90px"></v-text-field>
+                  style="width: 90px"></v-text-field>
                 <!-- 在這裡添加放大鏡圖示按鈕 -->
                 <v-btn @click="applyFilters" icon>
                   <v-icon>mdi-magnify</v-icon>
@@ -37,7 +37,7 @@ import Sidebar from "../components/sidebar.vue";
           <v-col v-for="(product, index) in products" :key="index" cols="12" sm="6" md="4" lg="3">
 
             <product-card :product="product" @navigate="navigateToProduct" @add-to-cart="addProductToCart"
-                          @toggle-wishlist="toggleWishlist"></product-card>
+              @toggle-wishlist="toggleWishlist"></product-card>
           </v-col>
         </v-row>
 
@@ -90,17 +90,17 @@ export default {
     },
     fetchWishlist() {
       axios.get("http://localhost:8080/public/api/wishlist")
-          .then(response => {
-            // Assuming response.data is the array of WishlistDTO objects
-            this.wishlist = response.data;
-            // Update the products' inWishlist status
-            this.products.forEach(product => {
-              product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
-            });
-          })
-          .catch(error => {
-            console.error("Error fetching wishlist:", error);
+        .then(response => {
+          // Assuming response.data is the array of WishlistDTO objects
+          this.wishlist = response.data;
+          // Update the products' inWishlist status
+          this.products.forEach(product => {
+            product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
           });
+        })
+        .catch(error => {
+          console.error("Error fetching wishlist:", error);
+        });
     },
     fetchProducts(categoryName, minPrice = 0, maxPrice = 99999) {
       if (this.selectedCategoryName !== categoryName) {
@@ -109,44 +109,44 @@ export default {
       }
 
       axios
-          .get("http://localhost:8080/public/api/categoryname", {
-            params: {
-              categoryname: categoryName,
-              minPrice: minPrice,
-              maxPrice: maxPrice,
-              page: this.currentPage,
-              pageSize: 4,
-            },
-          })
-          .then((response) => {
-            if (response.data && response.data.content && response.data.content.length > 0) {
-              this.products = response.data.content;
-              this.products.forEach(product => {
-                product.inWishlist = localStorage.getItem(product.productid) === 'true';
-                if (product && product.productid) {
-                  this.fetchAverageReview(product.productid);
-                }
-              });
-              this.totalPages = response.data.totalPages;
+        .get("http://localhost:8080/public/api/categoryname", {
+          params: {
+            categoryname: categoryName,
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+            page: this.currentPage,
+            pageSize: 4,
+          },
+        })
+        .then((response) => {
+          if (response.data && response.data.content && response.data.content.length > 0) {
+            this.products = response.data.content;
+            this.products.forEach(product => {
+              product.inWishlist = localStorage.getItem(product.productid) === 'true';
+              if (product && product.productid) {
+                this.fetchAverageReview(product.productid);
+              }
+            });
+            this.totalPages = response.data.totalPages;
 
-              // 循環調用fetchAverageReview為每個產品獲取平均評價
+            // 循環調用fetchAverageReview為每個產品獲取平均評價
 
-            } else {
-              // 如果返回的內容為空，則清空產品列表並設置總頁數為1
-              this.products = [];
-              this.totalPages = 1;
-              // 可以在這裡添加一個用戶提示，告知沒有找到產品
-              // alert('沒有找到產品。');
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching products:", error);
-            // 處理錯誤情況，如API呼叫失敗等
+          } else {
+            // 如果返回的內容為空，則清空產品列表並設置總頁數為1
             this.products = [];
             this.totalPages = 1;
-            // 提示用戶檢查錯誤
-            // alert('檢索產品時發生錯誤。');
-          });
+            // 可以在這裡添加一個用戶提示，告知沒有找到產品
+            // alert('沒有找到產品。');
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          // 處理錯誤情況，如API呼叫失敗等
+          this.products = [];
+          this.totalPages = 1;
+          // 提示用戶檢查錯誤
+          // alert('檢索產品時發生錯誤。');
+        });
     },
 
     showLargeAppliances() {
@@ -168,60 +168,68 @@ export default {
     addProductToCart(productid) {
 
       axios
-          .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
-            params: {
-              productId: productid,
-            }
-          }, {
-            headers: { 'Content-Type': 'application/json' }
+        .post('http://localhost:8080/customer/api/shoppingCart', null, { // 如果您的API期待URL參數，這裡應該是null或者空對象
+          params: {
+            productId: productid,
+          }
+        }, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        //加入購物車提示窗
+        .then(response => {
+
+          // 成功添加到購物車後的操作，比如通知用戶
+          this.snackbarText = '商品已成功加入購物車';
+          this.snackbarColor = 'success'; // 成功消息使用綠色
+          this.snackbar = true; // 顯示Snackbar
+          // 如果需要，這裡還可以添加其他UI更新或邏輯處理
+          Swal.fire({
+            icon: "success",
+            title: "商品已加入購物車",
+            showConfirmButton: false,
+            timer: 1000
           })
-          .then(response => {
-            // 成功添加到購物車後的操作，比如通知用戶
-            this.snackbarText = '商品已成功加入購物車';
-            this.snackbarColor = 'success'; // 成功消息使用綠色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果需要，這裡還可以添加其他UI更新或邏輯處理
-          })
+        })
 
 
-          .catch(error => {
-            // 錯誤處理
-            console.error('Error adding product to cart:', error);
-            this.snackbarText = '無法添加商品到購物車';
-            this.snackbarColor = 'error'; // 錯誤消息使用紅色
-            this.snackbar = true; // 顯示Snackbar
-            // 如果API響應了請求但出現錯誤
-            if (error.response) {
-              console.error('Error response data:', error.response.data);
-              this.snackbarText = `Error: ${error.response.data.message}`;
-            } else {
-              // 服务器没有响应
-              this.snackbarText = 'Error: Server did not respond';
-            }
-          });
+        .catch(error => {
+          // 錯誤處理
+          console.error('Error adding product to cart:', error);
+          this.snackbarText = '無法添加商品到購物車';
+          this.snackbarColor = 'error'; // 錯誤消息使用紅色
+          this.snackbar = true; // 顯示Snackbar
+          // 如果API響應了請求但出現錯誤
+          if (error.response) {
+            console.error('Error response data:', error.response.data);
+            this.snackbarText = `Error: ${error.response.data.message}`;
+          } else {
+            // 服务器没有响应
+            this.snackbarText = 'Error: Server did not respond';
+          }
+        });
     },
 
     //願望清單
     addProductToWishlist(productId) {
       // 发送 POST 请求到后端 API
       axios
-          .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
-          .then(response => {
-            // 检查响应状态码
-            if (response.status === 200) {
-              // 成功添加到愿望清单后的操作
-              alert('成功添加到愿望清单');
-              this.updateWishlistStatus(productId, true);
-            } else {
-              // 如果状态码不是200，不执行任何操作
-              console.error('Product was not added to wishlist. Status code:', response.status);
-            }
-          })
-          .catch(error => {
-            // 处理错误
-            console.error('Error adding product to wishlist:', error);
-            alert('无法添加商品到愿望清单。');
-          });
+        .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
+        .then(response => {
+          // 检查响应状态码
+          if (response.status === 200) {
+            // 成功添加到愿望清单后的操作
+            alert('成功添加到愿望清单');
+            this.updateWishlistStatus(productId, true);
+          } else {
+            // 如果状态码不是200，不执行任何操作
+            console.error('Product was not added to wishlist. Status code:', response.status);
+          }
+        })
+        .catch(error => {
+          // 处理错误
+          console.error('Error adding product to wishlist:', error);
+          alert('无法添加商品到愿望清单。');
+        });
     },
 
 
@@ -238,37 +246,37 @@ export default {
       if (product.inWishlist) {
         // Call the backend to remove the product from the wishlist
         axios.delete(`http://localhost:8080/customer/api/wishlist/${product.productid}`)
-            .then(response => {
-              // Assuming the API returns the removed product information
-              if (response.status === 200) {
-                this.snackbarText = '已從願望清單移除';
-                this.snackbarColor = 'success';
-                this.fetchWishlist(); // Refresh the wishlist from the backend
-              } else {
-                throw new Error('Failed to remove from wishlist');
-              }
-            })
-            .catch(error => {
-              console.error("Error removing product from wishlist:", error);
-              this.snackbarText = '無法從願望清單移除商品';
-              this.snackbarColor = 'error';
-              this.snackbar = true;
-            });
+          .then(response => {
+            // Assuming the API returns the removed product information
+            if (response.status === 200) {
+              this.snackbarText = '已從願望清單移除';
+              this.snackbarColor = 'success';
+              this.fetchWishlist(); // Refresh the wishlist from the backend
+            } else {
+              throw new Error('Failed to remove from wishlist');
+            }
+          })
+          .catch(error => {
+            console.error("Error removing product from wishlist:", error);
+            this.snackbarText = '無法從願望清單移除商品';
+            this.snackbarColor = 'error';
+            this.snackbar = true;
+          });
       } else {
         // Call the backend to add the product to the wishlist
         // You would need to have an endpoint for adding as well, similar to the delete
         axios.post(`http://localhost:8080/customer/api/wishlist/${product.productid}`)
-            .then(() => {
-              this.snackbarText = '已加入願望清單';
-              this.snackbarColor = 'success';
-              this.fetchWishlist(); // Refresh the wishlist from the backend
-            })
-            .catch(error => {
-              console.error("Error adding product to wishlist:", error);
-              this.snackbarText = '無法加入願望清單';
-              this.snackbarColor = 'error';
-              this.snackbar = true;
-            });
+          .then(() => {
+            this.snackbarText = '已加入願望清單';
+            this.snackbarColor = 'success';
+            this.fetchWishlist(); // Refresh the wishlist from the backend
+          })
+          .catch(error => {
+            console.error("Error adding product to wishlist:", error);
+            this.snackbarText = '無法加入願望清單';
+            this.snackbarColor = 'error';
+            this.snackbar = true;
+          });
       }
     },
 
@@ -277,22 +285,22 @@ export default {
     // 評價
     fetchAverageReview(productid) {
       axios
-          .get(`http://localhost:8080/public/api/reviews/product/${productid}/average`, {
-            params: {
-              // 其他需要傳遞的查詢參數
-              otherParam: 'value'
-            }
-          })
-          .then(response => {
-            const productIndex = this.products.findIndex(p => p.productid === productid);
-            if (productIndex !== -1) {
-              this.products[productIndex].averageReview = response.data.average;
-            }
-          })
-          .catch(error => {
-            console.error("Error fetching products:", error);
-            // 錯誤處理，比如設置默認值或顯示錯誤消息
-          });
+        .get(`http://localhost:8080/public/api/reviews/product/${productid}/average`, {
+          params: {
+            // 其他需要傳遞的查詢參數
+            otherParam: 'value'
+          }
+        })
+        .then(response => {
+          const productIndex = this.products.findIndex(p => p.productid === productid);
+          if (productIndex !== -1) {
+            this.products[productIndex].averageReview = response.data.average;
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching products:", error);
+          // 錯誤處理，比如設置默認值或顯示錯誤消息
+        });
 
     },
 

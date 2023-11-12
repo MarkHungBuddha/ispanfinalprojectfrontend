@@ -5,12 +5,11 @@ import Swal from 'sweetalert2'
 </script>
 
 <template>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
   <v-app>
     <v-main>
-
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
       <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
       <CategoryList></CategoryList>
       <router-view :is-logged-in="isLoggedIn"></router-view>
