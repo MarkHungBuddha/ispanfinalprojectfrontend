@@ -1,12 +1,12 @@
 <script setup>
 import Swal from 'sweetalert2';
-import Sidebar from "../components/sidebar.vue";
+import Sidebar from "@/components/sidebar.vue";
 </script>
 
 <template>
   <v-app>
     <v-main>
-      <sidebar></sidebar>
+
       <v-container>
 
         <v-row style="max-width: 500px">
@@ -88,20 +88,7 @@ export default {
       const [minPrice, maxPrice] = this.range;
       this.fetchProducts(this.selectedCategoryName, minPrice, maxPrice);
     },
-    fetchWishlist() {
-      axios.get("http://localhost:8080/public/api/wishlist")
-        .then(response => {
-          // 假設 response.data 是一個包含願望清單 DTO 對象的陣列
-          this.wishlist = response.data; // 將獲取到的數據賦值給 wishlist
-          // 檢查該產品是否在願望清單中
-          this.products.forEach(product => {
-            product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
-          });
-        })
-        .catch(error => {
-          console.error("Error fetching wishlist:", error);
-        });
-    },
+
     fetchProducts(categoryName, minPrice = 0, maxPrice = 99999) {
       if (this.selectedCategoryName !== categoryName) {
         this.currentPage = 1;
@@ -175,9 +162,9 @@ export default {
         }, {
           headers: { 'Content-Type': 'application/json' }
         })
+
         //加入購物車提示窗
         .then(response => {
-
           // 成功添加到購物車後的操作，比如通知用戶
           this.snackbarText = '商品已成功加入購物車';
           this.snackbarColor = 'success'; // 成功消息使用綠色
@@ -190,8 +177,6 @@ export default {
             timer: 1000
           })
         })
-
-
         .catch(error => {
           // 錯誤處理
           console.error('Error adding product to cart:', error);
@@ -202,8 +187,22 @@ export default {
           if (error.response) {
             console.error('Error response data:', error.response.data);
             this.snackbarText = `Error: ${error.response.data.message}`;
+            //提示窗
+            Swal.fire({
+              icon: "warning",
+              title: "商品庫存不足，無法加入購物車",
+              showConfirmButton: false,
+              timer: 1000
+            })
           } else {
             // 服务器没有响应
+            //提示窗
+            Swal.fire({
+              icon: "error",
+              title: "伺服器異常，請聯絡客服!",
+              showConfirmButton: false,
+              timer: 1000
+            })
             this.snackbarText = 'Error: Server did not respond';
           }
         });
@@ -218,7 +217,7 @@ export default {
           // 檢查回應狀態碼
           if (response.status === 200) {
             // 成功加入願望清單後的操作
-            alert('成功添加到愿望清单');
+            alert('成功添加到愿望清单222');
             this.updateWishlistStatus(productId, true);
           } else {
             // 如果狀態碼不是200，不執行任何動作
@@ -231,7 +230,21 @@ export default {
           alert('无法添加商品到愿望清单。');
         });
     },
-
+    //1
+    fetchWishlist() {
+      axios.get("http://localhost:8080/public/api/wishlist")
+        .then(response => {
+          // 假設 response.data 是一個包含願望清單 DTO 對象的陣列
+          this.wishlist = response.data; // 將獲取到的數據賦值給 wishlist
+          // 檢查該產品是否在願望清單中
+          this.products.forEach(product => {
+            product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching wishlist:", error);
+        });
+    },
 
     updateWishlistStatus(productid, status) {
       // 找到產品並更新其 inWishlist 狀態
@@ -240,7 +253,7 @@ export default {
         this.$set(this.products[productIndex], 'inWishlist', status);
       }
     },
-
+    //2
     // 切換產品在願望清單中的狀態
     toggleWishlist(product) {
       if (product.inWishlist) {

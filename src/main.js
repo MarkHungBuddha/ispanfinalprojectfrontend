@@ -58,7 +58,7 @@ app.component('productCategortCard', productCategoryCard)
 app.component('ProductSearchBar', ProductSearchBar)
 app.component('ProductCard', ProductCard)
 app.component('sidebarBuyer', sidebarBuyer);
-app.component('Footer ', Footer);
+app.component('Footer', Footer);
 
 app.config.globalProperties.$axios = axios;
 

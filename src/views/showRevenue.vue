@@ -18,8 +18,7 @@
 
           <!-- 月份选择 -->
           <v-col cols="12" md="4">
-            <v-select v-model="selectedMonth" :items="months" label="选择月份"
-                      @change="fetchMonthlyIncome"></v-select>
+            <v-select v-model="selectedMonth" :items="months" label="选择月份" @change="fetchMonthlyIncome"></v-select>
           </v-col>
         </v-row>
 
@@ -87,7 +86,7 @@ export default {
   methods: {
     async fetchYearlyIncome() {
       try {
-        const response = await axios.get(`http://localhost:8080/year?year=${this.selectedYear}`);
+        const response = await axios.get(`http://localhost:8080/seller/api/revenue/year?year=${this.selectedYear}`);
         this.totalYearlyIncome = response.data; // 假设返回的数据是年收入总额
       } catch (error) {
         console.error('Error fetching the yearly income:', error);
@@ -99,7 +98,7 @@ export default {
         const monthNumber = this.monthMap[this.selectedMonth];
 
         try {
-          const response = await axios.get(`http://localhost:8080/month?year=${this.selectedYear}&month=${monthNumber}`);
+          const response = await axios.get(`http://localhost:8080/seller/api/revenue/month?year=${this.selectedYear}&month=${monthNumber}`);
           this.totalMonthlyIncome = response.data;
         } catch (error) {
           console.error('Error fetching the monthly income:', error);

@@ -16,7 +16,7 @@ import navbar from "@/components/navbar.vue";
 
         <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
           <v-col cols="6" class="d-flex align-center">
-            <v-img :src="item.imgUrl + item.imgExtension" max-width="80" class="mr-3"></v-img>
+            <v-img :src="item.imgUrl + item.imgExtension" max-width="80" min-width="80" class="mr-3"></v-img>
             <span class="font-weight-medium">{{ item.itemName }}</span>
           </v-col>
           <!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
@@ -34,7 +34,7 @@ import navbar from "@/components/navbar.vue";
 
 <script>
 import axios from "axios";
-
+import Swal from 'sweetalert2';
 export default {
   data() {
     return {
@@ -51,36 +51,43 @@ export default {
   methods: {
     addToCart(item) {
       axios
-          .post(`http://localhost:8080/customer/api/shoppingCart?productId=${item.productid}`)
-          .then(response => {
-            console.log(response.data); // 這裡可以顯示一些提示給使用者，如 "商品已加入購物車！"
-            // 商品成功加入購物車後，從願望清單中移除
-            this.removeFromWishlist(item.productid);
-          })
-          .catch(error => {
-            console.error(error);
+        .post(`http://localhost:8080/customer/api/shoppingCart?productId=${item.productid}`)
+        .then(response => {
+          console.log(response.data); // 這裡可以顯示一些提示給使用者，如 "商品已加入購物車！"
+          // 商品成功加入購物車後，從願望清單中移除
+          this.removeFromWishlist(item.productid);
+        })
+        .catch(error => {
+          //提示窗
+          Swal.fire({
+            icon: "warning",
+            title: "商品庫存不足，無法加入購物車",
+            showConfirmButton: false,
+            timer: 1500
           });
+          console.error(error);
+        });
     },
 
 
     removeFromWishlist(productId, index) {
       axios
-          .delete(`http://localhost:8080/customer/api/wishlist/${productId}`)
-          .then(response => {
-            this.itemList.splice(index, 1);
-            console.log(response.data); // you might want to display this to the user
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        .delete(`http://localhost:8080/customer/api/wishlist/${productId}`)
+        .then(response => {
+          this.itemList.splice(index, 1);
+          console.log(response.data); // you might want to display this to the user
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   },
   created() {
     if (!this.$store.state.wishlist.length) {
       axios.get('http://localhost:8080/public/api/wishlist')
-          .then((response) => {
-            this.$store.commit('setWishList', response.data);
-          });
+        .then((response) => {
+          this.$store.commit('setWishList', response.data);
+        });
     }
   }
 }

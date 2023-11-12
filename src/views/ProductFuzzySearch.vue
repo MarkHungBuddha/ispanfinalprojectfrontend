@@ -11,11 +11,11 @@
             <span class="slider-prepend-text">價格搜索 </span>
 
             <v-text-field v-model="priceRange[0]" hide-details single-line type="number" variant="outlined"
-                          density="compact" style="width: 90px"></v-text-field>
+              density="compact" style="width: 90px"></v-text-field>
           </template>
           <template v-slot:append>
             <v-text-field v-model="priceRange[1]" hide-details single-line type="number" variant="outlined"
-                          style="width: 90px" density="compact"></v-text-field>
+              style="width: 90px" density="compact"></v-text-field>
             <!-- 放大鏡圖示按鈕 -->
             <v-btn @click="applyPriceFilter" icon>
               <v-icon>mdi-magnify</v-icon>
@@ -174,14 +174,14 @@ export default {
     },
     fetchData() {
       fetch('some-api')
-          .then(response => response.json())
-          .then(data => {
-            this.someData = data;
+        .then(response => response.json())
+        .then(data => {
+          this.someData = data;
 
-            this.$nextTick(() => {
-              // 確保 Vue 更新了 DOM
-            });
+          this.$nextTick(() => {
+            // 確保 Vue 更新了 DOM
           });
+        });
     },
 
     showSnackbar(message, color) {
@@ -230,62 +230,62 @@ export default {
 
       axios.get('http://localhost:8080/public/api/products', { params })
 
-          .then(response => {
-            // 确保响应中有数据并且包含产品内容
-            if (response.data && response.data.content) {
-              this.products = response.data.content.map(product => {
-                // 确保产品有 productid 属性
-                if (product && product.productid !== undefined) {
-                  // 安全地检查产品ID是否在 wishlistStatus 中
-                  product.inWishlist = !!this.wishlistStatus[product.productid];
-                } else {
-                  // 如果 product 或 product.productid 是 undefined，设置一个默认值
-                  product.inWishlist = false;
-                }
-                return product;
-              }).filter(p => p); // 使用 filter() 移除所有 null 值
-              // 更新分頁相關的狀態;
+        .then(response => {
+          // 确保响应中有数据并且包含产品内容
+          if (response.data && response.data.content) {
+            this.products = response.data.content.map(product => {
+              // 确保产品有 productid 属性
+              if (product && product.productid !== undefined) {
+                // 安全地检查产品ID是否在 wishlistStatus 中
+                product.inWishlist = !!this.wishlistStatus[product.productid];
+              } else {
+                // 如果 product 或 product.productid 是 undefined，设置一个默认值
+                product.inWishlist = false;
+              }
+              return product;
+            }).filter(p => p); // 使用 filter() 移除所有 null 值
+            // 更新分頁相關的狀態;
 
-              // 更新分页总数
-              this.totalPages = response.data.totalPages;
-              // 更新总产品数量
-              this.totalProducts = response.data.totalElements;
+            // 更新分页总数
+            this.totalPages = response.data.totalPages;
+            // 更新总产品数量
+            this.totalProducts = response.data.totalElements;
 
-              // 这里可以添加任何其他状态更新，例如：
-              // this.someOtherStatus = response.data.someOtherField;
+            // 这里可以添加任何其他状态更新，例如：
+            // this.someOtherStatus = response.data.someOtherField;
 
-            } else {
-              // 如果响应中没有内容或格式不正确，则设置默认值
-              this.products = [];
-              this.totalPages = 0;
-              this.totalProducts = 0;
-              // 可以在这里显示一个错误消息，告知用户数据加载失败
-              console.error('API 响应缺少内容或格式不正确');
-            }
-          })
-          .catch(error => {
-            // 处理错误...
+          } else {
+            // 如果响应中没有内容或格式不正确，则设置默认值
+            this.products = [];
+            this.totalPages = 0;
+            this.totalProducts = 0;
+            // 可以在这里显示一个错误消息，告知用户数据加载失败
+            console.error('API 响应缺少内容或格式不正确');
+          }
+        })
+        .catch(error => {
+          // 处理错误...
 
-            this.loading = false;
+          this.loading = false;
 
-            console.error('请求失败，错误信息:', error);
-            this.showSnackbar('檢索產品時發生錯誤。', 'error');
-          })
-          .finally(() => {
-            this.loading = false;
-          });
+          console.error('请求失败，错误信息:', error);
+          this.showSnackbar('檢索產品時發生錯誤。', 'error');
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
 
     // 加入購物車方法
     addProductToCart(productId) {
       axios.post(`http://localhost:8080/customer/api/shoppingCart?productId=${productId}`)
-          .then(response => {
-            this.showSnackbar('商品已成功加入购物车。', 'success');
-          })
-          .catch(error => {
-            this.showSnackbar('无法添加商品到购物车。', 'error');
-            console.error('Error adding product to cart:', error);
-          });
+        .then(response => {
+          this.showSnackbar('商品已成功加入购物车。', 'success');
+        })
+        .catch(error => {
+          this.showSnackbar('无法添加商品到购物车。', 'error');
+          console.error('Error adding product to cart:', error);
+        });
 
     },
 
@@ -305,29 +305,29 @@ export default {
       axios.post(`http://localhost:8080/customer/api/wishlist/${productId}`, {}, {
         withCredentials: true // 這樣可以确保携带认证信息，例如cookies
       })
-          .then(response => {
-            // 更新產品在愿望清单的状态
-            this.updateWishlistStatus(productId, true);
-            this.showSnackbar('商品已加入愿望清单', 'success');
-          })
-          .catch(error => {
-            console.error('添加到愿望清单时发生错误:', error);
-            this.showSnackbar('添加到愿望清单时发生错误', 'error');
-          });
+        .then(response => {
+          // 更新產品在愿望清单的状态
+          this.updateWishlistStatus(productId, true);
+          this.showSnackbar('商品已加入愿望清单', 'success');
+        })
+        .catch(error => {
+          console.error('添加到愿望清单时发生错误:', error);
+          this.showSnackbar('添加到愿望清单时发生错误', 'error');
+        });
 
     },
 
     // 切换愿望清单状态
     toggleWishlist(product) {
       axios.post(`http://localhost:8080/customer/api/wishlist/${product.productId}`)
-          .then(response => {
-            product.inWishlist = !product.inWishlist;
-            this.showSnackbar('愿望清单状态已更新。', 'success');
-          })
-          .catch(error => {
-            this.showSnackbar('无法更新愿望清单状态。', 'error');
-            console.error('Error toggling wishlist status:', error);
-          });
+        .then(response => {
+          product.inWishlist = !product.inWishlist;
+          this.showSnackbar('愿望清单状态已更新。', 'success');
+        })
+        .catch(error => {
+          this.showSnackbar('无法更新愿望清单状态。', 'error');
+          console.error('Error toggling wishlist status:', error);
+        });
     },
     // 更新愿望清单状态
     updateWishlistStatus(productId, status) {

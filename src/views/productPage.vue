@@ -135,7 +135,7 @@ import navbar from "@/components/navbar.vue";
           <v-card flat>
             <v-card-text>
               <v-text-field v-model="question" label="Ask a question" clearable></v-text-field>
-              <v-btn color="primary" @click="submitQuestion">Submit Question</v-btn>
+              <v-btn color="primary" @click="submitQuestion">我要提問</v-btn>
             </v-card-text>
           </v-card>
 
@@ -255,6 +255,7 @@ export default {
       try {
         const response = await axios.post(`http://localhost:8080/customer/api/wishlist/${this.productData.productId}`);
         if (response.status === 200) {
+          //提示窗
           Swal.fire({
             icon: "success",
             title: "商品已加入願望清單",
@@ -270,6 +271,7 @@ export default {
         }
       } catch (error) {
         this.showErrorDialog(error.message || "Error adding to wishlist");
+        //提示窗
         Swal.fire({
           icon: "warning",
           title: "商品已經加入願望清單",
@@ -284,6 +286,7 @@ export default {
         const addToCartUrl = `http://localhost:8080/customer/api/shoppingCart?productId=${this.productId}`;
         const response = await axios.post(addToCartUrl);
         if (response.status === 200) {
+          //提示窗
           Swal.fire({
             icon: "success",
             title: "商品已加入購物車",
@@ -300,10 +303,10 @@ export default {
           this.showErrorDialog("Failed to add to cart");
         }
       } catch (error) {
+        //提示窗
         Swal.fire({
           icon: 'error',
-          title: '商品加入購物車失敗',
-          text: error.message || "Error adding to cart",
+          title: '商品加入購物車失敗，庫存不足',
         });
       }
     },

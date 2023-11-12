@@ -31,7 +31,7 @@
           <v-col cols="12" md="10">
             <v-row no-gutters>
               <v-col v-for="(product, index) in displayedProducts" :key="index" cols="12" sm="6" md="3" lg="3"
-                     class="card2">
+                class="card2">
                 <ProductCard :product="product" @navigate="navigateToProduct"></ProductCard>
               </v-col>
 
@@ -53,7 +53,7 @@
           <v-col v-for="(product, index) in productsContainingA" :key="index" cols="12" sm="6" md="4" lg="3" class="pa-2">
             <v-card>
               <v-img :src="`https://i.imgur.com/${product.imagepath}.png`" alt="Product Image" class="product-image"
-                     @click="navigateToProduct(product.productId)"></v-img>
+                @click="navigateToProduct(product.productId)"></v-img>
               <v-card-title class="product-name">{{ product.productName }}</v-card-title>
               <v-card-text>
                 <div v-if="product.specialPrice && product.specialPrice > 0" class="special-price">
@@ -74,10 +74,10 @@
                   </v-btn>
                 </v-btn>
               </v-card-actions>
-              <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="600">
+              <!-- <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="600">
                 {{ snackbarText }}
                 <v-btn color="white" text @click="snackbar = false">關閉</v-btn>
-              </v-snackbar>
+              </v-snackbar> -->
             </v-card>
           </v-col>
         </v-row>
@@ -89,7 +89,7 @@
 <script>
 import axios from 'axios';
 import ProductCard from '@/components/ProductCard.vue';
-
+import Swal from 'sweetalert2';
 export default {
   data() {
     return {
@@ -154,44 +154,59 @@ export default {
     // 加入購物車方法
     addToCart(productId) {
       axios.post(`http://localhost:8080/customer/api/shoppingCart?productId=${productId}`)
-          .then(response => {
-            this.showSnackbar('商品已成功加入购物车。', 'success');
-          })
-          .catch(error => {
-            this.showSnackbar('无法添加商品到购物车。', 'error');
-            console.error('Error adding product to cart:', error);
+        .then(response => {
+          // this.showSnackbar('商品已成功加入购物车。', 'success');
+          //提示窗
+          Swal.fire({
+            icon: "success",
+            title: "商品加入購物車",
+            showConfirmButton: false,
+            timer: 1000
           });
+        })
+        .catch(error => {
+          // this.showSnackbar('无法添加商品到购物车。', 'error');
+          Swal.fire({
+            icon: "warning",
+            title: "商品庫存不足",
+            showConfirmButton: false,
+            timer: 1000
+          });
+          console.error('Error adding product to cart:', error);
+        });
     },
     handleAddToCart(productId) {
       // 在这里编写加入购物车的逻辑
       // 通常是调用API接口将商品添加到用户的购物车中
       axios.post('/api/path/to/cart', { productId: productId })
-          .then(response => {
-            // 处理成功响应，可能是通知用户商品已添加到购物车
-            alert('商品已添加到购物车');
-          })
-          .catch(error => {
-            // 处理错误响应，可能是通知用户操作失败
-            console.error('添加到购物车失败', error);
-            alert('无法添加商品到购物车，请稍后再试');
-          });
+        .then(response => {
+          // 处理成功响应，可能是通知用户商品已添加到购物车
+          alert('商品已添加到购物车');
+        })
+        .catch(error => {
+          // 处理错误响应，可能是通知用户操作失败
+          console.error('添加到购物车失败', error);
+          alert('无法添加商品到购物车，请稍后再试');
+        });
     },
-    showSnackbar(message, color) {
-      this.snackbarText = message;
-      this.snackbarColor = color;
-      this.snackbar = true;
-    },
+    
+    // showSnackbar(message, color) {
+    //   this.snackbarText = message;
+    //   this.snackbarColor = color;
+    //   this.snackbar = true;
+    // },
     // 切换愿望清单状态
+
     toggleWishlist(product) {
       axios.post(`http://localhost:8080/customer/api/wishlist/${product.productId}`)
-          .then(response => {
-            product.inWishlist = !product.inWishlist;
-            this.showSnackbar('愿望清单状态已更新。', 'success');
-          })
-          .catch(error => {
-            this.showSnackbar('无法更新愿望清单状态。', 'error');
-            console.error('Error toggling wishlist status:', error);
-          });
+        .then(response => {
+          product.inWishlist = !product.inWishlist;
+          this.showSnackbar('愿望清单状态已更新。', 'success');
+        })
+        .catch(error => {
+          this.showSnackbar('无法更新愿望清单状态。', 'error');
+          console.error('Error toggling wishlist status:', error);
+        });
       this.$emit('toggle-wishlist', this.product);
 
     },
@@ -251,18 +266,18 @@ export default {
         page: this.currentPage,
       };
       axios.get('http://localhost:8080/public/api/products', { params })
-          .then(response => {
-            if (response.data && response.data.content) {
-              this.productsContainingA = response.data.content;
-            } else {
-              this.productsContainingA = [];
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching products with keyword:', error);
+        .then(response => {
+          if (response.data && response.data.content) {
+            this.productsContainingA = response.data.content;
+          } else {
             this.productsContainingA = [];
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching products with keyword:', error);
+          this.productsContainingA = [];
 
-          });
+        });
     },
 
 

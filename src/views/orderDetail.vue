@@ -49,7 +49,7 @@
             </div>
 
             <!-- 縣市區 -->
-            <div v-else>
+            <div v-else class="address">
               <v-select v-model="selectedCity" :items="Object.keys(taiwanLocations)" label="選擇縣市"
                 @update:modelValue="updateDistricts"></v-select>
 
@@ -516,5 +516,9 @@ export default {
   }
 
   /* 其他需要調整的樣式 */
+}
+
+.address {
+  position: relative;
 }
 </style>

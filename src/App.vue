@@ -6,14 +6,11 @@ import Swal from 'sweetalert2'
 </script>
 
 <template>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
   <v-app>
     <v-main>
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@600&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
 
       <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
       <CategoryList></CategoryList>
@@ -107,13 +104,13 @@ axios.interceptors.response.use(response => {
 });
 
 </script>
-<style>
+<style scoped>
 html,
 body {
   font-family: 'Noto Sans TC', sans-serif;
-  /* font-family: sans-serif; */
-  /* font-size: 16px; */
-  /* font-weight: bolder; */
+  /* font-family: sans-serif;
+  font-size: 16px;
+  font-weight: bolder; */
 
   /* 全局樣式 */
 }

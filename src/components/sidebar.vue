@@ -50,12 +50,12 @@
                 數據分析
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-<!--                <v-list-item>-->
-<!--                  <v-list-item-title>提問數量</v-list-item-title>-->
-<!--                </v-list-item>-->
-<!--                <v-list-item>-->
-<!--                  <v-list-item-title>評論數量</v-list-item-title>-->
-<!--                </v-list-item>-->
+                <!--                <v-list-item>-->
+                <!--                  <v-list-item-title>提問數量</v-list-item-title>-->
+                <!--                </v-list-item>-->
+                <!--                <v-list-item>-->
+                <!--                  <v-list-item-title>評論數量</v-list-item-title>-->
+                <!--                </v-list-item>-->
                 <v-list-item @click="FindRevenue">
                   <v-list-item-title>營收分析</v-list-item-title>
                 </v-list-item>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import QuestionList from "../views/CustomerALLQuestion.vue";
+import QuestionList from "@/views/CustomerALLQuestion.vue";
 
 export default {
   computed: {
@@ -95,10 +95,10 @@ export default {
     Unanswer() {
       this.$router.push('/unanswer');
     },
-    SellerQuestionList(){
+    SellerQuestionList() {
       this.$router.push('/seller/SellerALLQuestion');
     },
-    SellerReviewList(){
+    SellerReviewList() {
       this.$router.push('/seller/SellerAllReview');
     },
 

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 import sidebar from "@/components/sidebar.vue";
+import Swal from 'sweetalert2';
 </script>
 
 <template>
@@ -23,41 +24,41 @@ import sidebar from "@/components/sidebar.vue";
 
             <v-table class="table">
               <thead>
-              <tr>
-                <th>商品編號</th>
-                <th>圖片</th>
-                <th>商品名稱</th>
-                <th>價錢</th>
-                <th>特價</th>
-                <th>子分類</th>
-                <th>母分類</th>
-                <th>商品細節</th>
-                <th>數量</th>
-                <th>編輯</th>
-              </tr>
+                <tr>
+                  <th>商品編號</th>
+                  <th>圖片</th>
+                  <th>商品名稱</th>
+                  <th>價錢</th>
+                  <th>特價</th>
+                  <th>子分類</th>
+                  <th>母分類</th>
+                  <th>商品細節</th>
+                  <th>數量</th>
+                  <th>編輯</th>
+                </tr>
               </thead>
               <tbody>
-              <!-- 使用v-for循环遍历结果 -->
-              <tr v-for="product in searchQuery ? searchResults : products" :key="product.productId">
-                <td class="id_style" @click="productPage(product.productId)">{{ product.productId }}</td>
+                <!-- 使用v-for循环遍历结果 -->
+                <tr v-for="product in searchQuery ? searchResults : products" :key="product.productId">
+                  <td class="id_style" @click="productPage(product.productId)">{{ product.productId }}</td>
 
-                <td class="img_style">
-                  <v-img :src="`https://i.imgur.com/${product.imagePath}.png`" alt="Product Image"
-                         class="product_image"></v-img>
-                </td>
-                <td class="name_style">{{ product.productName }}</td>
-                <td class="price_style">{{ product.price }}</td>
-                <td class="price_style">{{ product.specialPrice }}</td>
-                <td class="category_style">{{ product.categoryName }}</td>
-                <td class="category_style">{{ product.parentCategoryName }}</td>
-                <td class="description_style">{{ truncate(product.description, 50) }}</td>
-                <td class="quantity_style">{{ product.quantity }}</td>
-                <td class="edit_style">
-                  <button @click="editPage(product.productId)">編輯商品</button>
-                  <br>
-                  <button @click="deleteProduct(product.productId)">下架商品</button>
-                </td>
-              </tr>
+                  <td class="img_style">
+                    <v-img :src="`https://i.imgur.com/${product.imagePath}.png`" alt="Product Image"
+                      class="product_image"></v-img>
+                  </td>
+                  <td class="name_style">{{ product.productName }}</td>
+                  <td class="price_style">{{ product.price }}</td>
+                  <td class="price_style">{{ product.specialPrice }}</td>
+                  <td class="category_style">{{ product.categoryName }}</td>
+                  <td class="category_style">{{ product.parentCategoryName }}</td>
+                  <td class="description_style">{{ truncate(product.description, 50) }}</td>
+                  <td class="quantity_style">{{ product.quantity }}</td>
+                  <td class="edit_style">
+                    <button @click="editPage(product.productId)">編輯商品</button>
+                    <br>
+                    <button @click="deleteProduct(product.productId)">下架商品</button>
+                  </td>
+                </tr>
               </tbody>
             </v-table>
             <v-pagination v-model="currentPage" :length="totalPages" @input="handlePageChange"></v-pagination>
@@ -106,13 +107,13 @@ export default {
           p: this.currentPage,
         },
       })
-          .then((response) => {
-            this.products = response.data.content; // 使用products而不是orders
-            this.totalPages = response.data.totalPages;
-          })
-          .catch((error) => {
-            console.error('无法检索产品：', error);
-          });
+        .then((response) => {
+          this.products = response.data.content; // 使用products而不是orders
+          this.totalPages = response.data.totalPages;
+        })
+        .catch((error) => {
+          console.error('无法检索产品：', error);
+        });
     },
     truncate(text, length) {
       if (text.length <= length) {
@@ -121,15 +122,24 @@ export default {
       return text.substring(0, length) + '...';
     },
     deleteProduct(productId) {
-      axios.put(`http://localhost:8080/seller/api/${productId}/remove`)
-          .then(response => {
-            // 商品删除成功删除后的处理，可以刷新产品列表或进行其他操作
-            // 例如，你可以重新获取产品列表：
+      Swal.fire({
+        title: '確定要下架這個商品嗎？',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '是的，下架它！',
+        cancelButtonText: '取消'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.put(`http://localhost:8080/seller/api/${productId}/remove`).then((result) => {
             this.fetchProducts();
           })
-          .catch(error => {
-            console.error('删除商品失败：', error);
-          });
+        }
+      })
+        .catch(error => {
+          console.error('删除商品失敗：', error);
+        });
     },
     searchProducts() {
       this.currentPage = 1; // 假设您希望每次搜索都返回第一页的结果
@@ -140,14 +150,14 @@ export default {
           productname: this.searchQuery,
         },
       })
-          .then((response) => {
-            this.searchResults = response.data.content;
-            this.products = response.data.content; // 使用products而不是orders
-            this.totalPages = response.data.totalPages;
-          })
-          .catch((error) => {
-            console.error('无法检索产品：', error);
-          });
+        .then((response) => {
+          this.searchResults = response.data.content;
+          this.products = response.data.content; // 使用products而不是orders
+          this.totalPages = response.data.totalPages;
+        })
+        .catch((error) => {
+          console.error('无法检索产品：', error);
+        });
     },
     handlePageChange(newPage) {
       this.currentPage = newPage;
@@ -173,9 +183,7 @@ export default {
   background-size: 13%;
 }
 
-.product_image {
-
-}
+.product_image {}
 
 .id_style {
   width: 100px;
