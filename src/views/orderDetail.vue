@@ -345,6 +345,14 @@ export default {
     completeOrder(orderId) {
       axios.put(`http://localhost:8080/customer/api/${orderId}/completeOrder`)
         .then(response => {
+          //完成訂單提示窗
+          Swal.fire({
+            icon: "success",
+            title: "完成訂單",
+            showConfirmButton: false,
+            timer: 1500
+          });
+
           this.orderDetails = response.data;
           this.orderStatusClass = 'status-color-change'; // 應用綠色
 

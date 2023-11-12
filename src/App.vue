@@ -2,14 +2,19 @@
 
 import CategoryList from '@/components/CategoryList.vue';
 import Swal from 'sweetalert2'
+
 </script>
 
 <template>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
   <v-app>
     <v-main>
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@600&display=swap" rel="stylesheet">
+
       <navbar :key="isLoggedIn" :is-logged-in="isLoggedIn"></navbar>
       <CategoryList></CategoryList>
       <router-view :is-logged-in="isLoggedIn"></router-view>
@@ -106,10 +111,12 @@ axios.interceptors.response.use(response => {
 html,
 body {
   font-family: 'Noto Sans TC', sans-serif;
+  /* font-family: sans-serif; */
+  /* font-size: 16px; */
+  /* font-weight: bolder; */
+
+  /* 全局樣式 */
 }
-
-/* 全局樣式 */
-
 
 /* 添加這部分來確保 #app 佔滿整個可用高度 */
 #app {

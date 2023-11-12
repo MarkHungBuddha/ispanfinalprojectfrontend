@@ -178,7 +178,7 @@ body {
           </v-col>
 
         </v-card>
-        <v-col><v-btn @click="checkoutItems" class="checkout-btn">Checkout</v-btn></v-col>
+        <v-col><v-btn @click="checkoutItems" class="checkout-btn">結帳</v-btn></v-col>
       </v-row>
 
 
@@ -213,7 +213,7 @@ export default {
       } else {
         // 刪除提示窗
         Swal.fire({
-          title: "你確定要刪除購物車商品嗎?",
+          title: "你確定要移除這個商品嗎?",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#d33",
@@ -226,7 +226,7 @@ export default {
             this.removeFromCart(item.transactionId, index);
 
             Swal.fire({
-              title: "刪除購物車商品成功",
+              title: "移除購物車商品成功",
               icon: "success"
             });
           }

@@ -53,7 +53,7 @@ export default {
   props: ['category'],
   created() {
     this.fetchProducts(this.category);
-    this.fetchWishlist(); // Fetch the wishlist on creation
+    this.fetchWishlist(); // 取得創建時的願望清單
   },
   data() {
     return {
@@ -91,9 +91,9 @@ export default {
     fetchWishlist() {
       axios.get("http://localhost:8080/public/api/wishlist")
         .then(response => {
-          // Assuming response.data is the array of WishlistDTO objects
-          this.wishlist = response.data;
-          // Update the products' inWishlist status
+          // 假設 response.data 是一個包含願望清單 DTO 對象的陣列
+          this.wishlist = response.data; // 將獲取到的數據賦值給 wishlist
+          // 檢查該產品是否在願望清單中
           this.products.forEach(product => {
             product.inWishlist = this.wishlist.some(w => w.productid === product.productid);
           });
@@ -211,22 +211,22 @@ export default {
 
     //願望清單
     addProductToWishlist(productId) {
-      // 发送 POST 请求到后端 API
+      // 傳送 POST 請求到後端 API
       axios
         .post(`http://localhost:8080/customer/api/wishlist/${productId}`)
         .then(response => {
-          // 检查响应状态码
+          // 檢查回應狀態碼
           if (response.status === 200) {
-            // 成功添加到愿望清单后的操作
+            // 成功加入願望清單後的操作
             alert('成功添加到愿望清单');
             this.updateWishlistStatus(productId, true);
           } else {
-            // 如果状态码不是200，不执行任何操作
+            // 如果狀態碼不是200，不執行任何動作
             console.error('Product was not added to wishlist. Status code:', response.status);
           }
         })
         .catch(error => {
-          // 处理错误
+          // 處理錯誤
           console.error('Error adding product to wishlist:', error);
           alert('无法添加商品到愿望清单。');
         });
@@ -234,42 +234,41 @@ export default {
 
 
     updateWishlistStatus(productid, status) {
-      // 找到产品并更新其 inWishlist 状态
+      // 找到產品並更新其 inWishlist 狀態
       const productIndex = this.products.findIndex(p => p.id === productid);
       if (productIndex !== -1) {
         this.$set(this.products[productIndex], 'inWishlist', status);
       }
     },
 
-    // Toggle wishlist status
+    // 切換產品在願望清單中的狀態
     toggleWishlist(product) {
       if (product.inWishlist) {
-        // Call the backend to remove the product from the wishlist
+        // 如果產品已在願望清單中，呼叫後端 API 進行移除操作
         axios.delete(`http://localhost:8080/customer/api/wishlist/${product.productid}`)
           .then(response => {
-            // Assuming the API returns the removed product information
+            // 假設 API 返回已移除的產品資訊
             if (response.status === 200) {
-              this.snackbarText = '已從願望清單移除';
-              this.snackbarColor = 'success';
-              this.fetchWishlist(); // Refresh the wishlist from the backend
+              this.snackbarText = '已從願望清單移除'; // 設置成功提示信息
+              this.snackbarColor = 'success'; // 設置提示條的顏色為成功（綠色）
+              this.fetchWishlist(); // 從後端重新獲取願望清單以更新狀態
             } else {
-              throw new Error('Failed to remove from wishlist');
+              throw new Error('Failed to remove from wishlist'); // 若移除失敗，拋出錯誤
             }
           })
           .catch(error => {
             console.error("Error removing product from wishlist:", error);
             this.snackbarText = '無法從願望清單移除商品';
             this.snackbarColor = 'error';
-            this.snackbar = true;
+            this.snackbar = true; // 顯示提示條
           });
       } else {
-        // Call the backend to add the product to the wishlist
-        // You would need to have an endpoint for adding as well, similar to the delete
+        // 如果產品不在願望清單中，呼叫後端 API 進行添加操作
         axios.post(`http://localhost:8080/customer/api/wishlist/${product.productid}`)
           .then(() => {
             this.snackbarText = '已加入願望清單';
             this.snackbarColor = 'success';
-            this.fetchWishlist(); // Refresh the wishlist from the backend
+            this.fetchWishlist(); // 從後端重新獲取願望清單以更新狀態
           })
           .catch(error => {
             console.error("Error adding product to wishlist:", error);
@@ -396,16 +395,17 @@ export default {
 
 .red--text {
   --v-theme-foreground: #ff5252;
-  /* This is an example, adjust the color to fit your theme */
+  /* 設定自定義CSS變量 --v-theme-foreground 為鮮紅色 (#ff5252) */
 }
 
 .text--accent-4 {
   color: var(--v-theme-foreground);
-  /* Use the defined accent color */
+  /* 使用前面定義的 --v-theme-foreground 變量作為文字顏色 */
 }
 
 .no-background::before {
   background: transparent !important;
+  /* 對有 .no-background 類別的元素，其 ::before 偽元素的背景設定為透明，!important 確保覆蓋其他任何相關的背景設定 */
 }
 
 .card-actions {

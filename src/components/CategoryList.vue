@@ -224,8 +224,8 @@ export default {
   margin: 3px;
   min-width: 150px;
   min-height: 65px;
-  font-size: 1.4rem;
-  color: rgb(8, 8, 8);
+  font-size: 1.5rem;
+  color: rgb(0, 0, 0);
   transition: background-color 0.2s, box-shadow 0.2s;
   background-color: rgba(206, 148, 105, 0.5);
   /* opacity: 0.5; */

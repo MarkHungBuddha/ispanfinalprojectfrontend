@@ -19,7 +19,7 @@ import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 import ProductImageUpload from "@/components/Image.vue";
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 export default {
   props: {
     productId: Number
@@ -67,8 +67,9 @@ export default {
         }
       })
         .then(response => {
+
           console.log(`图片 ${od} 上传成功:`, response.data);
-          this.$router.push('/seller');
+          this.$router.push('/seller')
         })
         .catch(error => {
           console.error(`图片 ${od} 上传失败:`, error);
