@@ -43,6 +43,8 @@
             </v-card>
           </v-col>
         </v-row>
+
+        <Chart :selectedYear="selectedYear"></Chart>
       </v-container>
     </v-main>
   </v-app>
@@ -52,7 +54,7 @@
 import axios from 'axios';
 import navbar from "@/components/navbar.vue";
 import sidebar from "@/components/sidebar.vue";
-
+import Chart from '@/components/Chart.vue';
 export default {
   name: 'IncomeDashboard',
   components: {

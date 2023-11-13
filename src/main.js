@@ -22,7 +22,7 @@ import ProductCard from "@/components/ProductCard.vue";
 import ProductImageUpload from "@/components/Image.vue";
 import sidebarBuyer from "@/components/sidebarBuyer.vue";
 import Footer from "@/components/footer.vue";
-
+import Chart from '@/components/Chart.vue';
 // import 'vuetify/dist/vuetify.min.css';
 // 設定 Axios
 axios.defaults.withCredentials = true;
@@ -59,7 +59,7 @@ app.component('ProductSearchBar', ProductSearchBar)
 app.component('ProductCard', ProductCard)
 app.component('sidebarBuyer', sidebarBuyer);
 app.component('Footer', Footer);
-
+app.component('Chart', Chart);
 app.config.globalProperties.$axios = axios;
 
 app.use(vuetify).use(router).use(store).mount('#app');  // 加入 .use(store)
