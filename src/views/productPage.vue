@@ -32,6 +32,7 @@ import navbar from "@/components/navbar.vue";
         <v-col cols="8" md="9">
           <h2>{{ productData.productName }}</h2>
           <v-rating v-model="rating" readonly></v-rating>
+          <span style="font-size: large;" > ({{ roundedRating(rating) }} / {{ reviewCount }})</span>
           <p v-if="productData.specialPrice && productData.specialPrice !== 0">
             <del>價格: {{ productData.price }}</del>
             <span style="color: red; font-size: 1.5em;">特價價格: {{ productData.specialPrice }}</span>
@@ -171,6 +172,7 @@ export default {
       productImages: [],
       productReviews: [],
       rating: 0, // for example, a 4 out of 5 stars rating
+      reviewCount:0,
       productId: null,
       productData: {
         productName: "",
@@ -209,10 +211,14 @@ export default {
         const response = await axios.get(`http://localhost:8080/public/api/reviews/product/${productId}/average`);
         if (response.status === 200 && response.data) {
           this.rating = response.data.averageRating; // 假设返回的数据结构中包含一个名为"average"的属性
+          this.reviewCount=response.data.reviewCount;
         }
       } catch (error) {
         console.error("Error fetching product average review:", error);
       }
+    },
+    roundedRating(rating) {
+      return (Math.round(rating * 100) / 100).toFixed(2);
     },
     async fetchProductData(productId) {
       this.productId = productId;
