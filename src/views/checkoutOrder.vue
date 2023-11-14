@@ -6,9 +6,9 @@
         <v-card>
           <v-card-title>{{ item.name }}</v-card-title>
           <v-card-text>
-            <div>Product ID: {{ item.productID }}</div>
-            <div>Quantity: {{ item.quantity }}</div>
-            <div>Price: ${{ item.price.toFixed(2) }}</div>
+            <div>商品ID: {{ item.productID }}</div>
+            <div>數量: {{ item.quantity }}</div>
+            <div>單價: ${{ item.price.toFixed(2) }}</div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -18,13 +18,13 @@
     <v-row v-if="orderDetails">
       <v-col cols="12">
         <v-card color="grey lighten-3" class="pa-3">
-          <div class="text-h5">Total Price: ${{ orderDetails.totalPrice.toFixed(2) }}</div>
+          <div class="text-h5">總價: ${{ orderDetails.totalPrice.toFixed(2) }}</div>
         </v-card>
       </v-col>
     </v-row>
 
-    <v-card outlined>
-      <v-card-title>Order Address</v-card-title>
+    <v-card outlined class="address">
+      <v-card-title>訂單地址</v-card-title>
       <v-select :items="cityList" item-text="name" item-value="name" label="選擇縣市" v-model="selectedCity"></v-select>
 
       <v-select :items="districts" label="選擇行政區" v-model="selectedDistrict"></v-select>
@@ -34,8 +34,9 @@
 
 
       <!-- Submit button -->
-      <v-btn color="primary" @click="submitOrder">下單</v-btn>
+
     </v-card>
+    <v-btn color="primary" @click="submitOrder">下單</v-btn>
   </v-container>
 </template>
 <script setup>
@@ -189,4 +190,14 @@ const submitOrder = async () => {
 
 <style scoped>
 /* 可以在這裡添加你需要的樣式 */
+.v-select {
+  width: 100%;
+  /* 確保 v-select 使用可用寬度 */
+}
+
+.address {
+  position: relative;
+  overflow: visible;
+  /* 確保 v-select 的下拉部分不會被裁剪 */
+}
 </style>

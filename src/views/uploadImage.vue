@@ -69,10 +69,11 @@ export default {
         .then(response => {
 
           console.log(`图片 ${od} 上传成功:`, response.data);
-          this.$router.push('/seller')
+          this.$router.push('/showAllProduct')
         })
         .catch(error => {
           console.error(`图片 ${od} 上传失败:`, error);
+          this.$router.push('/showAllProduct')
         });
     }
   }

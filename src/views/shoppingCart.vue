@@ -178,9 +178,8 @@ body {
           </v-col>
 
         </v-card>
-        <v-col><v-btn @click="checkoutItems" class="checkout-btn">結帳</v-btn></v-col>
       </v-row>
-
+      <v-col><v-btn @click="checkoutItems" class="checkout-btn">結帳</v-btn></v-col>
 
 
     </v-container>

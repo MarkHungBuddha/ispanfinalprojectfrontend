@@ -87,7 +87,8 @@ import navbar from "@/components/navbar.vue";
                       <v-list-item-content>
                         <v-card-text class="pa-2 d-flex flex-column">
                           <span class="text-subtitle-1">{{ qanda.question }}</span>
-                          <span class="text-caption font-italic align-self-start">{{ qanda.questiontime }}</span>
+                          <span class="text-caption font-italic align-self-start">{{ formatTime(qanda.questiontime)
+                          }}</span>
                         </v-card-text>
                       </v-list-item-content>
                     </v-list-item>
@@ -99,7 +100,8 @@ import navbar from "@/components/navbar.vue";
                       <v-list-item-content>
                         <v-card-text class="pa-2 d-flex flex-column">
                           <span class="text-subtitle-1 chat-message">{{ qanda.answer }}</span>
-                          <span class="text-caption font-italic align-self-start">{{ qanda.answertime }}</span>
+                          <span class="text-caption font-italic align-self-start">{{ formatTime(qanda.answertime)
+                          }}</span>
                         </v-card-text>
                       </v-list-item-content>
                     </v-list-item>
@@ -107,6 +109,12 @@ import navbar from "@/components/navbar.vue";
                 </v-card>
               </v-row>
             </v-container>
+            <v-card flat>
+              <v-card-text>
+                <v-text-field v-model="question" label="Ask a question" clearable></v-text-field>
+                <v-btn color="primary" @click="submitQuestion">我要提問</v-btn>
+              </v-card-text>
+            </v-card>
           </v-window-item>
 
 
@@ -132,12 +140,7 @@ import navbar from "@/components/navbar.vue";
             </v-container>
           </v-window-item>
 
-          <v-card flat>
-            <v-card-text>
-              <v-text-field v-model="question" label="Ask a question" clearable></v-text-field>
-              <v-btn color="primary" @click="submitQuestion">我要提問</v-btn>
-            </v-card-text>
-          </v-card>
+
 
         </v-window>
       </v-card>
@@ -149,6 +152,14 @@ import navbar from "@/components/navbar.vue";
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
+
+//時間格式
+const formatTime = (timeStr) => {
+  const date = new Date(timeStr);
+  date.setHours(date.getHours() + 8); // 加上 8 小時
+  return date.toISOString().replace('T', ' ').substring(0, 19);
+};
+
 export default {
   data() {
     return {
@@ -192,7 +203,7 @@ export default {
     const productId = this.$route.params.productId;
   },
   methods: {
-
+    formatTime,
     async fetchProductAverageReview(productId) {
       try {
         const response = await axios.get(`http://localhost:8080/public/api/reviews/product/${productId}/average`);

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <sidebar-buyer/>
+      <sidebar-buyer />
       <v-container>
         <div v-for="qa in state.askedQuestions" :key="qa.qandaid" class="mb-4">
           <v-card @click="goToProduct(qa.productId)">
@@ -10,9 +10,9 @@
             </v-card-title>
             <v-card-text>
               <div>問題: {{ qa.question }}</div>
-              <div>提問時間: {{ qa.questiontime }}</div>
+              <div>提問時間: {{ formatTime(qa.questiontime) }}</div>
               <div v-if="qa.answer">回答: {{ qa.answer }}</div>
-              <div v-if="qa.answer">回答時間: {{ qa.answertime }}</div>
+              <div v-if="qa.answer">回答時間: {{ formatTime(qa.answertime) }}</div>
             </v-card-text>
           </v-card>
         </div>
@@ -32,6 +32,8 @@ const state = reactive({
   askedQuestions: [],
   productsMap: new Map()
 });
+
+
 
 const fetchProductInfo = async (productId) => {
   if (state.productsMap.has(productId)) {
@@ -67,7 +69,12 @@ const fetchAskedQuestions = async () => {
 const goToProduct = (productId) => {
   router.push(`/product/${productId}`);
 };
-
+//時間格式
+const formatTime = (timeStr) => {
+  const date = new Date(timeStr);
+  date.setHours(date.getHours() + 8); // 加上 8 小時
+  return date.toISOString().replace('T', ' ').substring(0, 19);
+};
 onMounted(fetchAskedQuestions);
 </script>
 

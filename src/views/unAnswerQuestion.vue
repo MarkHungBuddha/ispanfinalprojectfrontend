@@ -86,13 +86,13 @@ onMounted(async () => {
               </v-card-title>
               <v-divider></v-divider>
               <v-img :src="`https://i.imgur.com/${detail.productImagePath}.jpeg`" aspect-ratio="1.7" max-height="200px"
-                     max-width="100%" class="mb-3"></v-img>
+                max-width="100%" class="mb-3"></v-img>
               <v-card-text>
-                <div>Question: {{ detail.question }}</div>
-                <div>Question Time: {{ new Date(detail.questiontime).toLocaleString() }}</div>
-                <div>User: {{ detail.memberUsername }}</div>
+                <div>問題: {{ detail.question }}</div>
+                <div>問題時間: {{ new Date(detail.questiontime).toLocaleString() }}</div>
+                <div>提問人: {{ detail.memberUsername }}</div>
                 <v-img :src="detail.memberImgPath" aspect-ratio="1.7" max-height="100px" max-width="100px"
-                       class="mb-3"></v-img>
+                  class="mb-3"></v-img>
                 <!-- Only show answer fields if there is an answer -->
                 <template v-if="detail.answer">
                   <div>Answer: {{ detail.answer }}</div>
