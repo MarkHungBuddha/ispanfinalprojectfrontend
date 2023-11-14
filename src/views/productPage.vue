@@ -208,7 +208,7 @@ export default {
       try {
         const response = await axios.get(`http://localhost:8080/public/api/reviews/product/${productId}/average`);
         if (response.status === 200 && response.data) {
-          this.rating = response.data.average; // 假设返回的数据结构中包含一个名为"average"的属性
+          this.rating = response.data.averageRating; // 假设返回的数据结构中包含一个名为"average"的属性
         }
       } catch (error) {
         console.error("Error fetching product average review:", error);
