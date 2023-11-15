@@ -122,7 +122,7 @@ export default {
         const { data } = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
         if (data.isLoggedIn) {
           this.$store.dispatch('updateLoginStatus', true);
-          this.userType = data.role; // 根据返回的 role 更新 userType
+
           this.fetchMemberData(data.memberId);
         } else {
           this.$store.dispatch('updateLoginStatus', false);

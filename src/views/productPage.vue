@@ -33,9 +33,12 @@ import navbar from "@/components/navbar.vue";
           <h2>{{ productData.productName }}</h2>
           <v-rating v-model="rating" readonly></v-rating>
           <v-spacer/>
-          <span > ({{ roundedRating(rating) }} / 5)</span>
 
+
+          <span > ({{ roundedRating(rating) }} / 5)</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
           <span >{{ reviewCount }}則評論</span>
+
           <p v-if="productData.specialPrice && productData.specialPrice !== 0">
             <del>價格: {{ productData.price }}</del>
             <span style="color: red; font-size: 1.5em;">特價價格: {{ productData.specialPrice }}</span>

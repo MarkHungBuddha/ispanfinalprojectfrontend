@@ -104,11 +104,13 @@
                   <v-btn v-if="user.membertypeid == 3" @click="$router.push('/phone')">
                     進入手機認證頁
                   </v-btn>
+                  <span v-if="user.membertypeid == 3" class="phone-note">此為範例手機號碼，請進入手機驗證頁修改手機號碼</span>
                   <template v-else-if="user.membertypeid < 3">
                     <v-icon color="green">mdi-check-circle</v-icon>
                     <span class="verified-text">手機號碼已認證</span>
                   </template>
                 </v-col>
+
               </v-row>
               <!-- Email -->
               <v-text-field

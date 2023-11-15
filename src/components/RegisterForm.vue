@@ -210,8 +210,8 @@ export default {
           passwdbcrypt: this.password,
           email: this.email,
           // 添加后端要求的默认值
-          firstname: '放', // 預設名字
-          lastname: '風吹', // 預設姓氏
+          firstname: '小明', // 預設名字
+          lastname: '王', // 預設姓氏
           gender: '男', // 預設性別
           birthdate: '1990-01-01', // 預設生日
           phone: '0912345678', // 預設手機號碼，符合台灣手機號碼格式
