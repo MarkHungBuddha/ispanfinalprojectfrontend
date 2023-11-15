@@ -335,6 +335,14 @@ export default {
           // 處理響應，更新訂單詳情
           this.orderDetails = response.data;
           this.orderStatusClass = 'status-color-change'; // 應用綠色
+
+          //提示窗
+          Swal.fire({
+            icon: "success",
+            title: "付款成功",
+            showConfirmButton: false,
+            timer: 1500
+          });
         })
         .catch(error => {
           console.error('付款失敗：', error);
