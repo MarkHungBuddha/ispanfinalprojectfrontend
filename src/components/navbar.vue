@@ -25,6 +25,8 @@
 
 
     <v-spacer></v-spacer>
+    <!-- 頭像顯示 -->
+
 
     <!-- 購物車按鈕 -->
     <v-btn v-if="isLoggedIn" @click="redirectToShoppingCart" icon>
@@ -39,9 +41,12 @@
       <img src="https://i.imgur.com/xS0SdbL.png" alt="Order" class="icon-img">
     </v-btn>
     <!-- 會員中心按鈕 -->
-    <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" icon>
+    <v-btn v-if="isLoggedIn" @click="redirectTo('/member')" icon class="elevation-6">
       <!-- <img src="https://i.imgur.com/WYW1y2p.png" alt="Member" class="icon-img"> -->
-      <img src="https://i.imgur.com/F6mWj8r.png" alt="Member" class="icon-img">
+      <v-avatar size="45">
+        <img :src="imageFullPath" alt="Profile image" class="avatar-img">
+      </v-avatar>
+
     </v-btn>
     <!-- 登出按鈕 -->
     <v-btn v-if="isLoggedIn" @click="logout" class="custom-btn">登出</v-btn>
@@ -61,12 +66,18 @@ export default {
       searchText: '',
       loading: false,
       userType: null,  // 添加用於存儲用戶類型的變數
+      user: { memberimgpath: "" }, //頭像
     };
   },
   computed: {
     isLoggedIn() {
       return this.$store.state.isLoggedIn;
-    }
+    },
+
+    imageFullPath() {
+      const { memberimgpath } = this.user;
+      return memberimgpath ? `https://i.imgur.com/${memberimgpath}.jpg` : '';
+    },
   },
   methods: {
     redirectTo(path) {
@@ -106,6 +117,30 @@ export default {
           console.error("Error fetching user type:", error);
         });
     },
+    async fetchUserProfile() {
+      try {
+        const { data } = await axios.get("http://localhost:8080/public/api/checkLoginStatus");
+        if (data.isLoggedIn) {
+          this.$store.dispatch('updateLoginStatus', true);
+          this.userType = data.role; // 根据返回的 role 更新 userType
+          this.fetchMemberData(data.memberId);
+        } else {
+          this.$store.dispatch('updateLoginStatus', false);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user profile: ", error);
+      }
+    },
+    // 頭像
+    async fetchMemberData(memberId) {
+      try {
+        const { data } = await axios.get(`http://localhost:8080/public/api/member/${memberId}`);
+        this.user = { ...this.user, ...data };
+      } catch (error) {
+        console.error("Failed to fetch member data: ", error);
+      }
+    }
+
 
 
   },
@@ -119,6 +154,11 @@ export default {
   },
   mounted() {
     this.getuserType(); // 在組件掛載後調用 getuserType 方法
+    if (this.isLoggedIn) {
+
+      this.fetchUserProfile();
+      this.fetchMemberData();
+    }
   },
 };
 
@@ -170,5 +210,14 @@ export default {
   width: 40px;
   /* Adjust as needed */
   height: 80%;
+}
+
+/**頭像*/
+.avatar-img {
+  border-radius: 50%;
+  object-fit: cover;
+  /* 確保圖片填滿頭像區域 */
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -27,7 +27,7 @@
                     <v-list-item class="my-2">
                       <v-list-item-content>
                         <v-list-item-title class="title">姓名</v-list-item-title>
-                        <v-list-item-subtitle class="subtitle">{{user.lastname}} {{  user.firstname  }}</v-list-item-subtitle>
+                        <v-list-item-sule class="subtitle">{{ user.lastname }} {{ user.firstname }}</v-list-item-sule>
                       </v-list-item-content>
                     </v-list-item>
 
@@ -217,12 +217,14 @@ export default {
 }
 
 .custom-background {
-  background-color: rgb(227, 238, 142); /* 更改为你想要的颜色 */
+  background-color: rgb(227, 238, 142);
+  /* 更改为你想要的颜色 */
 }
 
 .custom-background .v-card__text,
 .custom-background .v-list {
-  background-color: #fefffe; /* 确保子元素背景色与 v-card 相同 */
+  background-color: #fefffe;
+  /* 确保子元素背景色与 v-card 相同 */
 }
 
 @media (min-width: 960px) {
