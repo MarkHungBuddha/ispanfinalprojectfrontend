@@ -1,89 +1,107 @@
 <script setup>
 import navbar from "@/components/navbar.vue";
 </script>
-
 <template>
   <v-app>
-    <v-container>
-      <navbar></navbar>
+    <v-main>
+      <sidebarBuyer></sidebarBuyer>
+      <v-container fluid>
 
-      <v-row class="header">
-        <v-col cols="6">商品</v-col>
-        <v-col cols="5">操作</v-col>
-      </v-row>
+        <v-row class="my-4">
+          <v-col cols="6" class="font-weight-bold">商品</v-col>
+          <v-col cols="6" class="text-right font-weight-bold">操作</v-col>
+        </v-row>
 
-      <v-row v-for="(item, index) in itemList" :key="item.id" class="item-row">
-        <v-col cols="6">
-          <v-img :src="item.imgUrl" max-width="80"></v-img>
-          <span>{{ item.itemName }}</span>
-        </v-col>
-        <v-col cols="5">
-          <v-btn small @click="addToCart(item)">加入購物車</v-btn>
-          <v-btn small @click="handledelete(index)">刪除</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
+        <v-divider></v-divider>
+
+        <v-row v-for="(item, index) in itemList" :key="item.id" class="py-3 item-row align-center">
+          <v-col cols="6" class="d-flex align-center">
+            <v-img :src="item.imgUrl + item.imgExtension" max-width="80" min-width="80" class="mr-3"></v-img>
+            <span class="font-weight-medium">{{ item.itemName }}</span>
+          </v-col>
+          <!--        <blockquote class="imgur-embed-pub" lang="en" data-id="SDt6WzE"><a href="https://imgur.com/SDt6WzE">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>-->
+          <v-col cols="6" class="text-right">
+            <v-btn small color="primary" @click="addToCart(item)">加入購物車</v-btn>
+            <v-btn small color="error" @click="removeFromWishlist(item.productid, index)">刪除</v-btn>
+          </v-col>
+        </v-row>
+
+
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
 <script>
+import axios from "axios";
+import Swal from 'sweetalert2';
 export default {
   data() {
     return {
-      itemList: [
-        {
-          id: '1',
-          itemName: '優質短袖白T',
-          imgUrl: 'https://images.unsplash.com/photo-1534961880437-ce5ae2033053?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
-          price: '500',
-          count: '1'
-        },
-        {
-          id: '2',
-          itemName: '骷髏手短黑T',
-          imgUrl: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80',
-          price: '790',
-          count: '1'
-        },
-        {
-          id: '3',
-          itemName: '超時尚牛仔庫',
-          imgUrl: 'https://images.unsplash.com/photo-1529391409740-59f2cea08bc6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1124&q=80',
-          price: '1200',
-          count: '1'
-        },
-        {
-          id: '4',
-          itemName: '質感褐色系大衣服',
-          imgUrl: 'https://images.unsplash.com/photo-1491998664548-0063bef7856c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80',
-          price: '2300',
-          count: '1'
-        },
-      ]
-    }
+      itemList: this.$store.state.wishlist.map(item => ({
+        id: item.id,
+        itemName: item.productname,
+        imgUrl: `https://i.imgur.com/${item.productimage}`,
+        imgExtension: item.imageExtension || '.png',  // 假設從store中也可以取得檔名後綴，如果沒有則預設為.png
+        productid: item.productid
+      }))
+
+    };
   },
   methods: {
-    handlePlus(item) {
-      item.count++;
+    addToCart(item) {
+      axios
+        .post(`http://localhost:8080/customer/api/shoppingCart?productId=${item.productid}`)
+        .then(response => {
+          console.log(response.data); // 這裡可以顯示一些提示給使用者，如 "商品已加入購物車！"
+          // 商品成功加入購物車後，從願望清單中移除
+          this.removeFromWishlist(item.productid);
+        })
+        .catch(error => {
+          //提示窗
+          Swal.fire({
+            icon: "warning",
+            title: "商品庫存不足，無法加入購物車",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          console.error(error);
+        });
     },
-    handleSub(item) {
-      if (item.count > 1) {
-        item.count--;
-      }
-    },
-    handledelete(index) {
-      this.itemList.splice(index, 1);
+
+
+    removeFromWishlist(productId, index) {
+      axios
+        .delete(`http://localhost:8080/customer/api/wishlist/${productId}`)
+        .then(response => {
+          this.itemList.splice(index, 1);
+          console.log(response.data); // you might want to display this to the user
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   },
-  computed: {
-    // ... your computed properties (if any) ...
+  created() {
+    if (!this.$store.state.wishlist.length) {
+      axios.get('http://localhost:8080/public/api/wishlist')
+        .then((response) => {
+          this.$store.commit('setWishList', response.data);
+        });
+    }
   }
 }
 </script>
 
 <style scoped>
-body {
-  background-color: rgba(0, 0, 0, .2);
+.v-application {
+  background-image: url('@/assets/buy01.png'), linear-gradient(to bottom, rgb(243, 215, 163), rgb(129, 245, 245));
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom;
+  /* 圖片位置在右下角 */
+  background-attachment: fixed;
+  /* 圖片固定在視窗中 */
+  background-size: 13%;
 }
 
 .item_header {
@@ -123,5 +141,10 @@ body {
 .item_detail .name {
   margin-left: 100px;
   margin-top: 20px;
+}
+
+.item-row:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s;
 }
 </style>
